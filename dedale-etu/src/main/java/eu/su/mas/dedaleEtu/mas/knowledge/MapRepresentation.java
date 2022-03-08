@@ -313,8 +313,47 @@ public class MapRepresentation implements Serializable {
 				.filter(n -> n.getAttribute("ui.class")==MapAttribute.open.toString())
 				.findAny()).isPresent();
 	}
+	/***
+	 * We try to only collect the part of the map that we're missing 
+	 * @param sgreceived the other map
+	 * @return the missing part
+	 */
+	public MapRepresentation getMissingPart(SerializableSimpleGraph<String, MapAttribute> sgreceived) {
+		// we want to get only the part that our map is missing in sgreceived
+		MapRepresentation partialMap = null;
+		
+		//1 Add the node
+		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
+			//System.out.println(n);
+			boolean alreadyIn =false;
+			//1 Add the node
+			Node newnode=null;
+			try {
+				newnode=partialMap.g.addNode(n.getNodeId());
+			}	catch(IdAlreadyInUseException e) {
+				alreadyIn=true;
+				//System.out.println("Already in"+n.getNodeId());
+			}
+			if (!alreadyIn) {
+				newnode.setAttribute("ui.label", newnode.getId());
+				newnode.setAttribute("ui.class", n.getNodeContent().toString());
+			}else{
+				newnode=this.g.getNode(n.getNodeId());
+				//3 check its attribute. If it is below the one received, update it.
+				if (((String) newnode.getAttribute("ui.class"))==MapAttribute.closed.toString() || n.getNodeContent().toString()==MapAttribute.closed.toString()) {
+					newnode.setAttribute("ui.class",MapAttribute.closed.toString());
+				}
+			}
+		}
 
-
+		//4 now that all nodes are added, we can add edges
+		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
+			for(String s:sgreceived.getEdges(n.getNodeId())){
+				partialMap.addEdge(n.getNodeId(),s);
+			}
+		}
+		return partialMap;
+	}
 
 
 }

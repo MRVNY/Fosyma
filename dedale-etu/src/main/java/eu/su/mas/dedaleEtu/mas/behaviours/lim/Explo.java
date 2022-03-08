@@ -1,4 +1,4 @@
-package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
+package eu.su.mas.dedaleEtu.mas.behaviours.lim;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 
 
-
 /**
  * <pre>
  * This behaviour allows an agent to explore the environment and learn the associated topological map.
@@ -41,7 +40,7 @@ import jade.lang.acl.UnreadableException;
  * @author hc
  *
  */
-public class FSMExplo extends SimpleBehaviour {
+public class Explo extends SimpleBehaviour {
 
 	private static final long serialVersionUID = 8567689731496787661L;
 
@@ -52,25 +51,9 @@ public class FSMExplo extends SimpleBehaviour {
 	 */
 	private MapRepresentation myMap;
 
-	private List<String> list_agentNames;
-
-/**
- *
- * @param myagent
- * @param myMap known map of the world the agent is living in
- * @param agentNames name of the agents to share the map with
- */
-	public FSMExplo(final AbstractDedaleAgent myagent, MapRepresentation myMap, List<String> agentNames) {
-		super(myagent);
-		this.myMap=myMap;
-		this.list_agentNames=agentNames;
-		
-		
-	private int ExitValue = 0;
 
 
-
-	public FSMExplo(final AbstractDedaleAgent myagent, MapRepresentation myMap) {
+	public Explo(final AbstractDedaleAgent myagent, MapRepresentation myMap) {
 		super(myagent);
 		this.myMap=myMap;
 			
@@ -81,7 +64,6 @@ public class FSMExplo extends SimpleBehaviour {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
-			this.myAgent.addBehaviour(new ShareMapBehaviour(this.myAgent,500,this.myMap,list_agentNames));
 		}
 
 		//0) Retrieve the current position
@@ -118,10 +100,8 @@ public class FSMExplo extends SimpleBehaviour {
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
-				//Explo finished
+				//Explo finished, we don't create other behaviours
 				finished=true;
-				ExitValue = 0;
-				
 				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done, behaviour removed.");
 			}else{
 				//4) select next move.
@@ -133,9 +113,13 @@ public class FSMExplo extends SimpleBehaviour {
 					nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 				}
-
-				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+				//We now want to send our map to other agents in our vicinity
+				this.myAgent.addBehaviour(new Send((AbstractDedaleAgent)this.myAgent,this.myMap));
 				finished=true;
+				//As explained in the docs moveTo need to be the last instructions
+				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+				
+				
 			}
 
 		}
@@ -146,8 +130,5 @@ public class FSMExplo extends SimpleBehaviour {
 		return finished;
 	}
 	
-	public int onEnd() {
-		return ExitValue ;
-		}
 
 }
