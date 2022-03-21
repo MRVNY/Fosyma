@@ -20,6 +20,7 @@ import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.DataStore;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -42,7 +43,13 @@ import jade.lang.acl.UnreadableException;
  */
 public class FSMExplo extends SimpleBehaviour {
 
-	private static final long serialVersionUID = 8567689731496787661L;
+	
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8402143361534297234L;
 
 	private boolean finished = false;
 
@@ -54,9 +61,9 @@ public class FSMExplo extends SimpleBehaviour {
 
 
 
-	public FSMExplo(final AbstractDedaleAgent myagent, MapRepresentation myMap) {
+	public FSMExplo(final AbstractDedaleAgent myagent) {
 		super(myagent);
-		this.myMap=myMap;
+		myMap = (MapRepresentation) this.getDataStore().get("map");
 			
 	}
 
@@ -66,6 +73,7 @@ public class FSMExplo extends SimpleBehaviour {
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
 		}
+		
 
 		//0) Retrieve the current position
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
@@ -117,6 +125,7 @@ public class FSMExplo extends SimpleBehaviour {
 				}
 
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+			
 				finished=true;
 			}
 
