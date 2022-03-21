@@ -7,14 +7,25 @@ import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
 import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckACK;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMExplo;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMReceive;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSEM;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSPM;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSend;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWCM;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWait;
 import eu.su.mas.dedaleEtu.mas.behaviours.lim.Explo;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-
+import jade.core.AID;
 import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.DataStore;
 import jade.core.behaviours.FSMBehaviour;
+import jade.domain.AMSService;
+import jade.domain.FIPAAgentManagement.AMSAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 
 /**
  * <pre>
@@ -43,12 +54,18 @@ public class LimitedComCoopAgent extends AbstractDedaleAgent {
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap;
 	
+	
 
 	//Name for the FSM state
 	
-	private static final String MoveOn = "MoveOn";
-	private static final String Send = "IsSomeoneThere";
-	private static final String IGotIt = "IGotIt";
+	private static final String Explo = "Exploration";
+	private static final String Ping = "Ping";
+	private static final String Wait = "Wait";
+	private static final String CheckPing = "CheckPing";
+	private static final String SEM = "SendEntireMap";
+	private static final String WCM = "Wait_CheckforMap";
+	private static final String CheckACK = "CheckACK";
+	private static final String SPM = "SendPieceofMap";
 
 	protected void setup(){
 
@@ -58,33 +75,53 @@ public class LimitedComCoopAgent extends AbstractDedaleAgent {
 		final Object[] args = getArguments();
 		
 		
+		List<String> list_agentNames = new ArrayList<String>();
+		
 		if(args.length==0){
 			System.err.println("Error while creating the agent, names of agent to contact expected");
 			System.exit(-1);
 		}else{
 			int i=2;// WARNING YOU SHOULD ALWAYS START AT 2. This will be corrected in the next release.
 			while (i<args.length) {
+				list_agentNames = (List<String>) args[i];
 				i++;
 			}
 		}
+		
+
+		
 		//FSM implentation
 		
-		/*
+		
 		FSMBehaviour fsm = new FSMBehaviour(this);
 		// Define the different states and behaviours
-		fsm. registerFirstState (new FSMExplo(this,this.myMap), MoveOn);
-		fsm. registerState (new FSMSend(this,this.myMap), Send);
-		fsm. registerState (new FSMReceive(this,this.myMap), IGotIt);
+		fsm. registerFirstState (new FSMExplo(this), Explo);
+		fsm. registerState (new FSMPing(this), Ping);
+		fsm. registerState (new FSMWait(this), Wait);
+		fsm. registerState (new FSMCheckPing(this), CheckPing);
+		fsm. registerState (new FSMSEM(this), SEM);
+		fsm. registerState (new FSMWCM(this), WCM);
+		fsm. registerState (new FSMCheckACK(this), CheckACK);
+		fsm. registerState (new FSMSPM(this), SPM);
 		
 		// Register the transitions
-		fsm. registerDefaultTransition (MoveOn,Send);//Default
-		fsm. registerDefaultTransition (Send,IGotIt);//Default
-		fsm. registerDefaultTransition (IGotIt,MoveOn);//Default
+		fsm. registerDefaultTransition (Explo,Ping);
+		fsm. registerDefaultTransition (Ping,Wait);
+		fsm. registerDefaultTransition (Wait,CheckPing);
+		fsm. registerDefaultTransition (CheckPing,CheckACK);
+		fsm. registerDefaultTransition (CheckACK,Explo);
+		fsm. registerDefaultTransition (SPM,Wait);
+		fsm. registerDefaultTransition (SEM,WCM);
+		fsm. registerDefaultTransition (WCM,CheckPing);
 		
 		
-		fsm. registerTransition (B,B, 2) ;//Cond 2
-		fsm. registerTransition (B,C, 1) ;//Cond 1
-		*/
+		fsm. registerTransition (CheckPing,SEM, 1) ;
+		fsm. registerTransition (CheckACK,SPM, 1) ;
+		
+		DataStore dataFSM = new DataStore();
+		dataFSM.put("agents",list_agentNames);
+		fsm.setDataStore(dataFSM);
+		
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
 		
@@ -96,20 +133,20 @@ public class LimitedComCoopAgent extends AbstractDedaleAgent {
 		
 		
 		
-		lb.add(new Explo(this,this.myMap));
-
+		//lb.add(new Explo(this,this.myMap));
+		lb.add(fsm);
 		
 		
 		/***
 		 * MANDATORY TO ALLOW YOUR AGENT TO BE DEPLOYED CORRECTLY
 		 */
 		
-		
 		addBehaviour(new startMyBehaviours(this,lb));
 		
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
-
+		
 	}
+	
 	
 	
 }
