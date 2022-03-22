@@ -4,16 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import eu.su.mas.dedaleEtu.mas.agents.dummies.DummyMovingAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.DummyTankerAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.ExploreSoloAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.ExploreCoopAgent;
-import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.LimitedComCoopAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agents.GateKeeperAgent;
-import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift;
-import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.DummyWumpusShift2;
-import eu.su.mas.dedale.mas.agents.dedaleDummyAgents.Controlled.ControlledAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -368,7 +361,7 @@ public class Principal {
 						Object [] entityParametersExplo1={agentsNames};
 
 						//4) Give the class name of your agent to let the system instantiate it
-						ag=createNewDedaleAgent(c, agentName, LimitedComCoopAgent.class.getName(), entityParametersExplo1);//ExploreSoloAgent
+						ag=createNewDedaleAgent(c, agentName, Adventurer.class.getName(), entityParametersExplo1);//ExploreSoloAgent
 						agentList.add(ag);
 						agentsNames.add(agentName);
 						
@@ -379,7 +372,7 @@ public class Principal {
 						Object [] entityParametersExplo2={agentsNames};
 
 						//4) Give the class name of your agent to let the system instantiate it
-						ag=createNewDedaleAgent(c, agentName, LimitedComCoopAgent.class.getName(), entityParametersExplo2);//ExploreSoloAgent
+						ag=createNewDedaleAgent(c, agentName, Adventurer.class.getName(), entityParametersExplo2);//ExploreSoloAgent
 						agentList.add(ag);
 						agentsNames.add(agentName);
 						
@@ -390,7 +383,7 @@ public class Principal {
 						Object [] entityParametersExplo3={agentsNames};
 
 						//4) Give the class name of your agent to let the system instantiate it
-						ag=createNewDedaleAgent(c, agentName, LimitedComCoopAgent.class.getName(), entityParametersExplo3);//ExploreSoloAgent
+						ag=createNewDedaleAgent(c, agentName, Adventurer.class.getName(), entityParametersExplo3);//ExploreSoloAgent
 						agentList.add(ag);
 						agentsNames.add(agentName);
 

@@ -1,30 +1,18 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import dataStructures.serializableGraph.SerializableSimpleGraph;
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 
 
-import jade.core.AID;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.DataStore;
 import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 
 
 
@@ -67,28 +55,25 @@ public class FSMExplo extends SimpleBehaviour {
  * @param myMap known map of the world the agent is living in
  * @param agentNames name of the agents to share the map with
  */
-	public FSMExplo(final AbstractDedaleAgent myagent, MapRepresentation myMap, List<String> agentNames) {
-		super(myagent);
-		this.myMap=myMap;
-		this.list_agentNames=agentNames;
 		
 		
 	private int ExitValue = 0;
 
 
 
-	public FSMExplo(final AbstractDedaleAgent myagent) {
+	public FSMExplo(final Adventurer myagent) {
 		super(myagent);
-		myMap = (MapRepresentation) this.getDataStore().get("map");
+		myMap = myagent.getMyMap();
 			
 	}
 
 	@Override
 	public void action() {
+		
+		System.out.println("I'm in "+this.getBehaviourName()+" Stade");
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
-			this.myAgent.addBehaviour(new ShareMapBehaviour(this.myAgent,500,this.myMap,list_agentNames));
 		}
 		
 
@@ -141,7 +126,9 @@ public class FSMExplo extends SimpleBehaviour {
 					nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 				}
-
+				
+				((Adventurer)this.myAgent).setMyMap(myMap);
+				
 				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
 			
 				finished=true;

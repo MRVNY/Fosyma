@@ -1,9 +1,10 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.io.IOException;
-import java.util.List;
-
+import dataStructures.serializableGraph.SerializableSimpleGraph;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
+import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -22,29 +23,29 @@ public class FSMSEM extends Behaviour {
 	 */
 	private int exitValue = 0;
 	
-	public FSMSEM(final AbstractDedaleAgent myagent) {
+	public FSMSEM(final Adventurer myagent) {
 		super(myagent);
 
 	}
 
 	@Override
 	public void action() {
+		System.out.println("I'm in "+this.getBehaviourName()+" Stade");
 		// problème ici, comment savoir qui nous a envoyer le ping depuis ce behavior.
-		List<String> list_agentNames = (List<String>) this.getParent().getDataStore().get("agents");
-		for(String agent : list_agentNames) {
-			//sendEntireMap(agent);
-		}
+		sendEntireMap(((Adventurer)this.myAgent).getCorresponder());
 		finished = true;
 
 	}
 	
 	private void sendEntireMap(String agentName) {
-		ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-		msg.setProtocol("PING");
+		ACLMessage msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+		msg.setProtocol("PONG");
 		msg.setSender(this.myAgent.getAID());
-		msg.addReceiver(new AID("agentName",false));
+		msg.addReceiver(new AID(agentName,false));
+		
+		SerializableSimpleGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
 		try {					
-			msg.setContentObject(null);
+			msg.setContentObject(sg);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

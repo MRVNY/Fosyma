@@ -6,26 +6,18 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
-import eu.su.mas.dedaleEtu.mas.behaviours.ExploCoopBehaviour;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckACK;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckPing;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMExplo;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMReceive;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSEM;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSPM;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSend;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWCM;
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWait;
-import eu.su.mas.dedaleEtu.mas.behaviours.lim.Explo;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
-import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
 import jade.core.behaviours.FSMBehaviour;
-import jade.domain.AMSService;
-import jade.domain.FIPAAgentManagement.AMSAgentDescription;
-import jade.domain.FIPAAgentManagement.SearchConstraints;
 
 /**
  * <pre>
@@ -49,10 +41,12 @@ import jade.domain.FIPAAgentManagement.SearchConstraints;
  */
 
 
-public class LimitedComCoopAgent extends AbstractDedaleAgent {
+public class Adventurer extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap;
+	
+	private String corresponder;
 	
 	
 
@@ -145,6 +139,22 @@ public class LimitedComCoopAgent extends AbstractDedaleAgent {
 		
 		System.out.println("the  agent "+this.getLocalName()+ " is started");
 		
+	}
+
+	public MapRepresentation getMyMap() {
+		return myMap;
+	}
+
+	public void setMyMap(MapRepresentation myMap) {
+		this.myMap = myMap;
+	}
+
+	public String getCorresponder() {
+		return corresponder;
+	}
+
+	public void setCorresponder(String corresponder) {
+		this.corresponder = corresponder;
 	}
 	
 	

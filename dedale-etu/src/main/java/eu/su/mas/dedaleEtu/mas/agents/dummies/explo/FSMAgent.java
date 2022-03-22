@@ -81,7 +81,7 @@ public class FSMAgent extends AbstractDedaleAgent {
 		FSMBehaviour fsm = new FSMBehaviour(this);
 
 		//States
-		fsm.registerFirstState(new FSMExplo(this,myMap,list_agentNames),explo);
+		//fsm.registerFirstState(new FSMExplo(this,myMap,list_agentNames),explo);
 		fsm.registerState(new FSMSendMes(this,this.myMap,list_agentNames),send);
 		fsm.registerState(new FSMReceiveMes(this,this.myMap,list_agentNames),receive);
 
