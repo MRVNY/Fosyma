@@ -25,20 +25,24 @@ public class FSMCheckPing extends Behaviour {
 
 	@Override
 	public void action() {
-		System.out.println("I'm in "+this.getBehaviourName()+" Stade");
+		exitValue = 0;
+		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		// On vérifie si on a reçu un Ping 
 		MessageTemplate msgTemplate=MessageTemplate.and(
 				MessageTemplate.MatchProtocol("PING"),
 				MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
 		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
 		
+		
 		if (msgReceived!=null) {
 			//si on a bien reçu un Ping, On vas devoir envoyer notre map dans un ACK
-			System.out.println(msgReceived.getSender().getLocalName());
+			System.out.println( this.getAgent().getLocalName()+" receive a message from "+msgReceived.getSender().getLocalName());
 			((Adventurer)this.myAgent).setCorresponder(msgReceived.getSender().getLocalName());
 			exitValue = 1;
 		}
 		//sinon on vérifier si l'on à pas recu de ACK nous même
+		
+		
 		finished = true;
 	}
 
