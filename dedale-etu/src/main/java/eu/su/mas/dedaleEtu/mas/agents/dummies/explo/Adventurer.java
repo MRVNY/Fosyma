@@ -1,6 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
@@ -28,6 +29,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	private MapRepresentation myMap;
 	
 	private String corresponder;
+	private List<String> listName;
 	
 	
 
@@ -63,7 +65,16 @@ public class Adventurer extends AbstractDedaleAgent {
 			}
 		}
 		
-
+		List<String> listName = new ArrayList<String>(list_agentNames.size());
+		for(String name:list_agentNames) {
+			listName.add(name);
+		}
+		listName.remove(this.getLocalName());
+		System.out.println(listName);
+		
+		list_agentNames = listName;
+		
+		//this.listName = listName;
 		
 		//FSM implentation
 		

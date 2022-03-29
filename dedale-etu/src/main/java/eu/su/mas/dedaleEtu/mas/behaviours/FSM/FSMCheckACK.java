@@ -31,7 +31,7 @@ public class FSMCheckACK extends Behaviour {
 		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
 		
 		if (msgReceived!=null) {
-			((Adventurer)this.myAgent).setCorresponder(this.getAgent().getLocalName());
+			((Adventurer)this.myAgent).setCorresponder(msgReceived.getSender().getLocalName());
 			exitValue = 1;
 		}
 		finished = true;

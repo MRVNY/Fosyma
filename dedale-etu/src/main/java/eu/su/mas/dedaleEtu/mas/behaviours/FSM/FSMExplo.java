@@ -70,7 +70,7 @@ public class FSMExplo extends SimpleBehaviour {
 	@Override
 	public void action() {
 		
-		System.out.println("I'm in "+this.getBehaviourName()+" Stade");
+		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
@@ -115,7 +115,7 @@ public class FSMExplo extends SimpleBehaviour {
 				finished=true;
 				ExitValue = 0;
 				
-				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done, behaviour removed.");
+				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done.");
 			}else{
 				//4) select next move.
 				//4.1 If there exist one open node directly reachable, go for it,
