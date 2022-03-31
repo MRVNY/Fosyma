@@ -7,14 +7,7 @@ import java.util.List;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckACK;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheckPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMExplo;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMPing;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSEM;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMSPM;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWCM;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMWait;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.*;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
@@ -27,11 +20,19 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap;
+
+	//Ratio of two types of treasure
+	private float ratioFound;
+	private float ratioCollected;
 	
 	private String corresponder;
 	private List<String> listName;
-	
-	
+
+	//enum for mode
+	private int EXPLORE = 0;
+	private int LOCATE = 1;
+	private int SEARCH = 2;
+	private int mode;
 
 	//Name for the FSM state
 	
@@ -43,10 +44,13 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String WCM = "Wait_CheckforMap";
 	private static final String CheckACK = "CheckACK";
 	private static final String SPM = "SendPieceofMap";
+	private static final String DECIDE = "DecideRole";
 
 	protected void setup(){
 
 		super.setup();
+
+		mode = EXPLORE;
 		
 		//get the parameters added to the agent at creation (if any)
 		final Object[] args = getArguments();
@@ -89,6 +93,7 @@ public class Adventurer extends AbstractDedaleAgent {
 		fsm. registerState (new FSMWCM(this), WCM);
 		fsm. registerState (new FSMCheckACK(this), CheckACK);
 		fsm. registerState (new FSMSPM(this), SPM);
+		fsm. registerState (new FSMDecideRole(this), DECIDE);
 		
 		// Register the transitions
 		fsm. registerDefaultTransition (Explo,Ping);
@@ -148,7 +153,21 @@ public class Adventurer extends AbstractDedaleAgent {
 	public void setCorresponder(String corresponder) {
 		this.corresponder = corresponder;
 	}
-	
-	
-	
+
+	public void setRatio(float found, float collected){
+		ratioFound = found;
+		ratioCollected = collected;
+	}
+
+	public float[] getRatio(){
+		return new float[]{ratioFound, ratioCollected};
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
 }
