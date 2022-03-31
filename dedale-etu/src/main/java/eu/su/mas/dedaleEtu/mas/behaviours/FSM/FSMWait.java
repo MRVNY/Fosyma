@@ -25,7 +25,7 @@ public class FSMWait extends Behaviour {
 
 	@Override
 	public void action() {
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		
 		//System.out.println("Me as "+ this.getAgent().getName()+ " is going to sleep.");
 		//l'agent s'endord la durée reste a détermier

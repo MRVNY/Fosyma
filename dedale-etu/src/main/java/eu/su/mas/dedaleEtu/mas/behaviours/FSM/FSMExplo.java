@@ -70,7 +70,7 @@ public class FSMExplo extends SimpleBehaviour {
 	@Override
 	public void action() {
 		
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
@@ -109,8 +109,28 @@ public class FSMExplo extends SimpleBehaviour {
 				}
 			}
 			
-				
-			System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
+			// ATTENTION JE SUIS UN TEST DE COLLECTE DE RESSOURCES
+			
+			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
+			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lObservations);
+			
+			Boolean b=false;
+			for(Couple<Observation,Integer> o:lObservations){
+				switch (o.getLeft()) {
+				case DIAMOND:case GOLD:
+					System.out.println(this.myAgent.getLocalName()+" - My treasure type is : "+((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
+					System.out.println(this.myAgent.getLocalName()+" - My current backpack capacity is:"+ ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+					System.out.println(this.myAgent.getLocalName()+" - Value of the treasure on the current position: "+o.getLeft() +": "+ o.getRight());
+					System.out.println(this.myAgent.getLocalName()+" - The agent grabbed : "+((AbstractDedaleAgent) this.myAgent).pick());
+					System.out.println(this.myAgent.getLocalName()+" - the remaining backpack capacity is: "+ ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+					b=true;
+					break;
+				default:
+					break;
+				}
+			}
+			
+			// ATTENTION JE SUIS UN TEST DE COLLECTE DE RESSOURCES
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){

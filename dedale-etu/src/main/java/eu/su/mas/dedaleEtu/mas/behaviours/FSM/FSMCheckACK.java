@@ -23,7 +23,7 @@ public class FSMCheckACK extends Behaviour {
 	@Override
 	public void action() {
 		exitValue = 0;
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		
 		MessageTemplate msgTemplate=MessageTemplate.and(
 				MessageTemplate.MatchProtocol("PONG"),

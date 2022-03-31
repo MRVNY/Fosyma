@@ -30,7 +30,7 @@ public class FSMSEM extends Behaviour {
 
 	@Override
 	public void action() {
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		// problème ici, comment savoir qui nous a envoyer le ping depuis ce behavior.
 		sendEntireMap(((Adventurer)this.myAgent).getCorresponder());
 		finished = true;

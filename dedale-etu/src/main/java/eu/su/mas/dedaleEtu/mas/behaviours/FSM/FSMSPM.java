@@ -33,7 +33,7 @@ public class FSMSPM extends Behaviour {
 	@Override
 	public void action() {
 		
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		sendPieceMap(((Adventurer)this.myAgent).getCorresponder());
 		finished = true;
 

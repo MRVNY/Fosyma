@@ -26,7 +26,7 @@ public class FSMCheckPing extends Behaviour {
 	@Override
 	public void action() {
 		exitValue = 0;
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		// On vérifie si on a reçu un Ping 
 		MessageTemplate msgTemplate=MessageTemplate.and(
 				MessageTemplate.MatchProtocol("PING"),

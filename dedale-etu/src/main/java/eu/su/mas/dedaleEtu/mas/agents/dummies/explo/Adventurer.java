@@ -124,7 +124,6 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		
 		
-		//lb.add(new Explo(this,this.myMap));
 		lb.add(fsm);
 		
 		

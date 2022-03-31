@@ -30,7 +30,7 @@ public class FSMWCM extends Behaviour {
 
 	@Override
 	public void action() {
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		//System.out.println("Me as "+ this.getAgent().getName()+ " is going to sleep.");
 		this.getAgent().doWait(1000);
 		//System.out.println("Me as "+ this.getAgent().getName()+ " have awaken.");

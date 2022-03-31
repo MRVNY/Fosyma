@@ -34,7 +34,7 @@ public class FSMPing extends Behaviour {
 	@Override
 	public void action() {
 		
-		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		//récupération de la listes des agents 
 		List<String> list_agentNames = (List<String>) this.getParent().getDataStore().get("agents");
 		
