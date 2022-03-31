@@ -108,6 +108,9 @@ public class FSMExplo extends SimpleBehaviour {
 					if (nextNode==null && isNewNode) nextNode=nodeId;
 				}
 			}
+			
+				
+			System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
