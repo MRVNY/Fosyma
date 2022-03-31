@@ -91,10 +91,10 @@ public final class ConfigurationFile {
 	 */
 	// If the environment is loaded but you do not want to define elements on the map
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
-	public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
+	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/distributedExploration/emptyMap";
 
 	// otherwise
-	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/map2019-elementsExam1";
+	public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/map2022-Gold-Diamond";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/Houat-elements";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/treasureHunt/map2018-elements-ica";
 	//public static String INSTANCE_CONFIGURATION_ELEMENTS="resources/interlocking/mapInterlocking2-elements";
@@ -136,7 +136,7 @@ public final class ConfigurationFile {
 	
 	public static boolean ACTIVE_WELL=false;
 	public static boolean ACTIVE_GOLD=true;
-	public static boolean ACTIVE_DIAMOND=false;
+	public static boolean ACTIVE_DIAMOND=true;
 
 	/************************************
 	 ************************************
