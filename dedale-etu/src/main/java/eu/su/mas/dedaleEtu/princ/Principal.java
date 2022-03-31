@@ -359,7 +359,7 @@ public class Principal {
 						ArrayList<String> agentsNames = new ArrayList<>();
 
 						//2) Give the name of your agent, MUST be the same as the one given in the entities file.
-						agentName="Explo1";
+						agentName="Advent1";
 
 						//3) If you want to give specific parameters to your agent, add them here
 						Object [] entityParametersExplo1={agentsNames};
@@ -370,7 +370,7 @@ public class Principal {
 						agentsNames.add(agentName);
 						
 						//2) Give the name of your agent, MUST be the same as the one given in the entities file.
-						agentName="Explo2";
+						agentName="Advent2";
 
 						//3) If you want to give specific parameters to your agent, add them here
 						Object [] entityParametersExplo2={agentsNames};
@@ -381,7 +381,7 @@ public class Principal {
 						agentsNames.add(agentName);
 						
 						//2) Give the name of your agent, MUST be the same as the one given in the entities file.
-						agentName="Explo3";
+						agentName="Advent3";
 
 						//3) If you want to give specific parameters to your agent, add them here
 						Object [] entityParametersExplo3={agentsNames};
