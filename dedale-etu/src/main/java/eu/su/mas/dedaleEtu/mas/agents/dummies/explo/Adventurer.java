@@ -1,9 +1,10 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import dataStructures.tuple.Couple;
+import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
@@ -20,13 +21,14 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	private static final long serialVersionUID = -7969469610241668140L;
 	private MapRepresentation myMap;
-
-	//Ratio of two types of treasure
-	private float ratioFound;
-	private float ratioCollected;
 	
 	private String corresponder;
 	private List<String> listName;
+
+	private int diamondCollected;
+	private int diamondFound;
+	private int goldCollected;
+	private int goldFound;
 
 	//enum for mode
 	private int EXPLORE = 0;
@@ -44,7 +46,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String WCM = "Wait_CheckforMap";
 	private static final String CheckACK = "CheckACK";
 	private static final String SPM = "SendPieceofMap";
-	private static final String DECIDE = "DecideRole";
+	private static final String DECIDE = "Decide";
 
 	protected void setup(){
 
@@ -93,7 +95,7 @@ public class Adventurer extends AbstractDedaleAgent {
 		fsm. registerState (new FSMWCM(this), WCM);
 		fsm. registerState (new FSMCheckACK(this), CheckACK);
 		fsm. registerState (new FSMSPM(this), SPM);
-		fsm. registerState (new FSMDecideRole(this), DECIDE);
+		fsm. registerState (new FSMDecide(this), DECIDE);
 		
 		// Register the transitions
 		fsm. registerDefaultTransition (Explo,Ping);
@@ -153,14 +155,28 @@ public class Adventurer extends AbstractDedaleAgent {
 		this.corresponder = corresponder;
 	}
 
-	public void setRatio(float found, float collected){
-		ratioFound = found;
-		ratioCollected = collected;
-	}
-
-	public float[] getRatio(){
-		return new float[]{ratioFound, ratioCollected};
-	}
+//	public float[] updateRatio(int diamond, int gold){
+//		diamondCollected += diamond;
+//		goldCollected += gold;
+//
+//		float nbG = 0;
+//
+//		List<Couple<String,List<Couple<Observation,Integer>>>> lobs=this.observe();
+//		List<Couple<Observation,Integer>> lObservations = lobs.get(0).getRight();
+//		for (Couple<Observation, Integer> o : lObservations) {
+//			switch (o.getLeft()) {
+//				case DIAMOND:
+//					nbD += o.getRight();
+//				case GOLD:
+//					nbG += o.getRight();
+//					break;
+//				default:
+//					break;
+//			}
+//		}
+//		float ratioLocal = nbD/nbG;
+//		return new float[]{0,0};
+//	}
 
 	public int getMode() {
 		return mode;
