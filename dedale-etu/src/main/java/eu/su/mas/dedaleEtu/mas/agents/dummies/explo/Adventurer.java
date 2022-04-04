@@ -185,4 +185,5 @@ public class Adventurer extends AbstractDedaleAgent {
 	public void setMode(int mode) {
 		this.mode = mode;
 	}
+
 }

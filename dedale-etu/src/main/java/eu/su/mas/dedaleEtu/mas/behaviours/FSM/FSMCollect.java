@@ -35,6 +35,9 @@ public class FSMCollect extends Behaviour {
 	public void action() {
 		System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 
+		//get role
+		Observation role = ((AbstractDedaleAgent) this.myAgent).getMyTreasureType();
+
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		if (myPosition!=null){
 			//List of observable from the agent's current position
@@ -45,14 +48,15 @@ public class FSMCollect extends Behaviour {
 
 			for(Couple<Observation,Integer> o:lObservations) {
 				switch (o.getLeft()) {
-					case DIAMOND:
-					case GOLD:
-						System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
-						System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
-						System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
-						System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + ((AbstractDedaleAgent) this.myAgent).openLock(o.getLeft()));
-						System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + ((AbstractDedaleAgent) this.myAgent).pick());
-						System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+					case DIAMOND:case GOLD:
+						if (o.getLeft() == role) {
+							System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
+							System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+							System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
+							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + ((AbstractDedaleAgent) this.myAgent).openLock(o.getLeft()));
+							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + ((AbstractDedaleAgent) this.myAgent).pick());
+							System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+						}
 						break;
 					default:
 						break;

@@ -54,6 +54,8 @@ public class FSMDecide extends Behaviour {
 
 			//get ratio
 
+			//get values
+
 
 			if(!bagFull(bag)) exitValue = COLLECT;
 
