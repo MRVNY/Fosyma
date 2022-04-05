@@ -3,8 +3,6 @@ package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 import java.util.ArrayList;
 import java.util.List;
 
-import dataStructures.tuple.Couple;
-import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
@@ -31,9 +29,9 @@ public class Adventurer extends AbstractDedaleAgent {
 	private int goldFound;
 
 	//enum for mode
-	private int EXPLORE = 0;
-	private int LOCATE = 1;
-	private int SEARCH = 2;
+	public static final int EXPLORE = 0;
+	public static final int LOCATE = 1;
+	public static final int SEARCH = 2;
 	private int mode;
 
 	//Name for the FSM state
@@ -87,7 +85,7 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		FSMBehaviour fsm = new FSMBehaviour(this);
 		// Define the different states and behaviours
-		fsm. registerFirstState (new FSMExplo(this), Explo);
+		fsm. registerFirstState (new FSMMove(this), Explo);
 		fsm. registerState (new FSMPing(this), Ping);
 		fsm. registerState (new FSMWait(this), Wait);
 		fsm. registerState (new FSMCheckPing(this), CheckPing);

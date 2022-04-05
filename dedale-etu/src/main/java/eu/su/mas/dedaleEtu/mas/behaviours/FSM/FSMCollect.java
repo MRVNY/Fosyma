@@ -20,7 +20,7 @@ public class FSMCollect extends Behaviour {
 	private boolean finished = false;
 
 	//exitValues
-	private static final int DEFAULT = 0;
+	private final int DEFAULT = 0;
 
 	/**
 	 * Current knowledge of the agent regarding the environment

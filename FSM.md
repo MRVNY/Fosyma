@@ -26,7 +26,7 @@ Send_Ping ---> Check
 
 Check --Ping--> Send_ACK_Entire_Map
 Check --ACK--> Send_Partial_Map
-Check --Treasure--> Decide
+Check --Treasure/First_Time_Locate--> Decide
 Check --Nothing--> Check
 Check --Timeout--> Move
 
@@ -53,7 +53,8 @@ Look for unknown treasures
 ### Treasure
 Pass to Treasure only one time
 
-## Decide: 4 factors
+## Decide: decide roles and whether to collect
+### Treasure & Value
 ### Bag
 If bag is empty
 ### Mode
@@ -62,8 +63,14 @@ Maybe not a factor?
 If the role correspond
 ### Ratio
 If the ratio permits me to become collector a said type
-Global ratio is updated through the quantities of treasures on the map
+Type: 
+TotalRatio : Proportion (TRatio)
+Average Collected : Equity (ARatio)
 
+~~No role & Locate -> Give role -> Check~~
+No role & TRatio_OK & Bag>Value -> Collect
+Role_OK & ARatio_OK & Bag>Value -> Collect 
+BagFull -> SearchMode -> Check
 
 
 

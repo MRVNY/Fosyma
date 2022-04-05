@@ -9,7 +9,6 @@ import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
-import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 
 
 import jade.core.behaviours.SimpleBehaviour;
@@ -30,7 +29,7 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
-public class FSMExplo extends SimpleBehaviour {
+public class FSMMove extends SimpleBehaviour {
 
 	
 
@@ -61,7 +60,7 @@ public class FSMExplo extends SimpleBehaviour {
 
 
 
-	public FSMExplo(final Adventurer myagent) {
+	public FSMMove(final Adventurer myagent) {
 		super(myagent);
 		myMap = myagent.getMyMap();
 			

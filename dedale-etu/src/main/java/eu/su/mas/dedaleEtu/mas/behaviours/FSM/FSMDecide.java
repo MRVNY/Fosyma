@@ -8,6 +8,7 @@ import jade.core.behaviours.Behaviour;
 
 import java.util.List;
 
+
 public class FSMDecide extends Behaviour {
 
 	/**
@@ -18,8 +19,8 @@ public class FSMDecide extends Behaviour {
 	private boolean finished = false;
 
 	//exitValues
-	private static final int DEFAULT = 0;
-	private static final int COLLECT = 1;
+	private final int DEFAULT = 0; //
+	private final int COLLECT = 1;
 
 	/**
 	 * Current knowledge of the agent regarding the environment
@@ -34,41 +35,64 @@ public class FSMDecide extends Behaviour {
 	public void action() {
 		exitValue = DEFAULT;
 		System.out.println(this.myAgent.getLocalName() + " in " + this.getBehaviourName() + " Stade");
-
 		String myPosition = ((AbstractDedaleAgent) this.myAgent).getCurrentPosition();
+
 		if (myPosition != null) {
-			//List of observable from the agent's current position
-			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent).observe();//myPosition
-
-			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
-			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lObservations);
-
-			//get mode
-			int mode = ((Adventurer) this.myAgent).getMode();
-
-			//get bag
-			List<Couple<Observation, Integer>> bag = ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace();
 
 			//get role
 			Observation role = ((AbstractDedaleAgent) this.myAgent).getMyTreasureType();
 
+			//get bagSpace
+			List<Couple<Observation, Integer>> bag = ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace();
+			int bagSpace = 0;
+			if (role != Observation.ANY_TREASURE){
+				for(Couple<Observation,Integer> o:bag) {
+					if(o.getLeft() == role) bagSpace = o.getRight();
+				}
+			}
+
+			//List of observable from the agent's current position
+			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent).observe();//myPosition
+			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
+
+			//get value and Type of the Treasure
+			int value = 0;
+			Observation type = Observation.ANY_TREASURE;
+			for(Couple<Observation,Integer> o:lObservations) {
+				if (o.getRight() > 0){
+					value = o.getRight();
+					type = o.getLeft();
+				}
+			}
+
+//			//get mode
+//			int mode = ((Adventurer) this.myAgent).getMode();
+
 			//get ratio
+			float TRatio = 1/2;
+			float ARatio = 1/2;
 
-			//get values
 
+			//////////////Decision////////////////////
 
-			if(!bagFull(bag)) exitValue = COLLECT;
+			//No role & TRatio_OK -> Collect
+			if (role == Observation.ANY_TREASURE && TRatio >= 1/3){
+				exitValue = COLLECT;
+			}
+
+			//Role_OK & ARatio_OK -> Collect
+			if (role == type && ARatio >= 1/3){
+				exitValue = COLLECT;
+			}
+
+			//BagFull -> SearchMode -> Check
+			if (bagSpace==0 && role != Observation.ANY_TREASURE){
+				((Adventurer)this.myAgent).setMode(Adventurer.SEARCH);
+				exitValue = DEFAULT;
+			}
 
 			finished = true;
 		}
-	}
-
-	private boolean bagFull(List<Couple<Observation, Integer>> bag){
-		boolean out = true;
-		for (Couple<Observation, Integer> o : bag) {
-			if(o.getRight()>0) out = false;
-		}
-		return out;
 	}
 
 	@Override
