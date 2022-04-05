@@ -92,9 +92,20 @@ public class FSMExplo extends SimpleBehaviour {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			
+			Couple<Observation,Integer> treasure = null;
+			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
+			for(Couple<Observation,Integer> o:lObservations){
+				switch (o.getLeft()) {
+				case DIAMOND: this.myMap.addNode(myPosition, MapAttribute.diamond);
+				case GOLD: this.myMap.addNode(myPosition, MapAttribute.gold);
+				default : this.myMap.addNode(myPosition, MapAttribute.closed);
+				}
+			}
+			
+			
 			//1) remove the current node from openlist and add it to closedNodes.
-			this.myMap.addNode(myPosition, MapAttribute.closed);
+			//this.myMap.addNode(myPosition, MapAttribute.closed);
 
 			//2) get the surrounding nodes and, if not in closedNodes, add them to open nodes.
 			String nextNode=null;
@@ -111,7 +122,7 @@ public class FSMExplo extends SimpleBehaviour {
 			
 			// ATTENTION JE SUIS UN TEST DE COLLECTE DE RESSOURCES
 			
-			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
+			
 			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lObservations);
 			
 			Boolean b=false;
@@ -135,9 +146,10 @@ public class FSMExplo extends SimpleBehaviour {
 
 			//3) while openNodes is not empty, continues.
 			if (!this.myMap.hasOpenNode()){
-				//Explo finished
+				// on dosi donc passer a la collecte de trésors, avec toute la map connue 
 				finished=true;
 				ExitValue = 0;
+				
 				
 				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done.");
 			}else{
