@@ -20,11 +20,11 @@ public class FSMCheck extends Behaviour {
 	private boolean finished = false;
 
 	//exitValues
-	private final int DEFAULT = 0; //
-	private final int Send_ACK_Entire_Map = 1;
-	private final int Send_Partial_Map = 2;
-	private final int DECIDE = 3;
-	private final int TIMEOUT = 4;
+	public final static int DEFAULT = 0; //
+	public final static int Send_Entire_Map = 1;
+	public final static int Send_Partial_Map = 2;
+	public final static int DECIDE = 3;
+	public final static int TIMEOUT = 4;
 
 	/**
 	 * Current knowledge of the agent regarding the environment
@@ -59,7 +59,7 @@ public class FSMCheck extends Behaviour {
 			//si on a bien reçu un Ping, On vas devoir envoyer notre map dans un ACK
 			System.out.println( this.getAgent().getLocalName()+" receive a message from "+pingReceived.getSender().getLocalName());
 			((Adventurer)this.myAgent).setCorresponder(pingReceived.getSender().getLocalName());
-			exitValue = Send_ACK_Entire_Map;
+			exitValue = Send_Entire_Map;
 			finished = true;
 		}
 		//sinon on vérifier si l'on à pas recu de ACK nous même
@@ -90,6 +90,10 @@ public class FSMCheck extends Behaviour {
 		if (value==0){
 			exitValue = DECIDE;
 			finished = true;
+		}
+
+		if (!((Adventurer) this.myAgent).countTime()){
+			exitValue = TIMEOUT;
 		}
 
 		finished = true;

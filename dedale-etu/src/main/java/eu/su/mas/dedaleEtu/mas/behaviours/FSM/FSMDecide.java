@@ -19,8 +19,8 @@ public class FSMDecide extends Behaviour {
 	private boolean finished = false;
 
 	//exitValues
-	private final int DEFAULT = 0; //
-	private final int COLLECT = 1;
+	public final static int DEFAULT = 0; //
+	public final static int COLLECT = 1;
 
 	/**
 	 * Current knowledge of the agent regarding the environment

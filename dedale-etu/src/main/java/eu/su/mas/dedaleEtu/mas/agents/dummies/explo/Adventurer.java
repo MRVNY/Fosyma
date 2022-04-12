@@ -12,6 +12,9 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
 import jade.core.behaviours.FSMBehaviour;
 
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheck;
+import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMDecide;
+
 
 
 
@@ -28,6 +31,12 @@ public class Adventurer extends AbstractDedaleAgent {
 	private int goldCollected;
 	private int goldFound;
 
+	//TIMEOUT
+	private int TIMEOUT = 10; //For Check
+	private int WAIT = 10; // Fot Wait_Partial_Map
+	private int cptCheck = 0;
+	private int cptWaitMap = 0;
+
 	//enum for mode
 	public static final int EXPLORE = 0;
 	public static final int LOCATE = 1;
@@ -38,13 +47,12 @@ public class Adventurer extends AbstractDedaleAgent {
 	
 	private static final String Move = "Move";
 	private static final String Ping = "Ping";
-	private static final String Wait = "Wait";
-	private static final String CheckPing = "CheckPing";
-	private static final String SEM = "SendEntireMap";
-	private static final String WCM = "Wait_CheckforMap";
-	private static final String CheckACK = "CheckACK";
-	private static final String SPM = "SendPieceofMap";
-	private static final String DECIDE = "Decide";
+	private static final String Check = "Check";
+	private static final String SEM = "Send_Entire_Map";
+	private static final String WCM = "Wait_Check_Map";
+	private static final String SPM = "Send_Partial_Map";
+	private static final String Decide = "Decide";
+    private static final String Collect = "Collect";
 
 	protected void setup(){
 
@@ -87,27 +95,36 @@ public class Adventurer extends AbstractDedaleAgent {
 		// Define the different states and behaviours
 		fsm. registerFirstState (new FSMMove(this), Move);
 		fsm. registerState (new FSMPing(this), Ping);
-		fsm. registerState (new FSMWait(this), Wait);
-		fsm. registerState (new FSMCheck(this), CheckPing);
+		//fsm. registerState (new FSMWait(this), Wait);
+		fsm. registerState (new FSMCheck(this), Check);
 		fsm. registerState (new FSMSEM(this), SEM);
 		fsm. registerState (new FSMWCM(this), WCM);
-		fsm. registerState (new FSMCheckACK(this), CheckACK);
 		fsm. registerState (new FSMSPM(this), SPM);
-		fsm. registerState (new FSMDecide(this), DECIDE);
+		fsm. registerState (new FSMDecide(this), Decide);
+        fsm. registerState (new FSMCollect(this), Collect);
 		
 		// Register the transitions
 		fsm. registerDefaultTransition (Move,Ping);
-		fsm. registerDefaultTransition (Ping,Wait);
-		fsm. registerDefaultTransition (Wait,CheckPing);
-		fsm. registerDefaultTransition (CheckPing,CheckACK);
-		fsm. registerDefaultTransition (CheckACK,Move);
-		fsm. registerDefaultTransition (SPM,Wait);
+
+		fsm. registerDefaultTransition (Ping,Check);
+
+		fsm. registerDefaultTransition (Check,Check);
+        fsm. registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
+        fsm. registerTransition (Check,SPM, FSMCheck.Send_Partial_Map);
+        fsm. registerTransition (Check,Decide, FSMCheck.DECIDE);
+        fsm. registerTransition (Check,Move, FSMCheck.TIMEOUT);
+
+		fsm. registerDefaultTransition (SPM,Check);
+
 		fsm. registerDefaultTransition (SEM,WCM);
-		fsm. registerDefaultTransition (WCM,CheckPing);
-		
-		
-		fsm. registerTransition (CheckPing,SEM, 1) ;
-		fsm. registerTransition (CheckACK,SPM, 1) ;
+
+		fsm. registerDefaultTransition (WCM,Check);
+
+        fsm. registerDefaultTransition (Decide,Check);
+        fsm. registerTransition (Decide,Collect, FSMDecide.COLLECT);
+
+        fsm. registerDefaultTransition (Collect,Ping);
+
 		
 		DataStore dataFSM = new DataStore();
 		dataFSM.put("agents",list_agentNames);
@@ -182,6 +199,24 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+
+	public boolean countTime(){
+		cptCheck++;
+		if(cptCheck >= TIMEOUT){
+			cptCheck = 0;
+			return false;
+		}
+		else return true;
+	}
+
+	public boolean waitMap(){
+		cptWaitMap++;
+		if(cptWaitMap >= WAIT){
+			cptWaitMap = 0;
+			return false;
+		}
+		else return true;
 	}
 
 }

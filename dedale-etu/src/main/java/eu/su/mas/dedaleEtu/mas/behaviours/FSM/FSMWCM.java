@@ -34,24 +34,26 @@ public class FSMWCM extends Behaviour {
 		//System.out.println("Me as "+ this.getAgent().getName()+ " is going to sleep.");
 		this.getAgent().doWait(1000);
 		//System.out.println("Me as "+ this.getAgent().getName()+ " have awaken.");
-		
-		MessageTemplate msgTemplate=MessageTemplate.and(
-				MessageTemplate.MatchProtocol("SENDMAP"),
-				MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL));
-		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
-		
-		if (msgReceived!=null) {
-			SerializableSimpleGraph<String, MapAttribute> sgreceived=null;
-			try {
-				sgreceived = (SerializableSimpleGraph<String, MapAttribute>)msgReceived.getContentObject();
-			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			((Adventurer)this.myAgent).getMyMap().mergeMap(sgreceived);
-		}
-		finished = true;
 
+		while (((Adventurer)this.myAgent).waitMap()) {
+			MessageTemplate msgTemplate = MessageTemplate.and(
+					MessageTemplate.MatchProtocol("SENDMAP"),
+					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL));
+			ACLMessage msgReceived = this.myAgent.receive(msgTemplate);
+
+			if (msgReceived != null) {
+				SerializableSimpleGraph<String, MapAttribute> sgreceived = null;
+				try {
+					sgreceived = (SerializableSimpleGraph<String, MapAttribute>) msgReceived.getContentObject();
+				} catch (UnreadableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				((Adventurer) this.myAgent).getMyMap().mergeMap(sgreceived);
+				finished = true;
+			}
+		}
+			finished = true;
 	}
 
 	@Override
