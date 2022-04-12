@@ -56,11 +56,11 @@ public class FSMDecide extends Behaviour {
 			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
 
 			//get value and Type of the Treasure
-			int value = 0;
+			//int value = 0;
 			Observation type = Observation.ANY_TREASURE;
 			for(Couple<Observation,Integer> o:lObservations) {
 				if (o.getRight() > 0){
-					value = o.getRight();
+					//value = o.getRight();
 					type = o.getLeft();
 				}
 			}

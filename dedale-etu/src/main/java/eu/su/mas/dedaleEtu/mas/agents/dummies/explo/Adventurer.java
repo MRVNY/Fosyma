@@ -36,7 +36,7 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	//Name for the FSM state
 	
-	private static final String Explo = "Exploration";
+	private static final String Move = "Move";
 	private static final String Ping = "Ping";
 	private static final String Wait = "Wait";
 	private static final String CheckPing = "CheckPing";
@@ -85,10 +85,10 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		FSMBehaviour fsm = new FSMBehaviour(this);
 		// Define the different states and behaviours
-		fsm. registerFirstState (new FSMMove(this), Explo);
+		fsm. registerFirstState (new FSMMove(this), Move);
 		fsm. registerState (new FSMPing(this), Ping);
 		fsm. registerState (new FSMWait(this), Wait);
-		fsm. registerState (new FSMCheckPing(this), CheckPing);
+		fsm. registerState (new FSMCheck(this), CheckPing);
 		fsm. registerState (new FSMSEM(this), SEM);
 		fsm. registerState (new FSMWCM(this), WCM);
 		fsm. registerState (new FSMCheckACK(this), CheckACK);
@@ -96,11 +96,11 @@ public class Adventurer extends AbstractDedaleAgent {
 		fsm. registerState (new FSMDecide(this), DECIDE);
 		
 		// Register the transitions
-		fsm. registerDefaultTransition (Explo,Ping);
+		fsm. registerDefaultTransition (Move,Ping);
 		fsm. registerDefaultTransition (Ping,Wait);
 		fsm. registerDefaultTransition (Wait,CheckPing);
 		fsm. registerDefaultTransition (CheckPing,CheckACK);
-		fsm. registerDefaultTransition (CheckACK,Explo);
+		fsm. registerDefaultTransition (CheckACK,Move);
 		fsm. registerDefaultTransition (SPM,Wait);
 		fsm. registerDefaultTransition (SEM,WCM);
 		fsm. registerDefaultTransition (WCM,CheckPing);
