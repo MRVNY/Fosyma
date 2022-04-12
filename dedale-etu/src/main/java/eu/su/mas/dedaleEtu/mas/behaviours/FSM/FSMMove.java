@@ -91,9 +91,10 @@ public class FSMMove extends SimpleBehaviour {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			Couple<Observation,Integer> treasure = null;
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
+			/*
+			Couple<Observation,Integer> treasure = null;
+			
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
 				case DIAMOND: this.myMap.addNode(myPosition, MapAttribute.diamond);
@@ -101,10 +102,10 @@ public class FSMMove extends SimpleBehaviour {
 				default : this.myMap.addNode(myPosition, MapAttribute.closed);
 				}
 			}
-			
+			*/
 			
 			//1) remove the current node from openlist and add it to closedNodes.
-			//this.myMap.addNode(myPosition, MapAttribute.closed);
+			this.myMap.addNode(myPosition, MapAttribute.closed);
 
 			//2) get the surrounding nodes and, if not in closedNodes, add them to open nodes.
 			String nextNode=null;

@@ -41,7 +41,7 @@ public class MapRepresentation implements Serializable {
 	 */
 
 	public enum MapAttribute {	
-		agent,open,closed,gold,diamond;
+		agent,open,closed;
 
 	}
 
@@ -56,7 +56,7 @@ public class MapRepresentation implements Serializable {
 	private String nodeStyle_agent = "node.open {"+"fill-color: blue;"+"}";
 	private String nodeStyle_gold = "node.gold {"+"fill-color: yellow;"+"}";
 	private String nodeStyle_diamond = "node.diamond {"+"fill-color: purple;"+"}";
-	private String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_open+nodeStyle_gold+nodeStyle_diamond;
+	private String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_open;
 	
 
 	private Graph g; //data structure non serializable
@@ -64,6 +64,8 @@ public class MapRepresentation implements Serializable {
 	private Integer nbEdges;//used to generate the edges ids
 
 	private SerializableSimpleGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
+	
+	private TreasureCollection treasure = new TreasureCollection();
 
 
 	public MapRepresentation() {
@@ -212,7 +214,8 @@ public class MapRepresentation implements Serializable {
 			Node sn=e.getSourceNode();
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
-		}	
+		}
+		
 	}
 
 
@@ -356,6 +359,22 @@ public class MapRepresentation implements Serializable {
 			}
 		}
 		return partialMap;
+	}
+	
+	public List<String> getShortestPathToClosestTreasure(String myPosition) {
+		return null;
+	}
+	
+	public List<String> getShortestPathToMostValuableTreasure(String myPosition) {
+		return null;
+	}
+	
+	public List<String> getShortestPathToSomeTreasure(String myPosition) {
+		return null;
+	}
+	
+	public List<String> getShortestPathToSomeValueTreasure(String myPosition) {
+		return null;
 	}
 
 
