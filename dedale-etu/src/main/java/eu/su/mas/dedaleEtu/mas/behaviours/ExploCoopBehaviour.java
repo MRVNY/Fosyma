@@ -14,6 +14,7 @@ import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.behaviours.ShareMapBehaviour;
 
@@ -150,9 +151,9 @@ public class ExploCoopBehaviour extends SimpleBehaviour {
 						MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 				ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
 				if (msgReceived!=null) {
-					SerializableSimpleGraph<String, MapAttribute> sgreceived=null;
+					SerializableComplexeGraph<String, MapAttribute> sgreceived=null;
 					try {
-						sgreceived = (SerializableSimpleGraph<String, MapAttribute>)msgReceived.getContentObject();
+						sgreceived = (SerializableComplexeGraph<String, MapAttribute>)msgReceived.getContentObject();
 					} catch (UnreadableException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

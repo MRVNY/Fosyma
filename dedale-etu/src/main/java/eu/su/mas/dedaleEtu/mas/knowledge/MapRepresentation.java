@@ -55,8 +55,8 @@ public class MapRepresentation implements Serializable {
 	private String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
 	private String nodeStyle_open = "node.agent {"+"fill-color: forestgreen;"+"}";
 	private String nodeStyle_agent = "node.open {"+"fill-color: blue;"+"}";
-	private String nodeStyle_gold = "node.gold {"+"fill-color: yellow;"+"}";
-	private String nodeStyle_diamond = "node.diamond {"+"fill-color: purple;"+"}";
+	//private String nodeStyle_gold = "node.gold {"+"fill-color: yellow;"+"}";
+	//private String nodeStyle_diamond = "node.diamond {"+"fill-color: purple;"+"}";
 	private String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_open;
 	
 
@@ -64,7 +64,7 @@ public class MapRepresentation implements Serializable {
 	private Viewer viewer; //ref to the display,  non serializable
 	private Integer nbEdges;//used to generate the edges ids
 
-	private SerializableSimpleGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
+	private SerializableComplexeGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
 	
 	private TreasureCollection treasure = new TreasureCollection();
 
@@ -211,7 +211,7 @@ public class MapRepresentation implements Serializable {
 	 * Before sending the agent knowledge of the map it should be serialized.
 	 */
 	private void serializeGraphTopology() {
-		this.sg= new SerializableSimpleGraph<String,MapAttribute>();
+		this.sg= new SerializableComplexeGraph<String,MapAttribute>();
 		Iterator<Node> iter=this.g.iterator();
 		while(iter.hasNext()){
 			Node n=iter.next();
@@ -228,7 +228,7 @@ public class MapRepresentation implements Serializable {
 	}
 
 
-	public synchronized SerializableSimpleGraph<String,MapAttribute> getSerializableGraph(){
+	public synchronized SerializableComplexeGraph<String,MapAttribute> getSerializableGraph(){
 		serializeGraphTopology();
 		return this.sg;
 	}
@@ -283,7 +283,7 @@ public class MapRepresentation implements Serializable {
 		g.display();
 	}
 
-	public void mergeMap(SerializableSimpleGraph<String, MapAttribute> sgreceived) {
+	public void mergeMap(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		//System.out.println("You should decide what you want to save and how");
 		//System.out.println("We currently blindy add the topology");
 
@@ -333,7 +333,7 @@ public class MapRepresentation implements Serializable {
 	 * @param sgreceived the other map
 	 * @return the missing part
 	 */
-	public MapRepresentation getMissingPart(SerializableSimpleGraph<String, MapAttribute> sgreceived) {
+	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		// we want to get only the part that our map is missing in sgreceived
 		MapRepresentation partialMap = null;
 		

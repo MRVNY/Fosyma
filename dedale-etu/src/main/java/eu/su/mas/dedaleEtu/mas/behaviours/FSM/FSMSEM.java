@@ -5,6 +5,7 @@ import dataStructures.serializableGraph.SerializableSimpleGraph;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -43,7 +44,7 @@ public class FSMSEM extends Behaviour {
 		msg.setSender(this.myAgent.getAID());
 		msg.addReceiver(new AID(agentName,false));
 		
-		SerializableSimpleGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
+		SerializableComplexeGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
 		try {					
 			msg.setContentObject(sg);
 		} catch (IOException e) {
