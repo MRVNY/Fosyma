@@ -23,6 +23,7 @@ import org.graphstream.ui.view.Viewer.CloseFramePolicy;
 
 import dataStructures.serializableGraph.*;
 import dataStructures.tuple.Couple;
+import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
 import javafx.application.Platform;
 
 /**
@@ -108,6 +109,14 @@ public class MapRepresentation implements Serializable {
 	public synchronized boolean addNewNode(String id) {
 		if (this.g.getNode(id)==null){
 			addNode(id,MapAttribute.open);
+			return true;
+		}
+		return false;
+	}
+	
+	public synchronized boolean addNewTreasure(Treasure t) {
+		if (t != null){
+			this.treasure.addTreasure(t);
 			return true;
 		}
 		return false;
@@ -361,19 +370,49 @@ public class MapRepresentation implements Serializable {
 		return partialMap;
 	}
 	
-	public List<String> getShortestPathToClosestTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		//1) Get all location of Treasures
+		List<String> treasurenodes=this.treasure.getAllLocation(type);
+
+		//2) select the closest one
+		List<Couple<String,Integer>> lc=
+				treasurenodes.stream()
+				.map(on -> (getShortestPath(myPosition,on)!=null)? new Couple<String, Integer>(on,getShortestPath(myPosition,on).size()): new Couple<String, Integer>(on,Integer.MAX_VALUE))//some nodes my be unreachable if the agents do not share at least one common node.
+				.collect(Collectors.toList());
+
+		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
+		//3) Compute shorterPath
+		return getShortestPath(myPosition,closest.get().getLeft());
 	}
 	
-	public List<String> getShortestPathToMostValuableTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToMostValuableTreasure(String myPosition,TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation());
 	}
 	
-	public List<String> getShortestPathToSomeTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
+		if(this.treasure.isIn(treasure)) {
+			return this.getShortestPath(myPosition,treasure.getLocation());
+		}
+		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
 	
-	public List<String> getShortestPathToSomeValueTreasure(String myPosition) {
+	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value, TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		List<Integer> treasureValues = this.treasure.getAllValue(type);
+		if(treasureValues.contains(value)) {
+			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation());
+		}
 		return null;
 	}
 

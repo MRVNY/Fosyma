@@ -34,6 +34,5 @@ public class Treasure {
 	public String toString() {
 		return "("+this.type+";"+this.treasureAmount+")";
 	}
-	
 
 }
