@@ -24,9 +24,12 @@ public class SerializableComplexeGraph<String,V> implements Serializable {
 	private static final long serialVersionUID = 296081571572029922L;
 
 	private Map<SerializableNode<String,V>,Set<String>> myMap;
+	
+	private TreasureCollection treasures;
 
 	public SerializableComplexeGraph(){
-		myMap=new HashMap<SerializableNode<String,V>,Set<String>>();		
+		myMap=new HashMap<SerializableNode<String,V>,Set<String>>();
+		
 	}
 
 	/**
@@ -112,9 +115,19 @@ public class SerializableComplexeGraph<String,V> implements Serializable {
 		return this.myMap.get(new SerializableNode<String, V>(nodeId));
 	}
 	
+	
 	@Override
 	public java.lang.String toString() {
 		return this.myMap.toString();
+	}
+	
+	public void addTreasures(TreasureCollection treasures) {
+		this.treasures = treasures;
+		
+	}
+	
+	public TreasureCollection getTreasures() {
+		return this.treasures;
 	}
 
 }

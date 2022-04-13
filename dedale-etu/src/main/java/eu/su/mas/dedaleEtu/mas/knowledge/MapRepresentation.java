@@ -224,6 +224,10 @@ public class MapRepresentation implements Serializable {
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
 		}
+		treasure.addTreasure(new Treasure(20,"1",TypeTreasure.GOLD));
+		sg.addTreasures(treasure);
+		
+		
 		
 	}
 
@@ -251,6 +255,7 @@ public class MapRepresentation implements Serializable {
 				nbEd++;
 			}
 		}
+		this.treasure = sg.getTreasures();
 		System.out.println("Loading done");
 	}
 

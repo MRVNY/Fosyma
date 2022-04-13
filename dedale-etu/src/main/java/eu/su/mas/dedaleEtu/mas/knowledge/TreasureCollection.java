@@ -1,10 +1,11 @@
 package eu.su.mas.dedaleEtu.mas.knowledge;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
 
-public class TreasureCollection {
+public class TreasureCollection implements Serializable{
 	
 	private ArrayList<Treasure> listTreasure = new ArrayList<>();
 	
@@ -49,6 +50,12 @@ public class TreasureCollection {
 	
 	public String toString() {
 		StringBuilder res = new StringBuilder();
+		res.append("[");
+		for(Treasure t: listTreasure) {
+			res.append(t.toString());
+			res.append("\t");
+		}
+		res.append("]");
 		return res.toString();
 	}
 	
