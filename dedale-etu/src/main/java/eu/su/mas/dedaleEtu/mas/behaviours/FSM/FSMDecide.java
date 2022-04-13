@@ -59,7 +59,7 @@ public class FSMDecide extends Behaviour {
 			//int value = 0;
 			Observation type = Observation.ANY_TREASURE;
 			for(Couple<Observation,Integer> o:lObservations) {
-				if (o.getRight() > 0){
+				if (o.getRight()!=null && o.getRight() > 0){
 					//value = o.getRight();
 					type = o.getLeft();
 				}

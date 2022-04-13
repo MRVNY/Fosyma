@@ -95,7 +95,6 @@ public class Adventurer extends AbstractDedaleAgent {
 		// Define the different states and behaviours
 		fsm. registerFirstState (new FSMMove(this), Move);
 		fsm. registerState (new FSMPing(this), Ping);
-		//fsm. registerState (new FSMWait(this), Wait);
 		fsm. registerState (new FSMCheck(this), Check);
 		fsm. registerState (new FSMSEM(this), SEM);
 		fsm. registerState (new FSMWCM(this), WCM);
@@ -105,8 +104,11 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		// Register the transitions
 		fsm. registerDefaultTransition (Move,Ping);
-
 		fsm. registerDefaultTransition (Ping,Check);
+		fsm. registerDefaultTransition (SPM,Check);
+		fsm. registerDefaultTransition (SEM,WCM);
+		fsm. registerDefaultTransition (WCM,Check);
+		fsm. registerDefaultTransition (Collect,Ping);
 
 		fsm. registerDefaultTransition (Check,Check);
         fsm. registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
@@ -114,16 +116,8 @@ public class Adventurer extends AbstractDedaleAgent {
         fsm. registerTransition (Check,Decide, FSMCheck.DECIDE);
         fsm. registerTransition (Check,Move, FSMCheck.TIMEOUT);
 
-		fsm. registerDefaultTransition (SPM,Check);
-
-		fsm. registerDefaultTransition (SEM,WCM);
-
-		fsm. registerDefaultTransition (WCM,Check);
-
         fsm. registerDefaultTransition (Decide,Check);
         fsm. registerTransition (Decide,Collect, FSMDecide.COLLECT);
-
-        fsm. registerDefaultTransition (Collect,Ping);
 
 		
 		DataStore dataFSM = new DataStore();

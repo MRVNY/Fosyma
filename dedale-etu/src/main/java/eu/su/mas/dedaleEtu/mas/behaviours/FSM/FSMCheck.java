@@ -53,8 +53,7 @@ public class FSMCheck extends Behaviour {
 				MessageTemplate.MatchProtocol("PING"),
 				MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
 		ACLMessage pingReceived=this.myAgent.receive(pingTemplate);
-		
-		
+
 		if (pingReceived!=null) {
 			//si on a bien reçu un Ping, On vas devoir envoyer notre map dans un ACK
 			System.out.println( this.getAgent().getLocalName()+" receive a message from "+pingReceived.getSender().getLocalName());
@@ -83,7 +82,7 @@ public class FSMCheck extends Behaviour {
 		//get value and Type of the Treasure
 		int value = 0;
 		for(Couple<Observation,Integer> o:lObservations) {
-			if (o.getRight() > 0){
+			if (o.getRight()!=null && o.getRight() > 0){
 				value = o.getRight();
 			}
 		}
