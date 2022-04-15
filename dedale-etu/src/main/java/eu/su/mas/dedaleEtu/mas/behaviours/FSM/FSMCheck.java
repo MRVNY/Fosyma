@@ -42,7 +42,7 @@ public class FSMCheck extends Behaviour {
 
 		//TIMEOUT
 		if (!((Adventurer) this.myAgent).countTime()){
-			System.out.println("Check TIMEOUT");
+			//System.out.println("Check TIMEOUT");
 			exitValue = TIMEOUT;
 			finished = true;
 		}

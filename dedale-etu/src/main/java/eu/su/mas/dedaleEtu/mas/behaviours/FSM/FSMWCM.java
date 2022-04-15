@@ -32,6 +32,7 @@ public class FSMWCM extends Behaviour {
 	@Override
 	public void action() {
 		finished = false;
+		boolean get = false;
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		//System.out.println("Me as "+ this.getAgent().getName()+ " is going to sleep.");
 		while (((Adventurer)this.myAgent).waitMap()) {
@@ -43,6 +44,7 @@ public class FSMWCM extends Behaviour {
 			ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
 			
 			if (msgReceived!=null) {
+				get = true;
 				SerializableComplexeGraph<String, MapAttribute> sgreceived=null;
 				try {
 					sgreceived = (SerializableComplexeGraph<String, MapAttribute>)msgReceived.getContentObject();

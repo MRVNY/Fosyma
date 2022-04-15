@@ -11,6 +11,7 @@ import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 
 
+import eu.su.mas.dedaleEtu.mas.knowledge.Treasure;
 import jade.core.behaviours.SimpleBehaviour;
 
 
@@ -144,11 +145,20 @@ public class FSMMove extends SimpleBehaviour {
 				}
 
 				else if (mode==Adventurer.LOCATE){
-					nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+					Observation role = ((Adventurer)this.myAgent).getRole();
+					Treasure.TypeTreasure treType;
+					if(role==Observation.DIAMOND) treType = Treasure.TypeTreasure.DIAMOND;
+					else treType = Treasure.TypeTreasure.GOLD;
+
+					try {
+						nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType).get(0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 
 				else if (mode==Adventurer.SEARCH){
-					nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+					
 				}
 
 
