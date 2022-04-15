@@ -1,6 +1,8 @@
 package eu.su.mas.dedaleEtu.mas.knowledge;
 
-public class Treasure {
+import java.io.Serializable;
+
+public class Treasure implements Serializable{
 		
 	
 	public enum TypeTreasure {	
@@ -34,6 +36,5 @@ public class Treasure {
 	public String toString() {
 		return "("+this.type+";"+this.treasureAmount+")";
 	}
-	
 
 }

@@ -23,6 +23,7 @@ import org.graphstream.ui.view.Viewer.CloseFramePolicy;
 
 import dataStructures.serializableGraph.*;
 import dataStructures.tuple.Couple;
+import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
 import javafx.application.Platform;
 
 /**
@@ -54,8 +55,8 @@ public class MapRepresentation implements Serializable {
 	private String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
 	private String nodeStyle_open = "node.agent {"+"fill-color: forestgreen;"+"}";
 	private String nodeStyle_agent = "node.open {"+"fill-color: blue;"+"}";
-	private String nodeStyle_gold = "node.gold {"+"fill-color: yellow;"+"}";
-	private String nodeStyle_diamond = "node.diamond {"+"fill-color: purple;"+"}";
+	//private String nodeStyle_gold = "node.gold {"+"fill-color: yellow;"+"}";
+	//private String nodeStyle_diamond = "node.diamond {"+"fill-color: purple;"+"}";
 	private String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_open;
 	
 
@@ -63,7 +64,7 @@ public class MapRepresentation implements Serializable {
 	private Viewer viewer; //ref to the display,  non serializable
 	private Integer nbEdges;//used to generate the edges ids
 
-	private SerializableSimpleGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
+	private SerializableComplexeGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
 	
 	private TreasureCollection treasure = new TreasureCollection();
 
@@ -108,6 +109,14 @@ public class MapRepresentation implements Serializable {
 	public synchronized boolean addNewNode(String id) {
 		if (this.g.getNode(id)==null){
 			addNode(id,MapAttribute.open);
+			return true;
+		}
+		return false;
+	}
+	
+	public synchronized boolean addNewTreasure(Treasure t) {
+		if (t != null){
+			this.treasure.addTreasure(t);
 			return true;
 		}
 		return false;
@@ -202,7 +211,7 @@ public class MapRepresentation implements Serializable {
 	 * Before sending the agent knowledge of the map it should be serialized.
 	 */
 	private void serializeGraphTopology() {
-		this.sg= new SerializableSimpleGraph<String,MapAttribute>();
+		this.sg= new SerializableComplexeGraph<String,MapAttribute>();
 		Iterator<Node> iter=this.g.iterator();
 		while(iter.hasNext()){
 			Node n=iter.next();
@@ -215,11 +224,15 @@ public class MapRepresentation implements Serializable {
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
 		}
+		treasure.addTreasure(new Treasure(20,"1",TypeTreasure.GOLD));
+		sg.addTreasures(treasure);
+		
+		
 		
 	}
 
 
-	public synchronized SerializableSimpleGraph<String,MapAttribute> getSerializableGraph(){
+	public synchronized SerializableComplexeGraph<String,MapAttribute> getSerializableGraph(){
 		serializeGraphTopology();
 		return this.sg;
 	}
@@ -242,6 +255,7 @@ public class MapRepresentation implements Serializable {
 				nbEd++;
 			}
 		}
+		this.treasure = sg.getTreasures();
 		System.out.println("Loading done");
 	}
 
@@ -274,7 +288,7 @@ public class MapRepresentation implements Serializable {
 		g.display();
 	}
 
-	public void mergeMap(SerializableSimpleGraph<String, MapAttribute> sgreceived) {
+	public void mergeMap(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		//System.out.println("You should decide what you want to save and how");
 		//System.out.println("We currently blindy add the topology");
 
@@ -324,7 +338,7 @@ public class MapRepresentation implements Serializable {
 	 * @param sgreceived the other map
 	 * @return the missing part
 	 */
-	public MapRepresentation getMissingPart(SerializableSimpleGraph<String, MapAttribute> sgreceived) {
+	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		// we want to get only the part that our map is missing in sgreceived
 		MapRepresentation partialMap = null;
 		
@@ -361,19 +375,49 @@ public class MapRepresentation implements Serializable {
 		return partialMap;
 	}
 	
-	public List<String> getShortestPathToClosestTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		//1) Get all location of Treasures
+		List<String> treasurenodes=this.treasure.getAllLocation(type);
+
+		//2) select the closest one
+		List<Couple<String,Integer>> lc=
+				treasurenodes.stream()
+				.map(on -> (getShortestPath(myPosition,on)!=null)? new Couple<String, Integer>(on,getShortestPath(myPosition,on).size()): new Couple<String, Integer>(on,Integer.MAX_VALUE))//some nodes my be unreachable if the agents do not share at least one common node.
+				.collect(Collectors.toList());
+
+		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
+		//3) Compute shorterPath
+		return getShortestPath(myPosition,closest.get().getLeft());
 	}
 	
-	public List<String> getShortestPathToMostValuableTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToMostValuableTreasure(String myPosition,TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation());
 	}
 	
-	public List<String> getShortestPathToSomeTreasure(String myPosition) {
-		return null;
+	public List<String> getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
+		if(this.treasure.isIn(treasure)) {
+			return this.getShortestPath(myPosition,treasure.getLocation());
+		}
+		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
 	
-	public List<String> getShortestPathToSomeValueTreasure(String myPosition) {
+	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value, TypeTreasure type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		List<Integer> treasureValues = this.treasure.getAllValue(type);
+		if(treasureValues.contains(value)) {
+			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation());
+		}
 		return null;
 	}
 

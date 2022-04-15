@@ -8,7 +8,7 @@ import dataStructures.serializableGraph.SerializableSimpleGraph;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
-
+import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -60,7 +60,7 @@ public class ShareMapBehaviour extends TickerBehaviour{
 			msg.addReceiver(new AID(agentName,AID.ISLOCALNAME));
 		}
 			
-		SerializableSimpleGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
+		SerializableComplexeGraph<String, MapAttribute> sg=this.myMap.getSerializableGraph();
 		try {					
 			msg.setContentObject(sg);
 		} catch (IOException e) {
