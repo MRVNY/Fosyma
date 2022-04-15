@@ -25,14 +25,11 @@ public class FSMPing extends Behaviour {
 	 */
 	private int exitValue = 0;
 	
-	public FSMPing(final Adventurer myagent) {
-		super(myagent);
-		
-		
-	}
+	public FSMPing(final Adventurer myagent) {super(myagent);}
 
 	@Override
 	public void action() {
+		finished = false;
 		
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		//récupération de la listes des agents 

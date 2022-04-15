@@ -31,24 +31,33 @@ public class FSMWCM extends Behaviour {
 
 	@Override
 	public void action() {
+		finished = false;
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 		//System.out.println("Me as "+ this.getAgent().getName()+ " is going to sleep.");
-		this.getAgent().doWait(1000);
-		//System.out.println("Me as "+ this.getAgent().getName()+ " have awaken.");
-		
-		MessageTemplate msgTemplate=MessageTemplate.and(
-				MessageTemplate.MatchProtocol("SENDMAP"),
-				MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL));
-		ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
-		
-		if (msgReceived!=null) {
-			SerializableComplexeGraph<String, MapAttribute> sgreceived=null;
-			try {
-				sgreceived = (SerializableComplexeGraph<String, MapAttribute>)msgReceived.getContentObject();
-			} catch (UnreadableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		while (((Adventurer)this.myAgent).waitMap()) {
+			//System.out.println("Me as "+ this.getAgent().getName()+ " have awaken.");
+			
+			MessageTemplate msgTemplate=MessageTemplate.and(
+					MessageTemplate.MatchProtocol("SENDMAP"),
+					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL));
+			ACLMessage msgReceived=this.myAgent.receive(msgTemplate);
+			
+			if (msgReceived!=null) {
+				SerializableComplexeGraph<String, MapAttribute> sgreceived=null;
+				try {
+					sgreceived = (SerializableComplexeGraph<String, MapAttribute>)msgReceived.getContentObject();
+				} catch (UnreadableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				finished = true;
 			}
+		}
+		if(!get){
+			System.out.println("Didn't get partial map :(");
+		}
+		else {
+			System.out.println("Got partial map :)");
 		}
 			finished = true;
 	}

@@ -3,6 +3,7 @@ package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
@@ -11,11 +12,6 @@ import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
 import jade.core.behaviours.FSMBehaviour;
-
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMCheck;
-import eu.su.mas.dedaleEtu.mas.behaviours.FSM.FSMDecide;
-
-
 
 
 public class Adventurer extends AbstractDedaleAgent {
@@ -33,7 +29,7 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	//TIMEOUT
 	private int TIMEOUT = 10; //For Check
-	private int WAIT = 10; // Fot Wait_Partial_Map
+	private int WAIT = 100; // Fot Wait_Partial_Map
 	private int cptCheck = 0;
 	private int cptWaitMap = 0;
 
@@ -42,6 +38,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	public static final int LOCATE = 1;
 	public static final int SEARCH = 2;
 	private int mode;
+	private Observation role = Observation.ANY_TREASURE;
 
 	//Name for the FSM state
 	
@@ -95,7 +92,6 @@ public class Adventurer extends AbstractDedaleAgent {
 		// Define the different states and behaviours
 		fsm. registerFirstState (new FSMMove(this), Move);
 		fsm. registerState (new FSMPing(this), Ping);
-		//fsm. registerState (new FSMWait(this), Wait);
 		fsm. registerState (new FSMCheck(this), Check);
 		fsm. registerState (new FSMSEM(this), SEM);
 		fsm. registerState (new FSMWCM(this), WCM);
@@ -105,8 +101,11 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		// Register the transitions
 		fsm. registerDefaultTransition (Move,Ping);
-
 		fsm. registerDefaultTransition (Ping,Check);
+		fsm. registerDefaultTransition (SPM,Check);
+		fsm. registerDefaultTransition (SEM,WCM);
+		fsm. registerDefaultTransition (WCM,Check);
+		fsm. registerDefaultTransition (Collect,Ping);
 
 		fsm. registerDefaultTransition (Check,Check);
         fsm. registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
@@ -114,16 +113,8 @@ public class Adventurer extends AbstractDedaleAgent {
         fsm. registerTransition (Check,Decide, FSMCheck.DECIDE);
         fsm. registerTransition (Check,Move, FSMCheck.TIMEOUT);
 
-		fsm. registerDefaultTransition (SPM,Check);
-
-		fsm. registerDefaultTransition (SEM,WCM);
-
-		fsm. registerDefaultTransition (WCM,Check);
-
         fsm. registerDefaultTransition (Decide,Check);
         fsm. registerTransition (Decide,Collect, FSMDecide.COLLECT);
-
-        fsm. registerDefaultTransition (Collect,Ping);
 
 		
 		DataStore dataFSM = new DataStore();
@@ -202,6 +193,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
 	public boolean countTime(){
+		//doWait(1);
 		cptCheck++;
 		if(cptCheck >= TIMEOUT){
 			cptCheck = 0;
@@ -211,6 +203,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
 	public boolean waitMap(){
+		doWait(1);
 		cptWaitMap++;
 		if(cptWaitMap >= WAIT){
 			cptWaitMap = 0;
@@ -219,4 +212,11 @@ public class Adventurer extends AbstractDedaleAgent {
 		else return true;
 	}
 
+	public Observation getRole() {
+		return role;
+	}
+
+	public void setRole(Observation role) {
+		this.role = role;
+	}
 }
