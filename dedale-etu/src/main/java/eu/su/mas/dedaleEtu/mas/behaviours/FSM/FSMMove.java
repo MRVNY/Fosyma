@@ -120,7 +120,7 @@ public class FSMMove extends SimpleBehaviour {
 				//the node may exist, but not necessarily the edge
 				if (myPosition!=nodeId) {
 					this.myMap.addEdge(myPosition, nodeId);
-					if (nextNode==null && isNewNode) nextNode=nodeId;
+					//
 				}
 			}
 
@@ -129,7 +129,7 @@ public class FSMMove extends SimpleBehaviour {
 			int mode = ((Adventurer)this.myAgent).getMode();
 
 			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
-				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done.");
+				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
 			}
 
@@ -137,10 +137,10 @@ public class FSMMove extends SimpleBehaviour {
 
 			//4.1 If there exist one open node directly reachable, go for it,
 			//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-			if (mode==Adventurer.EXPLORE){
+			if (this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
 				//no directly accessible openNode
 				//chose one, compute the path and take the first step.
-				nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+				nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 				//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 			}
 
@@ -151,22 +151,16 @@ public class FSMMove extends SimpleBehaviour {
 				else treType = Treasure.TypeTreasure.GOLD;
 
 				try {
-					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType).get(0);
+					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 
-			else if (mode==Adventurer.SEARCH){
-				//Random move from the current position
-				if (this.myMap.hasOpenNode()){
-					nextNode = this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-				}
-				else {
-					Random r = new Random();
-					int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
-					nextNode = lobs.get(moveId).getLeft();
-				}
+			if(nextNode==null){
+				Random r = new Random();
+				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
+				nextNode = lobs.get(moveId).getLeft();
 			}
 
 			((Adventurer)this.myAgent).setMyMap(myMap);

@@ -156,6 +156,7 @@ public class MapRepresentation implements Serializable {
 		dijkstra.init(g);
 		dijkstra.setSource(g.getNode(idFrom));
 		dijkstra.compute();//compute the distance to all nodes from idFrom
+		if(g.getNode(idTo)==null || g.getNode(idFrom)==null) return null;
 		List<Node> path=dijkstra.getPath(g.getNode(idTo)).getNodePath(); //the shortest path from idFrom to idTo
 		Iterator<Node> iter=path.iterator();
 		while (iter.hasNext()){
@@ -170,7 +171,7 @@ public class MapRepresentation implements Serializable {
 		return shortestPath;
 	}
 
-	public List<String> getShortestPathToClosestOpenNode(String myPosition) {
+	public String getShortestPathToClosestOpenNode(String myPosition) {
 		//1) Get all openNodes
 		List<String> opennodes=getOpenNodes();
 
@@ -183,7 +184,9 @@ public class MapRepresentation implements Serializable {
 		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
 		//3) Compute shorterPath
 
-		return getShortestPath(myPosition,closest.get().getLeft());
+		//if(closest.isPresent()) System.out.println(closest.get());
+		if(closest.isPresent()) return getShortestPath(myPosition,closest.get().getLeft()).get(0);
+		else return null;
 	}
 
 
@@ -375,7 +378,7 @@ public class MapRepresentation implements Serializable {
 		return partialMap;
 	}
 	
-	public List<String> getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
+	public String getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
@@ -391,7 +394,8 @@ public class MapRepresentation implements Serializable {
 
 		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
 		//3) Compute shorterPath
-		return getShortestPath(myPosition,closest.get().getLeft());
+		if(closest.isPresent() && closest.get().getLeft()!=null) return getShortestPath(myPosition,closest.get().getLeft()).get(0);
+		else return null;
 	}
 	
 	public List<String> getShortestPathToMostValuableTreasure(String myPosition,TypeTreasure type) throws Exception {

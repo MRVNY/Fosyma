@@ -59,6 +59,9 @@ public class FSMWCM extends Behaviour {
 		if(!get){
 			//System.out.println("Didn't get partial map :(");
 		}
+		else {
+			//System.out.println("Got partial map :)");
+		}
 			finished = true;
 	}
 
