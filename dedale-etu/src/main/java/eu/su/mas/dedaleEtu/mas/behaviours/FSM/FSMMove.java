@@ -146,9 +146,9 @@ public class FSMMove extends SimpleBehaviour {
 
 			else if (mode==Adventurer.LOCATE){
 				Observation role = ((Adventurer)this.myAgent).getRole();
-				Treasure.TypeTreasure treType;
-				if(role==Observation.DIAMOND) treType = Treasure.TypeTreasure.DIAMOND;
-				else treType = Treasure.TypeTreasure.GOLD;
+				Observation treType;
+				if(role==Observation.DIAMOND) treType = Observation.DIAMOND;
+				else treType = Observation.DIAMOND;
 
 				try {
 					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);

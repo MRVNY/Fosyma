@@ -23,7 +23,7 @@ import org.graphstream.ui.view.Viewer.CloseFramePolicy;
 
 import dataStructures.serializableGraph.*;
 import dataStructures.tuple.Couple;
-import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
+import eu.su.mas.dedale.env.Observation;
 import javafx.application.Platform;
 
 /**
@@ -227,8 +227,10 @@ public class MapRepresentation implements Serializable {
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
 		}
-		treasure.addTreasure(new Treasure(20,"1",TypeTreasure.GOLD));
+		/*
+		treasure.addTreasure(new Treasure(20,"1",Observation.GOLD));
 		sg.addTreasures(treasure);
+		*/
 		
 		
 		
@@ -382,7 +384,7 @@ public class MapRepresentation implements Serializable {
 		return partialMap;
 	}
 	
-	public String getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
+	public String getShortestPathToClosestTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
@@ -402,7 +404,7 @@ public class MapRepresentation implements Serializable {
 		else return null;
 	}
 	
-	public List<String> getShortestPathToMostValuableTreasure(String myPosition,TypeTreasure type) throws Exception {
+	public List<String> getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
@@ -417,7 +419,7 @@ public class MapRepresentation implements Serializable {
 		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
 	
-	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value, TypeTreasure type) throws Exception {
+	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}

@@ -3,7 +3,8 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
+
+import eu.su.mas.dedale.env.Observation;
 
 public class TreasureCollection implements Serializable{
 	
@@ -48,7 +49,7 @@ public class TreasureCollection implements Serializable{
 	public int countGold() {
 		int res = 0;
 		for(Treasure t: listTreasure) {
-			if(t.getType() == TypeTreasure.GOLD) {
+			if(t.getType() == Observation.GOLD) {
 				res += t.getTreasureAmount();
 			}
 		}
@@ -58,7 +59,7 @@ public class TreasureCollection implements Serializable{
 	public int countDiamond() {
 		int res = 0;
 		for(Treasure t: listTreasure) {
-			if(t.getType() == TypeTreasure.DIAMOND) {
+			if(t.getType() == Observation.DIAMOND) {
 				res += t.getTreasureAmount();
 			}
 		}
@@ -76,7 +77,7 @@ public class TreasureCollection implements Serializable{
 		return res.toString();
 	}
 	
-	public List<String> getAllLocation(TypeTreasure type){
+	public List<String> getAllLocation(Observation type){
 		List<String> res = new ArrayList<>();
 		for(Treasure t: listTreasure) {
 			if(t.getType() == type) {
@@ -95,7 +96,7 @@ public class TreasureCollection implements Serializable{
 		return res;
 	}
 	
-	public Treasure getMostValueable(TypeTreasure type) {
+	public Treasure getMostValueable(Observation type) {
 		Treasure res = null;
 		int max = 0;
 		for(Treasure t: listTreasure) {
@@ -115,7 +116,7 @@ public class TreasureCollection implements Serializable{
 		return this.listTreasure.isEmpty();
 	}
 	
-	public List<Integer> getAllValue(TypeTreasure type){
+	public List<Integer> getAllValue(Observation type){
 		List<Integer> res = new ArrayList<>();
 		for(Treasure t: listTreasure) {
 			if(t.getType() == type) {
