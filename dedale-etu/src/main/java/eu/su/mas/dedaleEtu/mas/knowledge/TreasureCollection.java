@@ -7,15 +7,32 @@ import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
 
 public class TreasureCollection implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7383476290092058458L;
 	private ArrayList<Treasure> listTreasure = new ArrayList<>();
 	
-	public void addTreasure(Treasure t) {
+	public void addTreasure(Treasure t){
+		/*
 		if(!this.listTreasure.contains(t)) {
+			listTreasure.add(t);
+		}
+		*/
+		if(this.getAllLocation(t.getType()).contains(t.getLocation())) {
+			Treasure tr = this.getTreasure(t.getLocation());
+			if(tr.getLocation() == t.getLocation()) {
+				if(tr.getTreasureAmount() < t.getTreasureAmount()) {
+					tr.setTreasureAmount(t.getTreasureAmount());
+				}
+			}
+		}
+		else {
 			listTreasure.add(t);
 		}
 	}
 	
-	public void addTreasures(ArrayList<Treasure> l) {
+	public void addTreasures(ArrayList<Treasure> l) throws Exception {
 		for(Treasure t: l) {
 			addTreasure(t);
 		}
@@ -117,8 +134,17 @@ public class TreasureCollection implements Serializable{
 		return null;
 	}
 	
-	public void updateList() {
-		List<String>location = this.getAllLocation();
+	public Treasure getTreasure(String location) {
+		for(Treasure t:this.listTreasure) {
+			if(t.getLocation() == location) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+	public void mergeTreasure(TreasureCollection tc) {
+		boolean alreadyIn = false;
 		
 	}
 	

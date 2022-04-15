@@ -290,6 +290,16 @@ public class MapRepresentation implements Serializable {
 
 		g.display();
 	}
+	
+	/**
+	 * 
+	 * @return true if there exist at least one openNode on the graph 
+	 */
+	public boolean hasOpenNode() {
+		return (this.g.nodes()
+				.filter(n -> n.getAttribute("ui.class")==MapAttribute.open.toString())
+				.findAny()).isPresent();
+	}
 
 	public void mergeMap(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		//System.out.println("You should decide what you want to save and how");
@@ -324,18 +334,12 @@ public class MapRepresentation implements Serializable {
 				addEdge(n.getNodeId(),s);
 			}
 		}
+		//merge the treasure knowledge
+		this.treasure.mergeTreasure(sgreceived.getTreasures());
 		//System.out.println("Merge done");
 	}
 
-	/**
-	 * 
-	 * @return true if there exist at least one openNode on the graph 
-	 */
-	public boolean hasOpenNode() {
-		return (this.g.nodes()
-				.filter(n -> n.getAttribute("ui.class")==MapAttribute.open.toString())
-				.findAny()).isPresent();
-	}
+	
 	/***
 	 * We try to only collect the part of the map that we're missing 
 	 * @param sgreceived the other map

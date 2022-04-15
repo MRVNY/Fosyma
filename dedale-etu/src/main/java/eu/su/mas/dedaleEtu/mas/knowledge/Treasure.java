@@ -37,4 +37,9 @@ public class Treasure implements Serializable{
 		return "("+this.type+";"+this.treasureAmount+")";
 	}
 
+	public void setTreasureAmount(int treasureAmount) {
+		this.treasureAmount = treasureAmount;
+	}
+	
+
 }
