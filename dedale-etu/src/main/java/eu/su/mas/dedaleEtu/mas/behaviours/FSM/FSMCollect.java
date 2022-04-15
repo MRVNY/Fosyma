@@ -47,7 +47,6 @@ public class FSMCollect extends Behaviour {
 			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lObservations);
 
 			for(Couple<Observation,Integer> o:lObservations) {
-				System.out.println(o);
 				switch (o.getLeft()) {
 					case DIAMOND:case GOLD:
 						if ((o.getLeft() == role || role == Observation.ANY_TREASURE) && o.getRight()>0) {

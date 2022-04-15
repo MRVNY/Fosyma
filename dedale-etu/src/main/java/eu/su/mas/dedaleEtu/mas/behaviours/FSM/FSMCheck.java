@@ -69,7 +69,7 @@ public class FSMCheck extends Behaviour {
 
 			if (pingReceived != null) {
 				//si on a bien reçu un Ping, On vas devoir envoyer notre map dans un ACK
-				System.out.println(this.getAgent().getLocalName() + " <--PING-- " + pingReceived.getSender().getLocalName());
+				//System.out.println(this.getAgent().getLocalName() + " <--PING-- " + pingReceived.getSender().getLocalName());
 				((Adventurer) this.myAgent).setCorresponder(pingReceived.getSender().getLocalName());
 				exitValue = Send_Entire_Map;
 				finished = true;
@@ -86,7 +86,7 @@ public class FSMCheck extends Behaviour {
 			ACLMessage pongReceived = this.myAgent.receive(pongTemplate);
 
 			if (pongReceived != null) {
-				System.out.println(this.getAgent().getLocalName() + " <--PONG-- " + pongReceived.getSender().getLocalName());
+				//System.out.println(this.getAgent().getLocalName() + " <--PONG-- " + pongReceived.getSender().getLocalName());
 				((Adventurer) this.myAgent).setCorresponder(pongReceived.getSender().getLocalName());
 				exitValue = Send_Partial_Map;
 				finished = true;
@@ -106,7 +106,7 @@ public class FSMCheck extends Behaviour {
 				}
 			}
 			if (value > 0) {
-				System.out.println(this.myAgent.getLocalName() + " found treasure");
+				//System.out.println(this.myAgent.getLocalName() + " found treasure");
 				exitValue = DECIDE;
 				finished = true;
 			}

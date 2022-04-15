@@ -2,6 +2,8 @@ package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
@@ -123,51 +125,55 @@ public class FSMMove extends SimpleBehaviour {
 			}
 
 			//3) while openNodes is not empty, continues.
-			if (!this.myMap.hasOpenNode()){
-				if(((Adventurer)this.myAgent).getMode()==Adventurer.EXPLORE) {
-					System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done.");
-				}
-				// on dosi donc passer a la collecte de trésors, avec toute la map connue
+
+			int mode = ((Adventurer)this.myAgent).getMode();
+
+			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
+				System.out.println(this.myAgent.getLocalName()+" - Exploration successufully done.");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
-				finished=true;
-			}else{
-				int mode = ((Adventurer)this.myAgent).getMode();
-
-				//4) select next move.
-
-				//4.1 If there exist one open node directly reachable, go for it,
-				//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-				if (mode==Adventurer.EXPLORE){
-					//no directly accessible openNode
-					//chose one, compute the path and take the first step.
-					nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-					//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
-				}
-
-				else if (mode==Adventurer.LOCATE){
-					Observation role = ((Adventurer)this.myAgent).getRole();
-					Treasure.TypeTreasure treType;
-					if(role==Observation.DIAMOND) treType = Treasure.TypeTreasure.DIAMOND;
-					else treType = Treasure.TypeTreasure.GOLD;
-
-					try {
-						nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType).get(0);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-				else if (mode==Adventurer.SEARCH){
-					
-				}
-
-
-				((Adventurer)this.myAgent).setMyMap(myMap);
-				
-				((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
-			
-				finished=true;
 			}
+
+			//4) select next move.
+
+			//4.1 If there exist one open node directly reachable, go for it,
+			//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
+			if (mode==Adventurer.EXPLORE){
+				//no directly accessible openNode
+				//chose one, compute the path and take the first step.
+				nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+				//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
+			}
+
+			else if (mode==Adventurer.LOCATE){
+				Observation role = ((Adventurer)this.myAgent).getRole();
+				Treasure.TypeTreasure treType;
+				if(role==Observation.DIAMOND) treType = Treasure.TypeTreasure.DIAMOND;
+				else treType = Treasure.TypeTreasure.GOLD;
+
+				try {
+					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType).get(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			else if (mode==Adventurer.SEARCH){
+				//Random move from the current position
+				if (this.myMap.hasOpenNode()){
+					nextNode = this.myMap.getShortestPathToClosestOpenNode(myPosition).get(0);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+				}
+				else {
+					Random r = new Random();
+					int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
+					nextNode = lobs.get(moveId).getLeft();
+				}
+			}
+
+			((Adventurer)this.myAgent).setMyMap(myMap);
+
+			((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+
+			finished=true;
 
 		}
 	}

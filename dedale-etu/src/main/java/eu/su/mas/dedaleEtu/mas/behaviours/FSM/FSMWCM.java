@@ -52,14 +52,12 @@ public class FSMWCM extends Behaviour {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				((Adventurer) this.myAgent).getMyMap().mergeMap(sgreceived);
 				finished = true;
 			}
 		}
 		if(!get){
-			System.out.println("Didn't get partial map :(");
-		}
-		else {
-			System.out.println("Got partial map :)");
+			//System.out.println("Didn't get partial map :(");
 		}
 			finished = true;
 	}

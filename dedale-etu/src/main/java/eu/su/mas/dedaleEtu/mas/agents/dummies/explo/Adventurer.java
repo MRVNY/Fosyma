@@ -90,31 +90,31 @@ public class Adventurer extends AbstractDedaleAgent {
 		
 		FSMBehaviour fsm = new FSMBehaviour(this);
 		// Define the different states and behaviours
-		fsm. registerFirstState (new FSMMove(this), Move);
-		fsm. registerState (new FSMPing(this), Ping);
-		fsm. registerState (new FSMCheck(this), Check);
-		fsm. registerState (new FSMSEM(this), SEM);
-		fsm. registerState (new FSMWCM(this), WCM);
-		fsm. registerState (new FSMSPM(this), SPM);
-		fsm. registerState (new FSMDecide(this), Decide);
-        fsm. registerState (new FSMCollect(this), Collect);
+		fsm.registerFirstState (new FSMMove(this), Move);
+		fsm.registerState (new FSMPing(this), Ping);
+		fsm.registerState (new FSMCheck(this), Check);
+		fsm.registerState (new FSMSEM(this), SEM);
+		fsm.registerState (new FSMWCM(this), WCM);
+		fsm.registerState (new FSMSPM(this), SPM);
+		fsm.registerState (new FSMDecide(this), Decide);
+        fsm.registerState (new FSMCollect(this), Collect);
 		
 		// Register the transitions
-		fsm. registerDefaultTransition (Move,Ping);
-		fsm. registerDefaultTransition (Ping,Check);
-		fsm. registerDefaultTransition (SPM,Check);
-		fsm. registerDefaultTransition (SEM,WCM);
-		fsm. registerDefaultTransition (WCM,Check);
-		fsm. registerDefaultTransition (Collect,Ping);
+		fsm.registerDefaultTransition (Move,Ping);
+		fsm.registerDefaultTransition (Ping,Check);
+		fsm.registerDefaultTransition (SPM,Check);
+		fsm.registerDefaultTransition (SEM,WCM);
+		fsm.registerDefaultTransition (WCM,Check);
+		fsm.registerDefaultTransition (Collect,Ping);
 
-		fsm. registerDefaultTransition (Check,Check);
-        fsm. registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
-        fsm. registerTransition (Check,SPM, FSMCheck.Send_Partial_Map);
-        fsm. registerTransition (Check,Decide, FSMCheck.DECIDE);
-        fsm. registerTransition (Check,Move, FSMCheck.TIMEOUT);
+		fsm.registerDefaultTransition (Check,Check);
+        fsm.registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
+        fsm.registerTransition (Check,SPM, FSMCheck.Send_Partial_Map);
+        fsm.registerTransition (Check,Decide, FSMCheck.DECIDE);
+        fsm.registerTransition (Check,Move, FSMCheck.TIMEOUT);
 
-        fsm. registerDefaultTransition (Decide,Check);
-        fsm. registerTransition (Decide,Collect, FSMDecide.COLLECT);
+        fsm.registerDefaultTransition (Decide,Check);
+        fsm.registerTransition (Decide,Collect, FSMDecide.COLLECT);
 
 		
 		DataStore dataFSM = new DataStore();
