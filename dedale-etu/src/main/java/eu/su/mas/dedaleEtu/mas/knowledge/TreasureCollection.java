@@ -33,7 +33,7 @@ public class TreasureCollection implements Serializable{
 		}
 	}
 	
-	public void addTreasures(ArrayList<Treasure> l) throws Exception {
+	public void addTreasures(ArrayList<Treasure> l) {
 		for(Treasure t: l) {
 			addTreasure(t);
 		}
@@ -145,8 +145,25 @@ public class TreasureCollection implements Serializable{
 	}
 	
 	public void mergeTreasure(TreasureCollection tc) {
-		boolean alreadyIn = false;
+		this.addTreasures(tc.listTreasure);
+	}
+	
+	public TreasureCollection getMissingPart(TreasureCollection tc) {
+		TreasureCollection res = new TreasureCollection();
+		for(Treasure ti:this.listTreasure) {
+			boolean notAlreadyIn = true;
+			for(Treasure tj:tc.listTreasure) {
+				if(ti.getLocation() == tj.getLocation()) {
+					notAlreadyIn = false;
+					break;
+				}
+			}
+			if(notAlreadyIn) {
+				res.addTreasure(ti);
+			}
+		}
 		
+		return res;
 	}
 	
 }

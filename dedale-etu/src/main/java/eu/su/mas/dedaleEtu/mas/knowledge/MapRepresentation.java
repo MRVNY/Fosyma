@@ -68,7 +68,6 @@ public class MapRepresentation implements Serializable {
 	
 	private TreasureCollection treasure = new TreasureCollection();
 
-
 	public MapRepresentation() {
 		//System.setProperty("org.graphstream.ui.renderer","org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		System.setProperty("org.graphstream.ui", "javafx");
@@ -82,6 +81,7 @@ public class MapRepresentation implements Serializable {
 
 		this.nbEdges=0;
 	}
+	
 
 	/**
 	 * Add or replace a node and its attribute 
@@ -337,7 +337,9 @@ public class MapRepresentation implements Serializable {
 			}
 		}
 		//merge the treasure knowledge
-		this.treasure.mergeTreasure(sgreceived.getTreasures());
+		if(sgreceived.getTreasures() != null) {
+			this.treasure.mergeTreasure(sgreceived.getTreasures());
+		}
 		//System.out.println("Merge done");
 	}
 
@@ -349,38 +351,23 @@ public class MapRepresentation implements Serializable {
 	 */
 	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		// we want to get only the part that our map is missing in sgreceived
-		MapRepresentation partialMap = null;
+		MapRepresentation partialMap = new MapRepresentation();
 		
-		//1 Add the node
-		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
-			//System.out.println(n);
-			boolean alreadyIn =false;
-			//1 Add the node
-			Node newnode=null;
-			try {
-				newnode=partialMap.g.addNode(n.getNodeId());
-			}	catch(IdAlreadyInUseException e) {
-				alreadyIn=true;
-				//System.out.println("Already in"+n.getNodeId());
-			}
-			if (!alreadyIn) {
-				newnode.setAttribute("ui.label", newnode.getId());
-				newnode.setAttribute("ui.class", n.getNodeContent().toString());
-			}else{
-				newnode=this.g.getNode(n.getNodeId());
-				//3 check its attribute. If it is below the one received, update it.
-				if (((String) newnode.getAttribute("ui.class"))==MapAttribute.closed.toString() || n.getNodeContent().toString()==MapAttribute.closed.toString()) {
-					newnode.setAttribute("ui.class",MapAttribute.closed.toString());
+		for (SerializableNode<String, MapAttribute> n: sg.getAllNodes()) {
+			boolean notAlreadyIn =true;
+			for (SerializableNode<String, MapAttribute> m: sgreceived.getAllNodes()){
+				if(n.getNodeId() == m.getNodeId()) {
+					notAlreadyIn = false;
+					break;
 				}
+			if(notAlreadyIn) {
+				partialMap.g.addNode(n.getNodeId());
+			}
 			}
 		}
-
-		//4 now that all nodes are added, we can add edges
-		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
-			for(String s:sgreceived.getEdges(n.getNodeId())){
-				partialMap.addEdge(n.getNodeId(),s);
-			}
-		}
+		
+		
+		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
 		return partialMap;
 	}
 	
