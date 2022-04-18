@@ -86,7 +86,7 @@ public class FSMDecide extends Behaviour {
 
 			//BagFull -> SearchMode -> Check
 			if (!finished && bagSpace==0 && role != Observation.ANY_TREASURE && mode!=Adventurer.SEARCH){
-				System.out.println(this.myAgent.getLocalName()+" passes to SEARCH");
+				//System.out.println(this.myAgent.getLocalName()+" passes to SEARCH");
 				((Adventurer)this.myAgent).setMode(Adventurer.SEARCH);
 				finished = true;
 			}
@@ -94,14 +94,14 @@ public class FSMDecide extends Behaviour {
 			//Can't verify role cuz bug not fixed by prof
 			//No role & TRatio_OK -> Collect
 			if (!finished && value>0 && role == Observation.ANY_TREASURE && TRatio >= 1/3){
-				System.out.println(this.myAgent.getLocalName() + " decides to collect and got a role");
+				//System.out.println(this.myAgent.getLocalName() + " decides to collect and got a role");
 				exitValue = COLLECT;
 				finished = true;
 			}
 
 			//Role_OK & ARatio_OK -> Collect
 			if ( !finished && value>0 && role == type && ARatio >= 1/3){
-				System.out.println(this.myAgent.getLocalName() + " decides to collect");
+				//System.out.println(this.myAgent.getLocalName() + " decides to collect");
 				exitValue = COLLECT;
 				finished = true;
 			}

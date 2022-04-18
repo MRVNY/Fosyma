@@ -378,6 +378,9 @@ public class MapRepresentation implements Serializable {
 		
 		//1) Get all location of Treasures
 		List<String> treasurenodes=this.treasure.getAllLocation(type);
+		if (treasurenodes.isEmpty()) {
+			throw new Exception("La liste de trésors ne semble pas contenir de " + type);
+		}
 
 		//2) select the closest one
 		List<Couple<String,Integer>> lc=
@@ -416,6 +419,10 @@ public class MapRepresentation implements Serializable {
 			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation());
 		}
 		return null;
+	}
+	
+	public TreasureCollection getTreasureCollection() {
+		return this.treasure;
 	}
 
 

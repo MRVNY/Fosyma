@@ -2,4 +2,7 @@ mapname:MultiTypes
 agentCollect:Advent1:3:free:50:50:0:10:10
 agentCollect:Advent2:3:free:50:50:0:10:10
 agentCollect:Advent3:3:free:50:50:0:10:10
+agentCollect:Advent4:3:free:50:50:0:10:10
+agentCollect:Advent5:3:free:50:50:0:10:10
+agentCollect:Advent6:3:free:50:50:0:10:10
 wumpus:Golem:0:free:20:20:1:0:0

@@ -29,6 +29,7 @@ public class TreasureCollection implements Serializable{
 			}
 		}
 		else {
+			//System.out.println(t + " added.");
 			listTreasure.add(t);
 		}
 	}
@@ -42,6 +43,16 @@ public class TreasureCollection implements Serializable{
 	public Treasure removeTreasure(Treasure t) {
 		if (listTreasure.remove(t)) {
 			return t;
+		}
+		return null;
+	}
+	
+	public Treasure removeTreasure(String location) {
+		for(Treasure t: listTreasure) {
+			if(t.getLocation() == location) {
+				this.removeTreasure(t);
+				return t;
+			}
 		}
 		return null;
 	}
@@ -71,8 +82,9 @@ public class TreasureCollection implements Serializable{
 		res.append("[");
 		for(Treasure t: listTreasure) {
 			res.append(t.toString());
-			res.append("\t");
+			res.append(";");
 		}
+		res.deleteCharAt(res.length()-1);
 		res.append("]");
 		return res.toString();
 	}

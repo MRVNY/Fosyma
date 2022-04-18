@@ -45,7 +45,7 @@ public class FSMCollect extends Behaviour {
 
 			List<Couple<Observation,Integer>> lObservations = lobs.get(0).getRight();
 			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lObservations);
-
+			/*
 			for(Couple<Observation,Integer> o:lObservations) {
 				switch (o.getLeft()) {
 					case DIAMOND:case GOLD:
@@ -63,6 +63,7 @@ public class FSMCollect extends Behaviour {
 						break;
 				}
 			}
+			*/
 		}
 
 		finished = true;

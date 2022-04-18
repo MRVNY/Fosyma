@@ -18,7 +18,7 @@ public class Treasure implements Serializable{
 	private String location;
 	private Observation type;
 	
-	public Treasure(int treasureAmount, String Location, Observation type) {
+	public Treasure(int treasureAmount, String location, Observation type) {
 		this.treasureAmount = treasureAmount;
 		this.location = location;
 		this.type = type;
@@ -37,7 +37,7 @@ public class Treasure implements Serializable{
 	}
 	
 	public String toString() {
-		return "("+this.type+";"+this.treasureAmount+")";
+		return "("+this.type+", "+this.treasureAmount+", "+this.location+")";
 	}
 
 	public void setTreasureAmount(int treasureAmount) {
