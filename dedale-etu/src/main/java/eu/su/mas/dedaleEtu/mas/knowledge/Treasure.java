@@ -2,20 +2,23 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 
+import eu.su.mas.dedale.env.Observation;
+
 public class Treasure implements Serializable{
 		
-	
+	/*
 	public enum TypeTreasure {	
 		GOLD,DIAMOND;
 
 	}
+	*/
 	
 	private int treasureAmount;
 	// Id of the Node
 	private String location;
-	private TypeTreasure type;
+	private Observation type;
 	
-	public Treasure(int treasureAmount, String Location, TypeTreasure type) {
+	public Treasure(int treasureAmount, String location, Observation type) {
 		this.treasureAmount = treasureAmount;
 		this.location = location;
 		this.type = type;
@@ -29,12 +32,12 @@ public class Treasure implements Serializable{
 		return location;
 	}
 
-	public TypeTreasure getType() {
+	public Observation getType() {
 		return type;
 	}
 	
 	public String toString() {
-		return "("+this.type+";"+this.treasureAmount+")";
+		return "("+this.type+", "+this.treasureAmount+", "+this.location+")";
 	}
 
 	public void setTreasureAmount(int treasureAmount) {

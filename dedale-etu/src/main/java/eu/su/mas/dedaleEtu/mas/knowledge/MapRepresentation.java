@@ -23,7 +23,7 @@ import org.graphstream.ui.view.Viewer.CloseFramePolicy;
 
 import dataStructures.serializableGraph.*;
 import dataStructures.tuple.Couple;
-import eu.su.mas.dedaleEtu.mas.knowledge.Treasure.TypeTreasure;
+import eu.su.mas.dedale.env.Observation;
 import javafx.application.Platform;
 
 /**
@@ -68,7 +68,6 @@ public class MapRepresentation implements Serializable {
 	
 	private TreasureCollection treasure = new TreasureCollection();
 
-
 	public MapRepresentation() {
 		//System.setProperty("org.graphstream.ui.renderer","org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		System.setProperty("org.graphstream.ui", "javafx");
@@ -82,6 +81,7 @@ public class MapRepresentation implements Serializable {
 
 		this.nbEdges=0;
 	}
+	
 
 	/**
 	 * Add or replace a node and its attribute 
@@ -227,8 +227,10 @@ public class MapRepresentation implements Serializable {
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
 		}
-		treasure.addTreasure(new Treasure(20,"1",TypeTreasure.GOLD));
+		/*
+		treasure.addTreasure(new Treasure(20,"1",Observation.GOLD));
 		sg.addTreasures(treasure);
+		*/
 		
 		
 		
@@ -335,7 +337,9 @@ public class MapRepresentation implements Serializable {
 			}
 		}
 		//merge the treasure knowledge
-		this.treasure.mergeTreasure(sgreceived.getTreasures());
+		if(sgreceived.getTreasures() != null) {
+			this.treasure.mergeTreasure(sgreceived.getTreasures());
+		}
 		//System.out.println("Merge done");
 	}
 
@@ -347,48 +351,36 @@ public class MapRepresentation implements Serializable {
 	 */
 	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		// we want to get only the part that our map is missing in sgreceived
-		MapRepresentation partialMap = null;
+		MapRepresentation partialMap = new MapRepresentation();
 		
-		//1 Add the node
-		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
-			//System.out.println(n);
-			boolean alreadyIn =false;
-			//1 Add the node
-			Node newnode=null;
-			try {
-				newnode=partialMap.g.addNode(n.getNodeId());
-			}	catch(IdAlreadyInUseException e) {
-				alreadyIn=true;
-				//System.out.println("Already in"+n.getNodeId());
-			}
-			if (!alreadyIn) {
-				newnode.setAttribute("ui.label", newnode.getId());
-				newnode.setAttribute("ui.class", n.getNodeContent().toString());
-			}else{
-				newnode=this.g.getNode(n.getNodeId());
-				//3 check its attribute. If it is below the one received, update it.
-				if (((String) newnode.getAttribute("ui.class"))==MapAttribute.closed.toString() || n.getNodeContent().toString()==MapAttribute.closed.toString()) {
-					newnode.setAttribute("ui.class",MapAttribute.closed.toString());
+		for (SerializableNode<String, MapAttribute> n: sg.getAllNodes()) {
+			boolean notAlreadyIn =true;
+			for (SerializableNode<String, MapAttribute> m: sgreceived.getAllNodes()){
+				if(n.getNodeId() == m.getNodeId()) {
+					notAlreadyIn = false;
+					break;
 				}
+			if(notAlreadyIn) {
+				partialMap.g.addNode(n.getNodeId());
+			}
 			}
 		}
-
-		//4 now that all nodes are added, we can add edges
-		for (SerializableNode<String, MapAttribute> n: sgreceived.getAllNodes()){
-			for(String s:sgreceived.getEdges(n.getNodeId())){
-				partialMap.addEdge(n.getNodeId(),s);
-			}
-		}
+		
+		
+		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
 		return partialMap;
 	}
 	
-	public String getShortestPathToClosestTreasure(String myPosition,TypeTreasure type) throws Exception {
+	public String getShortestPathToClosestTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
 		
 		//1) Get all location of Treasures
 		List<String> treasurenodes=this.treasure.getAllLocation(type);
+		if (treasurenodes.isEmpty()) {
+			throw new Exception("La liste de trésors ne semble pas contenir de " + type);
+		}
 
 		//2) select the closest one
 		List<Couple<String,Integer>> lc=
@@ -402,7 +394,7 @@ public class MapRepresentation implements Serializable {
 		else return null;
 	}
 	
-	public List<String> getShortestPathToMostValuableTreasure(String myPosition,TypeTreasure type) throws Exception {
+	public List<String> getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
@@ -417,7 +409,7 @@ public class MapRepresentation implements Serializable {
 		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
 	
-	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value, TypeTreasure type) throws Exception {
+	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
@@ -427,6 +419,10 @@ public class MapRepresentation implements Serializable {
 			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation());
 		}
 		return null;
+	}
+	
+	public TreasureCollection getTreasureCollection() {
+		return this.treasure;
 	}
 
 

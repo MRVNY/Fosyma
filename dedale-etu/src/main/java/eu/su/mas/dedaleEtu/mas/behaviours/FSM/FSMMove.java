@@ -91,22 +91,22 @@ public class FSMMove extends SimpleBehaviour {
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
 			 */
 			try {
-				this.myAgent.doWait(1000);
+				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
-			/*
-			Couple<Observation,Integer> treasure = null;
-			
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
-				case DIAMOND: this.myMap.addNode(myPosition, MapAttribute.diamond);
-				case GOLD: this.myMap.addNode(myPosition, MapAttribute.gold);
-				default : this.myMap.addNode(myPosition, MapAttribute.closed);
+				case DIAMOND: 
+					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.DIAMOND));
+					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
+				case GOLD: 
+					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
+					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 				}
 			}
-			*/
+			
 			
 			//1) remove the current node from openlist and add it to closedNodes.
 			this.myMap.addNode(myPosition, MapAttribute.closed);
@@ -131,6 +131,12 @@ public class FSMMove extends SimpleBehaviour {
 			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
+				
+				//affichage des trésors trouvés
+				System.out.println(this.myMap.getTreasureCollection());
+				//Ressources trouvés 
+				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
+				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
 			}
 
 			//4) select next move.
@@ -146,9 +152,9 @@ public class FSMMove extends SimpleBehaviour {
 
 			else if (mode==Adventurer.LOCATE){
 				Observation role = ((Adventurer)this.myAgent).getRole();
-				Treasure.TypeTreasure treType;
-				if(role==Observation.DIAMOND) treType = Treasure.TypeTreasure.DIAMOND;
-				else treType = Treasure.TypeTreasure.GOLD;
+				Observation treType;
+				if(role==Observation.DIAMOND) treType = Observation.DIAMOND;
+				else treType = Observation.GOLD;
 
 				try {
 					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
