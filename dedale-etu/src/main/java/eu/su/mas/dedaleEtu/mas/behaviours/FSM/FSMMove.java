@@ -98,14 +98,14 @@ public class FSMMove extends SimpleBehaviour {
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
-				case DIAMOND: 
+				case DIAMOND:
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.DIAMOND));
-					break;
 					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
+					break;
 				case GOLD: 
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
-					break;
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
+					break;
 				}
 			}
 			
@@ -137,6 +137,18 @@ public class FSMMove extends SimpleBehaviour {
 				//affichage des trésors trouvés
 				System.out.println(this.myMap.getTreasureCollection());
 				//Ressources trouvés 
+				System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
+				System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
+				
+				//this crap is only here for testing purpose, don't mind it.
+				
+//				this.myMap.getTreasureCollection().removeTreasure("25");
+//				this.myMap.getTreasureCollection().removeTreasure("7");
+//				
+//				this.myMap.getTreasureCollection().updateTreasure("25",0);
+//				this.myMap.getTreasureCollection().updateTreasure("7",0);
+				
+				//Ressources sur la cartes actuellement
 				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
 				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
 			}
@@ -164,7 +176,7 @@ public class FSMMove extends SimpleBehaviour {
 					e.printStackTrace();
 				}
 			}
-
+			
 			if(nextNode==null){
 				Random r = new Random();
 				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
