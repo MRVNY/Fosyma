@@ -86,7 +86,7 @@ public class FSMDecide extends Behaviour {
 
 			//BagFull -> SearchMode -> Check
 			if (!finished && bagSpace==0 && role != Observation.ANY_TREASURE && mode!=Adventurer.SEARCH){
-				//System.out.println(this.myAgent.getLocalName()+" passes to SEARCH");
+				System.out.println(this.myAgent.getLocalName()+" passes to SEARCH");
 				((Adventurer)this.myAgent).setMode(Adventurer.SEARCH);
 				finished = true;
 			}

@@ -156,7 +156,7 @@ public class MapRepresentation implements Serializable {
 		dijkstra.init(g);
 		dijkstra.setSource(g.getNode(idFrom));
 		dijkstra.compute();//compute the distance to all nodes from idFrom
-		if(g.getNode(idTo)==null || g.getNode(idFrom)==null) return null;
+		//if(g.getNode(idTo)==null || g.getNode(idFrom)==null) return null;
 		List<Node> path=dijkstra.getPath(g.getNode(idTo)).getNodePath(); //the shortest path from idFrom to idTo
 		Iterator<Node> iter=path.iterator();
 		while (iter.hasNext()){
@@ -390,7 +390,12 @@ public class MapRepresentation implements Serializable {
 
 		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
 		//3) Compute shorterPath
-		if(closest.isPresent() && closest.get().getLeft()!=null) return getShortestPath(myPosition,closest.get().getLeft()).get(0);
+
+		if(closest.isPresent() && closest.get().getLeft()!=null){
+			List<String> out = getShortestPath(myPosition,closest.get().getLeft());
+			if (!out.isEmpty()) return out.get(0);
+			else return null;
+		}
 		else return null;
 	}
 	
