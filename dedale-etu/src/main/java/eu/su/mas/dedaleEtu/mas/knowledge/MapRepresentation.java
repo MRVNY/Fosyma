@@ -397,6 +397,7 @@ public class MapRepresentation implements Serializable {
 			else return null;
 		}
 		else return null;
+
 	}
 	
 	public List<String> getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {

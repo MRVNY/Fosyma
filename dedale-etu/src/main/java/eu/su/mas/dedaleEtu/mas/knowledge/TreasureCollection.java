@@ -57,6 +57,14 @@ public class TreasureCollection implements Serializable{
 		return null;
 	}
 	
+	public void updateTreasure(String location, int value) {
+		for(Treasure t: listTreasure) {
+			if(t.getLocation() == location) {
+				t.setTreasureAmount(value);
+			}
+		}
+	}
+	
 	public int countGold() {
 		int res = 0;
 		for(Treasure t: listTreasure) {
