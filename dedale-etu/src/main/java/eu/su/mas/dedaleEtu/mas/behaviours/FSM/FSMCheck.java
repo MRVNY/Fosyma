@@ -4,9 +4,12 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
+import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
+import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.lang.acl.UnreadableException;
 
 import java.util.List;
 
@@ -78,7 +81,7 @@ public class FSMCheck extends Behaviour {
 		}
 
 
-		//Check ACK
+		//Check Pong
 		if(!finished) {
 			MessageTemplate pongTemplate = MessageTemplate.and(
 					MessageTemplate.MatchProtocol("PONG"),
@@ -88,6 +91,16 @@ public class FSMCheck extends Behaviour {
 			if (pongReceived != null) {
 				//System.out.println(this.getAgent().getLocalName() + " <--PONG-- " + pongReceived.getSender().getLocalName());
 				((Adventurer) this.myAgent).setCorresponder(pongReceived.getSender().getLocalName());
+
+				//Merge map
+				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgreceived=null;
+				try {
+					sgreceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>)pongReceived.getContentObject();
+				} catch (UnreadableException e) {
+					e.printStackTrace();
+				}
+				((Adventurer) this.myAgent).getMyMap().mergeMap(sgreceived);
+
 				exitValue = Send_Partial_Map;
 				finished = true;
 			}

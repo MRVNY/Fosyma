@@ -24,16 +24,40 @@ Move ---> Send_Ping
 
 Send_Ping ---> Check
 
-Check --Ping--> Send_ACK_Entire_Map
-Check --ACK--> Send_Partial_Map
+Check --Ping--> Send_Pong
+Check --Pong--> Send_End
 Check --Treasure/First_Time_Locate--> Decide
 Check --Nothing--> Check
 Check --Timeout--> Move
 
-Send_Partial_Map ---> Check
+Send_End ---> Check
 
-Send_ACK_Entire_Map ---> Wait_Partial_Map
-Wait_Partial_Map --Timeout/Received--> Check
+Send_Pong ---> Wait_End
+Wait_End --Timeout/Received--> Check
+
+Decide ---> Check
+Decide --Ratio_OK & Bag_OK & Role_OK & Mode_OK--> Collect
+
+Collect ---> Send_Ping
+```
+
+# Enchere
+```mermaid
+graph
+
+Move ---> Send_Ping
+
+Send_Ping ---> Check
+
+Check --Ping--> Send_Pong
+Check --Pong--> Send_End
+Check --Treasure/First_Time_Locate--> Decide
+Check --Nothing/End--> Check
+Check --Timeout--> Move
+
+Send_End ---> Check
+
+Send_Pong ---> Check
 
 Decide ---> Check
 Decide --Ratio_OK & Bag_OK & Role_OK & Mode_OK--> Collect
@@ -72,5 +96,15 @@ No role & TRatio_OK & Bag>Value -> Collect
 Role_OK & ARatio_OK & Bag>Value -> Collect 
 BagFull -> SearchMode -> Check
 
+
+# Enchere
+W > L > E > S
+## Explo - Explo / L-L / S-S
+avoid going to the same node together
+
+## Other (applicable for Wumpus)
+Give space for L by changing the goal node
+When colliding, one with less priority switch to next goal, when all goals cause collision, do random move
+(extreme case: random)
 
 
