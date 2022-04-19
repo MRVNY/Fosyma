@@ -13,6 +13,10 @@ public class Treasure implements Serializable{
 	}
 	*/
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8137590195977838015L;
 	private int treasureAmount;
 	// Id of the Node
 	private String location;

@@ -227,10 +227,9 @@ public class MapRepresentation implements Serializable {
 			Node tn=e.getTargetNode();
 			sg.addEdge(e.getId(), sn.getId(), tn.getId());
 		}
-		/*
-		treasure.addTreasure(new Treasure(20,"1",Observation.GOLD));
+		// adding the treasure to the serialiazeGraph
 		sg.addTreasures(treasure);
-		*/
+		
 		
 		
 		
@@ -337,7 +336,7 @@ public class MapRepresentation implements Serializable {
 			}
 		}
 		//merge the treasure knowledge
-		if(sgreceived.getTreasures() != null) {
+		if(!sgreceived.getTreasures().isEmpty()) {
 			this.treasure.mergeTreasure(sgreceived.getTreasures());
 		}
 		//System.out.println("Merge done");
@@ -400,31 +399,38 @@ public class MapRepresentation implements Serializable {
 
 	}
 	
-	public List<String> getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
+	public String getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
 		
-		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation());
+		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation()).get(0);
 	}
 	
-	public List<String> getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
+	public String getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
 		if(this.treasure.isIn(treasure)) {
-			return this.getShortestPath(myPosition,treasure.getLocation());
+			return this.getShortestPath(myPosition,treasure.getLocation()).get(0);
 		}
 		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
 	
-	public List<String> getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
+	public String getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
 		
 		List<Integer> treasureValues = this.treasure.getAllValue(type);
 		if(treasureValues.contains(value)) {
-			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation());
+			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation()).get(0);
 		}
 		return null;
+	}
+	
+	public String getShortestPathToGoal(String myPosition,String goal) throws Exception {
+		if(goal == null) {
+			throw new Exception("The goal isn't defined.");
+		}
+		return this.getShortestPath(myPosition, goal).get(0);
 	}
 	
 	public TreasureCollection getTreasureCollection() {

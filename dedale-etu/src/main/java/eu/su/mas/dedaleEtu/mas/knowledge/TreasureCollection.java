@@ -20,6 +20,10 @@ public class TreasureCollection implements Serializable{
 			listTreasure.add(t);
 		}
 		*/
+		if(this.isEmpty()) {
+			this.listTreasure.add(t);
+			return;
+		}
 		if(this.getAllLocation(t.getType()).contains(t.getLocation())) {
 			Treasure tr = this.getTreasure(t.getLocation());
 			if(tr.getLocation() == t.getLocation()) {
@@ -35,9 +39,15 @@ public class TreasureCollection implements Serializable{
 	}
 	
 	public void addTreasures(ArrayList<Treasure> l) {
+	
+		if(this.isEmpty()) {
+			this.listTreasure.addAll(l);
+			return;
+		}
 		for(Treasure t: l) {
 			addTreasure(t);
 		}
+		
 	}
 
 	public Treasure removeTreasure(Treasure t) {
@@ -88,7 +98,7 @@ public class TreasureCollection implements Serializable{
 	public String toString() {
 		StringBuilder res = new StringBuilder();
 		res.append("[");
-		for(Treasure t: listTreasure) {
+		for(Treasure t: this.listTreasure) {
 			res.append(t.toString());
 			res.append(";");
 		}
@@ -99,7 +109,7 @@ public class TreasureCollection implements Serializable{
 	
 	public List<String> getAllLocation(Observation type){
 		List<String> res = new ArrayList<>();
-		for(Treasure t: listTreasure) {
+		for(Treasure t: this.listTreasure) {
 			if(t.getType() == type) {
 				res.add(t.getLocation());
 			}
@@ -109,8 +119,7 @@ public class TreasureCollection implements Serializable{
 	
 	public List<String> getAllLocation(){
 		List<String> res = new ArrayList<>();
-		for(Treasure t: listTreasure) {
-			
+		for(Treasure t: this.listTreasure) {
 			res.add(t.getLocation());
 		}
 		return res;
@@ -119,7 +128,7 @@ public class TreasureCollection implements Serializable{
 	public Treasure getMostValueable(Observation type) {
 		Treasure res = null;
 		int max = 0;
-		for(Treasure t: listTreasure) {
+		for(Treasure t: this.listTreasure) {
 			if(t.getTreasureAmount() > max) {
 				res = t;
 				max = t.getTreasureAmount();
@@ -157,7 +166,7 @@ public class TreasureCollection implements Serializable{
 	
 	public Treasure getTreasure(String location) {
 		for(Treasure t:this.listTreasure) {
-			if(t.getLocation() == location) {
+			if(t.getLocation().equals(location)) {
 				return t;
 			}
 		}
