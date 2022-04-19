@@ -14,16 +14,26 @@ public class TreasureCollection implements Serializable{
 	private static final long serialVersionUID = 7383476290092058458L;
 	private ArrayList<Treasure> listTreasure = new ArrayList<>();
 	
+	public int allGold = 0;
+	public int allDiamond = 0;
+	
+	/***
+	 * Add a treasure to the knowledge or update the value to the lowest possible between the two possibility ( we assume that a lower value is the Wumpus falt )
+	 * @param t : a Treasure
+	 */
 	public void addTreasure(Treasure t){
 		/*
 		if(!this.listTreasure.contains(t)) {
 			listTreasure.add(t);
 		}
 		*/
+		//no value existing yet
 		if(this.isEmpty()) {
 			this.listTreasure.add(t);
+			this.addAllValueTreasure(t);
 			return;
 		}
+		//updating the value
 		if(this.getAllLocation(t.getType()).contains(t.getLocation())) {
 			Treasure tr = this.getTreasure(t.getLocation());
 			if(tr.getLocation() == t.getLocation()) {
@@ -32,24 +42,29 @@ public class TreasureCollection implements Serializable{
 				}
 			}
 		}
+		//regular addition
 		else {
-			//System.out.println(t + " added.");
-			listTreasure.add(t);
+			this.listTreasure.add(t);
+			this.addAllValueTreasure(t);
 		}
 	}
 	
+	/***
+	 * Adding multiple treasure at once
+	 * @param l: a collection of treasure 
+	 */
 	public void addTreasures(ArrayList<Treasure> l) {
-	
-		if(this.isEmpty()) {
-			this.listTreasure.addAll(l);
-			return;
-		}
 		for(Treasure t: l) {
 			addTreasure(t);
 		}
 		
 	}
 
+	/***
+	 * remove a treasure of the knowledge if present
+	 * @param t: the treasure to remove
+	 * @return the removed treasure or null if not found
+	 */
 	public Treasure removeTreasure(Treasure t) {
 		if (listTreasure.remove(t)) {
 			return t;
@@ -57,9 +72,14 @@ public class TreasureCollection implements Serializable{
 		return null;
 	}
 	
+	/***
+	 * remove a treasure of the knowledge if present
+	 * @param location: the location of the treasure
+	 * @return the removed treasure or null if not found
+	 */
 	public Treasure removeTreasure(String location) {
 		for(Treasure t: listTreasure) {
-			if(t.getLocation() == location) {
+			if(t.getLocation().equals(location)) {
 				this.removeTreasure(t);
 				return t;
 			}
@@ -67,34 +87,59 @@ public class TreasureCollection implements Serializable{
 		return null;
 	}
 	
+	/***
+	 * Updating the value of a specific treasure
+	 * @param location: location of the treasure
+	 * @param value: the new value of the treasure
+	 */
 	public void updateTreasure(String location, int value) {
+		Treasure res = null;
 		for(Treasure t: listTreasure) {
-			if(t.getLocation() == location) {
-				t.setTreasureAmount(value);
+			if(t.getLocation().equals(location)) {
+				res = t;
+				break;
 			}
+		}
+		if(res == null) {
+			return;
+		}
+		if(value == 0) {
+			this.removeTreasure(res);
+		}
+		else {
+			res.setTreasureAmount(value);
 		}
 	}
 	
+	/***
+	 * Count the global value of the Gold currently in the knowledge
+	 * @return global value of the Gold currently in the knowledge
+	 */
 	public int countGold() {
 		int res = 0;
 		for(Treasure t: listTreasure) {
-			if(t.getType() == Observation.GOLD) {
+			if(t.getType().equals(Observation.GOLD)) {
 				res += t.getTreasureAmount();
 			}
 		}
 		return res;
 	}
 	
+	/***
+	 * Count the global value of the Diamond currently in the knowledge
+	 * @return global value of the Diamond currently in the knowledge
+	 */
 	public int countDiamond() {
 		int res = 0;
 		for(Treasure t: listTreasure) {
-			if(t.getType() == Observation.DIAMOND) {
+			if(t.getType().equals(Observation.DIAMOND)) {
 				res += t.getTreasureAmount();
 			}
 		}
 		return res;
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder res = new StringBuilder();
 		res.append("[");
@@ -107,16 +152,25 @@ public class TreasureCollection implements Serializable{
 		return res.toString();
 	}
 	
+	/***
+	 * Give access to all the location of the knowledge for a given type
+	 * @param type: Gold or Diamond 
+	 * @return all the location of the knowledge for the type
+	 */
 	public List<String> getAllLocation(Observation type){
 		List<String> res = new ArrayList<>();
 		for(Treasure t: this.listTreasure) {
-			if(t.getType() == type) {
+			if(t.getType().equals(type)) {
 				res.add(t.getLocation());
 			}
 		}
 		return res;
 	}
 	
+	/***
+	 * Give access to all the location of the knowledge
+	 * @return all the location of the knowledge
+	 */
 	public List<String> getAllLocation(){
 		List<String> res = new ArrayList<>();
 		for(Treasure t: this.listTreasure) {
@@ -125,6 +179,11 @@ public class TreasureCollection implements Serializable{
 		return res;
 	}
 	
+	/***
+	 * Give the treasure with the most value among a certain type
+	 * @param type:  Gold or Diamond 
+	 * @return the treasure with the most value
+	 */
 	public Treasure getMostValueable(Observation type) {
 		Treasure res = null;
 		int max = 0;
@@ -137,6 +196,11 @@ public class TreasureCollection implements Serializable{
 		return res;
 	}
 	
+	/***
+	 * 
+	 * @param t: 
+	 * @return True if the treasure is already knew, false if not
+	 */
 	public boolean isIn(Treasure t) {
 		return this.listTreasure.contains(t);
 	}
@@ -148,7 +212,7 @@ public class TreasureCollection implements Serializable{
 	public List<Integer> getAllValue(Observation type){
 		List<Integer> res = new ArrayList<>();
 		for(Treasure t: listTreasure) {
-			if(t.getType() == type) {
+			if(t.getType().equals(type)) {
 				res.add(t.getTreasureAmount());
 			}
 		}
@@ -182,7 +246,7 @@ public class TreasureCollection implements Serializable{
 		for(Treasure ti:this.listTreasure) {
 			boolean notAlreadyIn = true;
 			for(Treasure tj:tc.listTreasure) {
-				if(ti.getLocation() == tj.getLocation()) {
+				if(ti.getLocation().equals(tj.getLocation())) {
 					notAlreadyIn = false;
 					break;
 				}
@@ -193,6 +257,15 @@ public class TreasureCollection implements Serializable{
 		}
 		
 		return res;
+	}
+	
+	public void addAllValueTreasure(Treasure t) {
+		if(t.getType().equals(Observation.GOLD)) {
+			allGold += t.getTreasureAmount(); 
+		}
+		if(t.getType().equals(Observation.DIAMOND)){
+			allDiamond += t.getTreasureAmount(); 
+		}
 	}
 	
 }
