@@ -3,6 +3,7 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,7 @@ public class MapRepresentation implements Serializable {
 	private SerializableComplexeGraph<String, MapAttribute> sg;//used as a temporary dataStructure during migration
 	
 	private TreasureCollection treasure = new TreasureCollection();
+	private HashMap<String,List<Couple<Observation, Integer>>> agentCapacity = new HashMap<>();
 
 	public MapRepresentation() {
 		//System.setProperty("org.graphstream.ui.renderer","org.graphstream.ui.j2dviewer.J2DGraphRenderer");
@@ -367,8 +369,8 @@ public class MapRepresentation implements Serializable {
 			if(notAlreadyIn) {
 				partialMap.g.addNode(n.getNodeId());
 			}
-			}
 		}
+	}
 		
 		
 		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
@@ -440,6 +442,13 @@ public class MapRepresentation implements Serializable {
 	
 	public TreasureCollection getTreasureCollection() {
 		return this.treasure;
+	}
+	
+	public void addCapacity(String agentName, List<Couple<Observation,Integer>> data) {
+		if(!this.agentCapacity.containsKey(agentName)) {
+			this.agentCapacity.put(agentName,data);
+		}
+		
 	}
 
 

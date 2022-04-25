@@ -4,6 +4,7 @@ import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
+import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.Behaviour;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class FSMCollect extends Behaviour {
 	 */
 	private int exitValue = DEFAULT;
 
-	public FSMCollect(final Adventurer myagent) {
+	public FSMCollect(Adventurer myagent) {
 		super(myagent);
 	}
 
@@ -35,8 +36,8 @@ public class FSMCollect extends Behaviour {
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 
 		//get role
-		//Observation role = ((AbstractDedaleAgent) this.myAgent).getMyTreasureType();
 		Observation role = ((Adventurer)this.myAgent).getRole();
+		
 
 		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
 		if (myPosition!=null){
@@ -50,13 +51,17 @@ public class FSMCollect extends Behaviour {
 				switch (o.getLeft()) {
 					case DIAMOND:case GOLD:
 						if ((o.getLeft() == role || role == Observation.ANY_TREASURE) && o.getRight()>0) {
-							System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
-							System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
-							System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
+							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
+							System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((Adventurer) this.myAgent).getRole());
+							//System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+							//System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
 							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + ((AbstractDedaleAgent) this.myAgent).openLock(o.getLeft()));
-							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + ((AbstractDedaleAgent) this.myAgent).pick());
+							int before = o.getRight();
+							int pickUp = ((AbstractDedaleAgent) this.myAgent).pick();
+							((Adventurer)this.myAgent).getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
+							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
 							((Adventurer)this.myAgent).setRole(o.getLeft());
-							System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
+							//System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
 						}
 						break;
 					default:

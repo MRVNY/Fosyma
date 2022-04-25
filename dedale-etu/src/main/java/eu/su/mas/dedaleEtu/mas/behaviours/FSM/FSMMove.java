@@ -58,9 +58,7 @@ public class FSMMove extends SimpleBehaviour {
  * @param agentNames name of the agents to share the map with
  */
 		
-		
 	private int ExitValue = 0;
-
 
 
 	public FSMMove(final Adventurer myagent) {
@@ -133,7 +131,7 @@ public class FSMMove extends SimpleBehaviour {
 			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
-				
+				((Adventurer)this.myAgent).getMyMap().addCapacity(((Adventurer)this.myAgent).getLocalName(), ((Adventurer)this.myAgent).getBackPackFreeSpace());
 				//affichage des trésors trouvés
 				System.out.println(this.myMap.getTreasureCollection());
 				//Ressources trouvés 

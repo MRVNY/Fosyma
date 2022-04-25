@@ -1,13 +1,16 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedale.mas.agent.behaviours.startMyBehaviours;
 
 import eu.su.mas.dedaleEtu.mas.behaviours.FSM.*;
+import eu.su.mas.dedaleEtu.mas.knowledge.EquityModule;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
@@ -26,6 +29,8 @@ public class Adventurer extends AbstractDedaleAgent {
 	private int diamondFound;
 	private int goldCollected;
 	private int goldFound;
+	
+	
 
 	//TIMEOUT
 	private int TIMEOUT = 10; //For Check
@@ -50,6 +55,8 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String SPM = "Send_Partial_Map";
 	private static final String Decide = "Decide";
     private static final String Collect = "Collect";
+    
+    private EquityModule equity = new EquityModule(this);
 
 	protected void setup(){
 
