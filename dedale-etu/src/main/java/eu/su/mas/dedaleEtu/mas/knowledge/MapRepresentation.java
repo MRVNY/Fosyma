@@ -237,6 +237,8 @@ public class MapRepresentation implements Serializable {
 		// adding the treasure to the serialiazeGraph
 		sg.addTreasures(treasure);
 		
+		sg.addCapacity(agentCapacity);
+		
 		
 		
 		
@@ -346,6 +348,7 @@ public class MapRepresentation implements Serializable {
 		if(!sgreceived.getTreasures().isEmpty()) {
 			this.treasure.mergeTreasure(sgreceived.getTreasures());
 		}
+		this.agentCapacity.putAll(sgreceived.getCapacity());
 		//System.out.println("Merge done");
 	}
 
@@ -374,6 +377,7 @@ public class MapRepresentation implements Serializable {
 		
 		
 		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
+		partialMap.agentCapacity.putAll(sgreceived.getCapacity());
 		return partialMap;
 	}
 	
@@ -449,6 +453,10 @@ public class MapRepresentation implements Serializable {
 			this.agentCapacity.put(agentName,data);
 		}
 		
+	}
+	
+	public HashMap<String,List<Couple<Observation, Integer>>> getCapacity(){
+		return this.agentCapacity;
 	}
 
 

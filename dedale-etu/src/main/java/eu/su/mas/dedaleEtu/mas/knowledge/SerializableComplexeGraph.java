@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import dataStructures.serializableGraph.SerializableNode;
+import dataStructures.tuple.Couple;
+import eu.su.mas.dedale.env.Observation;
 
 /**
  * This class offer a basic serializable graph as a set of nodes and edges.
@@ -26,6 +29,7 @@ public class SerializableComplexeGraph<String,V> implements Serializable {
 	private Map<SerializableNode<String,V>,Set<String>> myMap;
 	
 	private TreasureCollection treasures;
+	private HashMap<String,List<Couple<Observation, Integer>>> agentCapacity;
 
 	public SerializableComplexeGraph(){
 		myMap=new HashMap<SerializableNode<String,V>,Set<String>>();
@@ -128,6 +132,15 @@ public class SerializableComplexeGraph<String,V> implements Serializable {
 	
 	public TreasureCollection getTreasures() {
 		return this.treasures;
+	}
+	
+	public void addCapacity(HashMap<String,List<Couple<Observation, Integer>>> agentCapacity) {
+		this.agentCapacity = agentCapacity;
+		
+	}
+	
+	public HashMap<String, List<Couple<Observation, Integer>>> getCapacity() {
+		return this.agentCapacity;
 	}
 
 }
