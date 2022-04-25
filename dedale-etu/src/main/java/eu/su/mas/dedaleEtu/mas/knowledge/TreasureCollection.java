@@ -2,8 +2,10 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 
 public class TreasureCollection implements Serializable{
@@ -17,8 +19,11 @@ public class TreasureCollection implements Serializable{
 	public int allGold = 0;
 	public int allDiamond = 0;
 	
+	
+	
+	
 	/***
-	 * Add a treasure to the knowledge or update the value to the lowest possible between the two possibility ( we assume that a lower value is the Wumpus falt )
+	 * Add a treasure to the knowledge or update the value to the lowest possible between the two possibility ( we assume that a lower value is the Wumpus fault )
 	 * @param t : a Treasure
 	 */
 	public void addTreasure(Treasure t){
@@ -267,5 +272,6 @@ public class TreasureCollection implements Serializable{
 			allDiamond += t.getTreasureAmount(); 
 		}
 	}
+	
 	
 }
