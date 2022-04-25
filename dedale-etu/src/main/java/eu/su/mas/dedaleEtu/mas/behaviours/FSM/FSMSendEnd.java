@@ -1,9 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.io.IOException;
-import java.util.List;
 
-import dataStructures.serializableGraph.SerializableSimpleGraph;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -12,7 +10,7 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class FSMSPM extends Behaviour {
+public class FSMSendEnd extends Behaviour {
 
 	/**
 	 * 
@@ -26,7 +24,7 @@ public class FSMSPM extends Behaviour {
 	 */
 	private int exitValue = 0;
 	
-	public FSMSPM(final AbstractDedaleAgent myagent) {
+	public FSMSendEnd(final AbstractDedaleAgent myagent) {
 		super(myagent);
 
 	}
@@ -43,7 +41,7 @@ public class FSMSPM extends Behaviour {
 	
 	private void sendPieceMap(String agentName) {
 		ACLMessage msg = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-		msg.setProtocol("SENDMAP");
+		msg.setProtocol("END");
 		msg.setSender(this.myAgent.getAID());
 		msg.addReceiver(new AID(agentName,false));
 		

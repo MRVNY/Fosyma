@@ -9,7 +9,7 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class FSMPing extends Behaviour {
+public class FSMSendPings extends Behaviour {
 
 	
 
@@ -25,7 +25,7 @@ public class FSMPing extends Behaviour {
 	 */
 	private int exitValue = 0;
 	
-	public FSMPing(final Adventurer myagent) {super(myagent);}
+	public FSMSendPings(final Adventurer myagent) {super(myagent);}
 
 	@Override
 	public void action() {

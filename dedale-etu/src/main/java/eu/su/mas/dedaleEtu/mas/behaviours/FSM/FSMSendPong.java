@@ -1,7 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.io.IOException;
-import dataStructures.serializableGraph.SerializableSimpleGraph;
+
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
@@ -10,7 +10,7 @@ import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
-public class FSMSEM extends Behaviour {
+public class FSMSendPong extends Behaviour {
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public class FSMSEM extends Behaviour {
 	 */
 	private int exitValue = 0;
 	
-	public FSMSEM(final Adventurer myagent) {
+	public FSMSendPong(final Adventurer myagent) {
 		super(myagent);
 
 	}

@@ -27,12 +27,6 @@ public class Adventurer extends AbstractDedaleAgent {
 	private int goldCollected;
 	private int goldFound;
 
-	//TIMEOUT
-	private int TIMEOUT = 10; //For Check
-	private int WAIT = 100; // Fot Wait_Partial_Map
-	private int cptCheck = 0;
-	private int cptWaitMap = 0;
-
 	//enum for mode
 	public static final int EXPLORE = 0;
 	public static final int LOCATE = 1;
@@ -45,9 +39,8 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String Move = "Move";
 	private static final String Ping = "Ping";
 	private static final String Check = "Check";
-	private static final String SEM = "Send_Entire_Map";
-	private static final String WCM = "Wait_Check_Map";
-	private static final String SPM = "Send_Partial_Map";
+	private static final String Pong = "Pong";
+	private static final String End = "End";
 	private static final String Decide = "Decide";
     private static final String Collect = "Collect";
 
@@ -91,25 +84,23 @@ public class Adventurer extends AbstractDedaleAgent {
 		FSMBehaviour fsm = new FSMBehaviour(this);
 		// Define the different states and behaviours
 		fsm.registerFirstState (new FSMMove(this), Move);
-		fsm.registerState (new FSMPing(this), Ping);
+		fsm.registerState (new FSMSendPings(this), Ping);
 		fsm.registerState (new FSMCheck(this), Check);
-		fsm.registerState (new FSMSEM(this), SEM);
-		fsm.registerState (new FSMWCM(this), WCM);
-		fsm.registerState (new FSMSPM(this), SPM);
+		fsm.registerState (new FSMSendPong(this), Pong);
+		fsm.registerState (new FSMSendEnd(this), End);
 		fsm.registerState (new FSMDecide(this), Decide);
         fsm.registerState (new FSMCollect(this), Collect);
 		
 		// Register the transitions
 		fsm.registerDefaultTransition (Move,Ping);
 		fsm.registerDefaultTransition (Ping,Check);
-		fsm.registerDefaultTransition (SPM,Check);
-		fsm.registerDefaultTransition (SEM,WCM);
-		fsm.registerDefaultTransition (WCM,Check);
+		fsm.registerDefaultTransition (End,Check);
+		fsm.registerDefaultTransition (Pong,Check);
 		fsm.registerDefaultTransition (Collect,Ping);
 
 		fsm.registerDefaultTransition (Check,Check);
-        fsm.registerTransition (Check,SEM, FSMCheck.Send_Entire_Map);
-        fsm.registerTransition (Check,SPM, FSMCheck.Send_Partial_Map);
+        fsm.registerTransition (Check,Pong, FSMCheck.SEND_PONG);
+        fsm.registerTransition (Check,End, FSMCheck.SEND_END);
         fsm.registerTransition (Check,Decide, FSMCheck.DECIDE);
         fsm.registerTransition (Check,Move, FSMCheck.TIMEOUT);
 
@@ -190,26 +181,6 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setMode(int mode) {
 		this.mode = mode;
-	}
-
-	public boolean countTime(){
-		//doWait(1);
-		cptCheck++;
-		if(cptCheck >= TIMEOUT){
-			cptCheck = 0;
-			return false;
-		}
-		else return true;
-	}
-
-	public boolean waitMap(){
-		doWait(1);
-		cptWaitMap++;
-		if(cptWaitMap >= WAIT){
-			cptWaitMap = 0;
-			return false;
-		}
-		else return true;
 	}
 
 	public Observation getRole() {

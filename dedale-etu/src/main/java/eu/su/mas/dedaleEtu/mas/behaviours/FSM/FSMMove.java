@@ -72,8 +72,7 @@ public class FSMMove extends SimpleBehaviour {
 	@Override
 	public void action() {
 		finished = false;
-		
-		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
+		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" State");
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
