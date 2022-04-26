@@ -9,6 +9,7 @@ import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.EquityModule;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 
@@ -133,12 +134,15 @@ public class FSMMove extends SimpleBehaviour {
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
 				//affichage des trésors trouvés
-				System.out.println(this.myMap.getTreasureCollection());
+				//System.out.println(this.myMap.getTreasureCollection());
 				//Ressources trouvés 
-				System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
-				System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
+				//System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
+				//System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
 				
-				System.out.println(this.myMap.getCapacity());
+				((Adventurer)this.myAgent).equity = new EquityModule(((Adventurer)this.myAgent).getMyMap(),this.getAgent().getLocalName());
+				((Adventurer)this.myAgent).setRole(((Adventurer)this.myAgent).equity.getType());
+				
+				//System.out.println(this.myMap.getCapacity());
 				
 				//this crap is only here for testing purpose, don't mind it.
 				
