@@ -375,6 +375,8 @@ public class MapRepresentation implements Serializable {
 		// adding the treasure to the serialiazeGraph
 		sg.addTreasures(treasure);
 		
+		sg.addCapacity(agentCapacity);
+		
 		
 		
 		
@@ -484,6 +486,116 @@ public class MapRepresentation implements Serializable {
 		if(!sgreceived.getTreasures().isEmpty()) {
 			this.treasure.mergeTreasure(sgreceived.getTreasures());
 		}
+		this.agentCapacity.putAll(sgreceived.getCapacity());
 		//System.out.println("Merge done");
 	}
+
+	
+	/***
+	 * We try to only collect the part of the map that we're missing 
+	 * @param sgreceived the other map
+	 * @return the missing part
+	 */
+	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
+		// we want to get only the part that our map is missing in sgreceived
+		MapRepresentation partialMap = new MapRepresentation();
+		
+		for (SerializableNode<String, MapAttribute> n: sg.getAllNodes()) {
+			boolean notAlreadyIn =true;
+			for (SerializableNode<String, MapAttribute> m: sgreceived.getAllNodes()){
+				if(n.getNodeId() == m.getNodeId()) {
+					notAlreadyIn = false;
+					break;
+				}
+			if(notAlreadyIn) {
+				partialMap.g.addNode(n.getNodeId());
+			}
+		}
+	}
+		
+		
+		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
+		partialMap.agentCapacity.putAll(sgreceived.getCapacity());
+		return partialMap;
+	}
+	
+	public String getShortestPathToClosestTreasure(String myPosition,Observation type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		//1) Get all location of Treasures
+		List<String> treasurenodes=this.treasure.getAllLocation(type);
+		if (treasurenodes.isEmpty()) {
+			throw new Exception("La liste de trésors ne semble pas contenir de " + type);
+		}
+
+		//2) select the closest one
+		List<Couple<String,Integer>> lc=
+				treasurenodes.stream()
+				.map(on -> (getShortestPath(myPosition,on)!=null)? new Couple<String, Integer>(on,getShortestPath(myPosition,on).size()): new Couple<String, Integer>(on,Integer.MAX_VALUE))//some nodes my be unreachable if the agents do not share at least one common node.
+				.collect(Collectors.toList());
+
+		Optional<Couple<String,Integer>> closest=lc.stream().min(Comparator.comparing(Couple::getRight));
+		//3) Compute shorterPath
+
+		if(closest.isPresent() && closest.get().getLeft()!=null){
+			List<String> out = getShortestPath(myPosition,closest.get().getLeft());
+			if (!out.isEmpty()) return out.get(0);
+			else return null;
+		}
+		else return null;
+
+	}
+	
+	public String getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation()).get(0);
+	}
+	
+	public String getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
+		if(this.treasure.isIn(treasure)) {
+			return this.getShortestPath(myPosition,treasure.getLocation()).get(0);
+		}
+		throw new Exception(treasure +" n'existe pas sur la map.");
+	}
+	
+	public String getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
+		if (this.treasure.isEmpty()) {
+			throw new Exception("La liste de trésors est vide pour le moment");
+		}
+		
+		List<Integer> treasureValues = this.treasure.getAllValue(type);
+		if(treasureValues.contains(value)) {
+			return this.getShortestPath(myPosition, treasure.getTreasure(value).getLocation()).get(0);
+		}
+		return null;
+	}
+	
+	public String getShortestPathToGoal(String myPosition,String goal) throws Exception {
+		if(goal == null) {
+			throw new Exception("The goal isn't defined.");
+		}
+		return this.getShortestPath(myPosition, goal).get(0);
+	}
+	
+	public TreasureCollection getTreasureCollection() {
+		return this.treasure;
+	}
+	
+	public void addCapacity(String agentName, List<Couple<Observation,Integer>> data) {
+		if(!this.agentCapacity.containsKey(agentName)) {
+			this.agentCapacity.put(agentName,data);
+		}
+		
+	}
+	
+	public HashMap<String,List<Couple<Observation, Integer>>> getCapacity(){
+		return this.agentCapacity;
+	}
+
+
 }

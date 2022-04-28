@@ -9,6 +9,7 @@ import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.EquityModule;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 
@@ -67,6 +68,7 @@ public class FSMMove extends SimpleBehaviour {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
+			this.myMap.addCapacity(((Adventurer)this.myAgent).getLocalName(), ((Adventurer)this.myAgent).getBackPackFreeSpace());
 		}
 		
 
@@ -123,12 +125,16 @@ public class FSMMove extends SimpleBehaviour {
 			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
-				((Adventurer)this.myAgent).getMyMap().addCapacity(((Adventurer)this.myAgent).getLocalName(), ((Adventurer)this.myAgent).getBackPackFreeSpace());
 				//affichage des trésors trouvés
-				System.out.println(this.myMap.getTreasureCollection());
+				//System.out.println(this.myMap.getTreasureCollection());
 				//Ressources trouvés 
-				System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
-				System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
+				//System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
+				//System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
+				
+				((Adventurer)this.myAgent).equity = new EquityModule(((Adventurer)this.myAgent).getMyMap(),this.getAgent().getLocalName());
+				((Adventurer)this.myAgent).setRole(((Adventurer)this.myAgent).equity.getType());
+				
+				//System.out.println(this.myMap.getCapacity());
 				
 				//this crap is only here for testing purpose, don't mind it.
 				
@@ -139,8 +145,8 @@ public class FSMMove extends SimpleBehaviour {
 //				this.myMap.getTreasureCollection().updateTreasure("7",0);
 				
 				//Ressources sur la cartes actuellement
-				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
-				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
+//				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
+//				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
 			}
 
 			//4) select next move.

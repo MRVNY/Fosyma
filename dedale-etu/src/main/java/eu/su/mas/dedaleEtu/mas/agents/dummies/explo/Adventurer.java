@@ -49,7 +49,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String Decide = "Decide";
     private static final String Collect = "Collect";
     
-    private EquityModule equity = new EquityModule(this);
+    public EquityModule equity;
 
 	protected void setup(){
 
