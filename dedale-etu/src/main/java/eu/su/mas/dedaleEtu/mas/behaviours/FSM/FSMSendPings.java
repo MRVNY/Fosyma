@@ -51,7 +51,7 @@ public class FSMSendPings extends Behaviour {
 		msg.setProtocol("PING");
 		msg.setSender(this.myAgent.getAID());
 		msg.addReceiver(new AID(agentName,false));
-		try {					
+		try {
 			msg.setContentObject(null);
 		} catch (IOException e) {
 			e.printStackTrace();

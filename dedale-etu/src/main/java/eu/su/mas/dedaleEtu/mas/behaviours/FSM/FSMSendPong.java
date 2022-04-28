@@ -1,10 +1,12 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.Message;
 import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -12,9 +14,6 @@ import jade.lang.acl.ACLMessage;
 
 public class FSMSendPong extends Behaviour {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4810526640574152546L;
 
 	private boolean finished = false;
@@ -44,10 +43,11 @@ public class FSMSendPong extends Behaviour {
 		msg.setProtocol("PONG");
 		msg.setSender(this.myAgent.getAID());
 		msg.addReceiver(new AID(agentName,false));
-		
-		SerializableComplexeGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
+
+		Message message = new Message(((Adventurer)this.myAgent));
+		//SerializableComplexeGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
 		try {					
-			msg.setContentObject(sg);
+			msg.setContentObject((Serializable) message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

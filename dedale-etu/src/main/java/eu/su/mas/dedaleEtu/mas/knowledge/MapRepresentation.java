@@ -449,7 +449,9 @@ public class MapRepresentation implements Serializable {
 		if(goal == null) {
 			throw new Exception("The goal isn't defined.");
 		}
-		return this.getShortestPath(myPosition, goal).get(0);
+		List<String> paths = this.getShortestPath(myPosition, goal);
+		if (!paths.isEmpty()) return paths.get(0);
+		else return null;
 	}
 	
 	public TreasureCollection getTreasureCollection() {

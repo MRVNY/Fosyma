@@ -22,6 +22,9 @@ public class FSMDecide extends Behaviour {
 	public final static int DEFAULT = 0; //
 	public final static int COLLECT = 1;
 
+	private Adventurer myAdventurer;
+	private AbstractDedaleAgent myAbstractAgent;
+
 	/**
 	 * Current knowledge of the agent regarding the environment
 	 */
@@ -29,6 +32,8 @@ public class FSMDecide extends Behaviour {
 
 	public FSMDecide(final Adventurer myagent) {
 		super(myagent);
+        myAdventurer = myagent;
+		myAbstractAgent = myagent;
 	}
 
 	@Override
@@ -36,16 +41,16 @@ public class FSMDecide extends Behaviour {
 		finished = false;
 		exitValue = DEFAULT;
 		//System.out.println(this.myAgent.getLocalName() + " in " + this.getBehaviourName() + " Stade");
-		String myPosition = ((AbstractDedaleAgent) this.myAgent).getCurrentPosition();
+		String myPosition = myAbstractAgent.getCurrentPosition();
 
 		if (myPosition != null) {
 
 			//get role
-			//Observation role = ((AbstractDedaleAgent) this.myAgent).getMyTreasureType();
-			Observation role = ((Adventurer)this.myAgent).getRole();
+			//Observation role = myAbstractAgent.getMyTreasureType();
+			Observation role = myAdventurer.getRole();
 
 			//get bagSpace
-			List<Couple<Observation, Integer>> bag = ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace();
+			List<Couple<Observation, Integer>> bag = myAbstractAgent.getBackPackFreeSpace();
 			int bagSpace = 0;
 			if (role != Observation.ANY_TREASURE){
 				for(Couple<Observation,Integer> o:bag) {
@@ -54,7 +59,7 @@ public class FSMDecide extends Behaviour {
 			}
 
 			//List of observable from the agent's current position
-			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent).observe();//myPosition
+			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = myAbstractAgent.observe();//myPosition
 			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
 
 			//get value and Type of the Treasure
@@ -68,7 +73,7 @@ public class FSMDecide extends Behaviour {
 			}
 
 //			//get mode
-			int mode = ((Adventurer) this.myAgent).getMode();
+			int mode = myAdventurer.getMode();
 
 			//get ratio
 			float TRatio = 1/2;
@@ -79,7 +84,7 @@ public class FSMDecide extends Behaviour {
 
 			if(!finished) {
 				if (mode == Adventurer.LOCATE && role == Observation.ANY_TREASURE) {
-					((Adventurer)this.myAgent).setRole(type); //Temporary buy fix
+					myAdventurer.setRole(type); //Temporary buy fix
 					finished = true;
 				}
 			}
@@ -88,7 +93,7 @@ public class FSMDecide extends Behaviour {
 			if (!finished && bagSpace==0){
 				if(role != Observation.ANY_TREASURE && mode!=Adventurer.SEARCH) {
 					System.out.println(this.myAgent.getLocalName() + " passes to SEARCH");
-					((Adventurer) this.myAgent).setMode(Adventurer.SEARCH);
+					myAdventurer.setMode(Adventurer.SEARCH);
 				}
 				finished = true;
 			}

@@ -42,6 +42,8 @@ public class FSMMove extends SimpleBehaviour {
 	 * Current knowledge of the agent regarding the environment
 	 */
 	private MapRepresentation myMap;
+	private Adventurer myAdventurer;
+	private AbstractDedaleAgent myAbstractAgent;
 
 	private List<String> list_agentNames;
 
@@ -58,7 +60,8 @@ public class FSMMove extends SimpleBehaviour {
 	public FSMMove(final Adventurer myagent) {
 		super(myagent);
 		myMap = myagent.getMyMap();
-			
+		myAdventurer = myagent;
+		myAbstractAgent = myagent;
 	}
 
 	@Override
@@ -68,16 +71,16 @@ public class FSMMove extends SimpleBehaviour {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
-			this.myMap.addCapacity(((Adventurer)this.myAgent).getLocalName(), ((Adventurer)this.myAgent).getBackPackFreeSpace());
+			this.myMap.addCapacity(myAdventurer.getLocalName(), myAdventurer.getBackPackFreeSpace());
 		}
 		
 
 		//0) Retrieve the current position
-		String myPosition=((AbstractDedaleAgent)this.myAgent).getCurrentPosition();
+		String myPosition=myAbstractAgent.getCurrentPosition();
 
 		if (myPosition!=null){
 			//List of observable from the agent's current position
-			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=((AbstractDedaleAgent)this.myAgent).observe();//myPosition
+			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=myAbstractAgent.observe();//myPosition
 
 			/**
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
@@ -120,19 +123,19 @@ public class FSMMove extends SimpleBehaviour {
 
 			//3) while openNodes is not empty, continues.
 
-			int mode = ((Adventurer)this.myAgent).getMode();
+			int mode = myAdventurer.getMode();
 
 			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
-				((Adventurer)this.myAgent).setMode(Adventurer.LOCATE);
+				myAdventurer.setMode(Adventurer.LOCATE);
 				//affichage des trésors trouvés
 				//System.out.println(this.myMap.getTreasureCollection());
 				//Ressources trouvés 
 				//System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
 				//System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
 				
-				((Adventurer)this.myAgent).equity = new EquityModule(((Adventurer)this.myAgent).getMyMap(),this.getAgent().getLocalName());
-				((Adventurer)this.myAgent).setRole(((Adventurer)this.myAgent).equity.getType());
+				myAdventurer.equity = new EquityModule(myAdventurer.getMyMap(),this.getAgent().getLocalName());
+				myAdventurer.setRole(myAdventurer.equity.getType());
 				
 				//System.out.println(this.myMap.getCapacity());
 				
@@ -157,8 +160,8 @@ public class FSMMove extends SimpleBehaviour {
 				//no directly accessible openNode
 				//chose one, compute the path and take the first step.
 				try {
-					((Adventurer)this.myAgent).setGoals(this.myMap.getClosestOpenNodes(myPosition));
-					List<Couple<String,Integer>> goals = ((Adventurer)this.myAgent).getGoals();
+					myAdventurer.setGoals(this.myMap.getClosestOpenNodes(myPosition));
+					List<Couple<String,Integer>> goals = myAdventurer.getGoals();
 					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
 					//nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
 				} catch (Exception e) {
@@ -168,14 +171,14 @@ public class FSMMove extends SimpleBehaviour {
 			}
 
 			else if (mode==Adventurer.LOCATE){
-				Observation role = ((Adventurer)this.myAgent).getRole();
+				Observation role = myAdventurer.getRole();
 				Observation treType;
 				if(role==Observation.DIAMOND) treType = Observation.DIAMOND;
 				else treType = Observation.GOLD;
 
 				try {
-					((Adventurer)this.myAgent).setGoals(this.myMap.getClosestTreasures(myPosition,treType));
-					List<Couple<String,Integer>> goals = ((Adventurer)this.myAgent).getGoals();
+					myAdventurer.setGoals(this.myMap.getClosestTreasures(myPosition,treType));
+					List<Couple<String,Integer>> goals = myAdventurer.getGoals();
 					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
 					//nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
 				} catch (Exception e) {
@@ -189,9 +192,9 @@ public class FSMMove extends SimpleBehaviour {
 				nextNode = lobs.get(moveId).getLeft();
 			}
 
-			((Adventurer)this.myAgent).setMyMap(myMap);
+			myAdventurer.setMyMap(myMap);
 
-			((AbstractDedaleAgent)this.myAgent).moveTo(nextNode);
+			myAbstractAgent.moveTo(nextNode);
 
 			finished=true;
 

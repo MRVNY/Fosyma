@@ -5,6 +5,7 @@ import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation;
+import eu.su.mas.dedaleEtu.mas.knowledge.Message;
 import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -33,8 +34,13 @@ public class FSMCheck extends Behaviour {
 
 	private int exitValue = 0;
 	
+    private Adventurer myAdventurer;
+	private AbstractDedaleAgent myAbstractAgent;
+
 	public FSMCheck(final Adventurer myagent) {
 		super(myagent);
+        myAdventurer = myagent;
+		myAbstractAgent = myagent;
 	}
 
 	@Override
@@ -67,11 +73,13 @@ public class FSMCheck extends Behaviour {
 				get = true;
 				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgReceived = null;
 				try {
-					sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
+					Message message = (Message) msgReceived.getContentObject();
+					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
+					sgReceived = message.getMap();
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
-				((Adventurer) this.myAgent).getMyMap().mergeMap(sgReceived);
+				myAdventurer.getMyMap().mergeMap(sgReceived);
 				finished = true;
 			}
 			if (!get) {
@@ -85,9 +93,9 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK MODE & ROLE//////////
 		//If in LOCATE mode and has no role, pass to decide to get a role
 		if(!finished) {
-			int mode = ((Adventurer) this.myAgent).getMode();
-			//Observation role = ((AbstractDedaleAgent) this.myAgent).getMyTreasureType();
-			Observation role = ((Adventurer)this.myAgent).getRole();
+			int mode = myAdventurer.getMode();
+			//Observation role = myAbstractAgent.getMyTreasureType();
+			Observation role = myAdventurer.getRole();
 			if (mode == Adventurer.LOCATE && role == Observation.ANY_TREASURE) {
 				exitValue = DECIDE;
 				finished = true;
@@ -106,7 +114,7 @@ public class FSMCheck extends Behaviour {
 			if (pingReceived != null) {
 				//si on a bien reçu un Ping, On vas devoir envoyer notre map dans un Pong
 				//System.out.println(this.getAgent().getLocalName() + " <--PING-- " + pingReceived.getSender().getLocalName());
-				((Adventurer) this.myAgent).setCorresponder(pingReceived.getSender().getLocalName());
+				myAdventurer.setCorresponder(pingReceived.getSender().getLocalName());
 				cptWaitMap = 0; //Extend waiting time for End
 				exitValue = SEND_PONG;
 				finished = true;
@@ -124,16 +132,18 @@ public class FSMCheck extends Behaviour {
 
 			if (pongReceived != null) {
 				//System.out.println(this.getAgent().getLocalName() + " <--PONG-- " + pongReceived.getSender().getLocalName());
-				((Adventurer) this.myAgent).setCorresponder(pongReceived.getSender().getLocalName());
+				myAdventurer.setCorresponder(pongReceived.getSender().getLocalName());
 
 				//Merge map
 				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgReceived=null;
 				try {
-					sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>)pongReceived.getContentObject();
+					Message message = (Message) pongReceived.getContentObject();
+					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
+					sgReceived = message.getMap();
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
-				((Adventurer) this.myAgent).getMyMap().mergeMap(sgReceived);
+				myAdventurer.getMyMap().mergeMap(sgReceived);
 
 				exitValue = SEND_END;
 				finished = true;
@@ -144,7 +154,7 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK MAP//////////
 		//If found treasure, pass to DECIDE
 		if(!finished) {
-			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = ((AbstractDedaleAgent) this.myAgent).observe();//myPosition
+			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = myAbstractAgent.observe();//myPosition
 			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
 			//get value of the Treasure
 			int value = 0;

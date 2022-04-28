@@ -1,10 +1,12 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import eu.su.mas.dedaleEtu.mas.knowledge.MapRepresentation.MapAttribute;
+import eu.su.mas.dedaleEtu.mas.knowledge.Message;
 import eu.su.mas.dedaleEtu.mas.knowledge.SerializableComplexeGraph;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -44,10 +46,12 @@ public class FSMSendEnd extends Behaviour {
 		msg.setProtocol("END");
 		msg.setSender(this.myAgent.getAID());
 		msg.addReceiver(new AID(agentName,false));
-		
-		SerializableComplexeGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
-		try {					
-			msg.setContentObject(sg);
+
+		Message message = new Message(((Adventurer)this.myAgent));
+		//SerializableComplexeGraph<String, MapAttribute> sg=((Adventurer)this.myAgent).getMyMap().getSerializableGraph();
+		//message.setMap(partialMap);
+		try {
+			msg.setContentObject((Serializable) message);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
