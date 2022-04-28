@@ -33,13 +33,6 @@ import jade.core.behaviours.SimpleBehaviour;
  *
  */
 public class FSMMove extends SimpleBehaviour {
-
-	
-
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8402143361534297234L;
 
 	private boolean finished = false;
@@ -157,7 +150,14 @@ public class FSMMove extends SimpleBehaviour {
 			if (this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
 				//no directly accessible openNode
 				//chose one, compute the path and take the first step.
-				nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+				try {
+					((Adventurer)this.myAgent).setGoals(this.myMap.getClosestOpenNodes(myPosition));
+					List<Couple<String,Integer>> goals = ((Adventurer)this.myAgent).getGoals();
+					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
+					//nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
 			}
 
@@ -168,7 +168,10 @@ public class FSMMove extends SimpleBehaviour {
 				else treType = Observation.GOLD;
 
 				try {
-					nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
+					((Adventurer)this.myAgent).setGoals(this.myMap.getClosestTreasures(myPosition,treType));
+					List<Couple<String,Integer>> goals = ((Adventurer)this.myAgent).getGoals();
+					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
+					//nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

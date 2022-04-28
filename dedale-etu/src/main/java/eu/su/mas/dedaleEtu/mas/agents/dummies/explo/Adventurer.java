@@ -30,7 +30,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	private int goldCollected;
 	private int goldFound;
 	
-	
+	private List<Couple<String,Integer>> goals = new ArrayList<>();
 
 	//enum for mode
 	public static final int EXPLORE = 0;
@@ -196,5 +196,17 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setRole(Observation role) {
 		this.role = role;
+	}
+
+	public List<Couple<String,Integer>> getGoals(){
+		return goals;
+	}
+
+	public void setGoals(List<Couple<String,Integer>> goals){
+		this.goals = goals;
+	}
+
+	public void popGoals(){
+		this.goals.remove(0);
 	}
 }
