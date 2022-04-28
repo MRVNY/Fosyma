@@ -2,10 +2,8 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 
 public class TreasureCollection implements Serializable{
@@ -271,6 +269,10 @@ public class TreasureCollection implements Serializable{
 		if(t.getType().equals(Observation.DIAMOND)){
 			allDiamond += t.getTreasureAmount(); 
 		}
+	}
+	
+	public ArrayList<Treasure> getTreasures(){
+		return this.listTreasure;
 	}
 	
 	

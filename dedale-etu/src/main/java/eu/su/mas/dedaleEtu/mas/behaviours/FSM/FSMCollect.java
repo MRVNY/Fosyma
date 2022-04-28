@@ -52,7 +52,7 @@ public class FSMCollect extends Behaviour {
 					case DIAMOND:case GOLD:
 						if ((o.getLeft() == role || role == Observation.ANY_TREASURE) && o.getRight()>0) {
 							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((AbstractDedaleAgent) this.myAgent).getMyTreasureType());
-							System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((Adventurer) this.myAgent).getRole());
+							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + ((Adventurer) this.myAgent).getRole());
 							//System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + ((AbstractDedaleAgent) this.myAgent).getBackPackFreeSpace());
 							//System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
 							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + ((AbstractDedaleAgent) this.myAgent).openLock(o.getLeft()));
