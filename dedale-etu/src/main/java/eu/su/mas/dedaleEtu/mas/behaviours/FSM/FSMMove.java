@@ -33,6 +33,7 @@ import jade.core.behaviours.SimpleBehaviour;
  * @author hc
  *
  */
+
 public class FSMMove extends SimpleBehaviour {
 	private static final long serialVersionUID = 8402143361534297234L;
 
@@ -45,7 +46,6 @@ public class FSMMove extends SimpleBehaviour {
 	private Adventurer myAdventurer;
 	private AbstractDedaleAgent myAbstractAgent;
 
-	private List<String> list_agentNames;
 
 /**
  *
@@ -62,6 +62,7 @@ public class FSMMove extends SimpleBehaviour {
 		myMap = myagent.getMyMap();
 		myAdventurer = myagent;
 		myAbstractAgent = myagent;
+		myAdventurer.updatePriorities();
 	}
 
 	@Override
@@ -109,7 +110,6 @@ public class FSMMove extends SimpleBehaviour {
 			this.myMap.addNode(myPosition, MapAttribute.closed);
 
 			//2) get the surrounding nodes and, if not in closedNodes, add them to open nodes.
-			String nextNode=null;
 			Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 			while(iter.hasNext()){
 				String nodeId=iter.next().getLeft();
@@ -155,46 +155,25 @@ public class FSMMove extends SimpleBehaviour {
 			//4) select next move.
 
 			//4.1 If there exist one open node directly reachable, go for it,
-			//	 otherwise choose one from the openNode list, compute the shortestPath and go for it
-			if (this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
-				//no directly accessible openNode
-				//chose one, compute the path and take the first step.
-				try {
-					myAdventurer.setGoals(this.myMap.getClosestOpenNodes(myPosition));
-					List<Couple<String,Integer>> goals = myAdventurer.getGoals();
-					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
-					//nextNode=this.myMap.getShortestPathToClosestOpenNode(myPosition);//getShortestPath(myPosition,this.openNodes.get(0)).get(0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				//System.out.println(this.myAgent.getLocalName()+"-- list= "+this.myMap.getOpenNodes()+"| nextNode: "+nextNode);
-			}
-
-			else if (mode==Adventurer.LOCATE){
-				Observation role = myAdventurer.getRole();
-				Observation treType;
-				if(role==Observation.DIAMOND) treType = Observation.DIAMOND;
-				else treType = Observation.GOLD;
-
-				try {
-					myAdventurer.setGoals(this.myMap.getClosestTreasures(myPosition,treType));
-					List<Couple<String,Integer>> goals = myAdventurer.getGoals();
-					if(goals!=null && !goals.isEmpty()) nextNode = this.myMap.getShortestPathToGoal(myPosition,goals.get(0).getLeft());
-					//nextNode = this.myMap.getShortestPathToClosestTreasure(myPosition, treType);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			if(nextNode==null){
-				Random r = new Random();
-				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
-				nextNode = lobs.get(moveId).getLeft();
-			}
+			//otherwise choose one from the openNode list, compute the shortestPath and go for it
+			//We now update goals in FSMCheck since we need to do enchere
 
 			myAdventurer.setMyMap(myMap);
 
-			myAbstractAgent.moveTo(nextNode);
+			String nextNode = myAdventurer.getNextNode();
+
+			if(nextNode==null){
+				myAdventurer.resetGoal();
+				nextNode = myAdventurer.getNextNode();
+
+				if(nextNode==null) {
+					Random r = new Random();
+					int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
+					nextNode = lobs.get(moveId).getLeft();
+				}
+			}
+
+			if(nextNode!=null) myAbstractAgent.moveTo(nextNode);
 
 			finished=true;
 
@@ -206,8 +185,6 @@ public class FSMMove extends SimpleBehaviour {
 		return finished;
 	}
 	
-	public int onEnd() {
-		return ExitValue ;
-		}
+	public int onEnd() {return ExitValue ;}
 
 }

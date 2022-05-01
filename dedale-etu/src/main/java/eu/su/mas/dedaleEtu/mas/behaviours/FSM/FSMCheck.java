@@ -37,6 +37,9 @@ public class FSMCheck extends Behaviour {
     private Adventurer myAdventurer;
 	private AbstractDedaleAgent myAbstractAgent;
 
+	int myMode = -1;
+	Observation myRole = null;
+
 	public FSMCheck(final Adventurer myagent) {
 		super(myagent);
         myAdventurer = myagent;
@@ -47,6 +50,10 @@ public class FSMCheck extends Behaviour {
 	public void action() {
 		finished = false;
 		exitValue = DEFAULT;
+
+		if(cptCheck==0) myAdventurer.updatePriorities(); //Update the goals so we don't stay on goals from last pos
+		myMode = myAdventurer.getMode();
+		myRole = myAdventurer.getRole();
 
 		boolean waitMapDone = waitMap();
 
@@ -76,6 +83,9 @@ public class FSMCheck extends Behaviour {
 					Message message = (Message) msgReceived.getContentObject();
 					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
 					sgReceived = message.getMap();
+
+					//Enchere
+					enchere(message);
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
@@ -93,10 +103,8 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK MODE & ROLE//////////
 		//If in LOCATE mode and has no role, pass to decide to get a role
 		if(!finished) {
-			int mode = myAdventurer.getMode();
-			//Observation role = myAbstractAgent.getMyTreasureType();
-			Observation role = myAdventurer.getRole();
-			if (mode == Adventurer.LOCATE && role == Observation.ANY_TREASURE) {
+			//Observation myRole = myAbstractAgent.getMyTreasureType();
+			if (myMode == Adventurer.LOCATE && myRole == Observation.ANY_TREASURE) {
 				exitValue = DECIDE;
 				finished = true;
 			}
@@ -123,7 +131,7 @@ public class FSMCheck extends Behaviour {
 
 
 		//////////CHECK PONG//////////
-		//if received Pong, send End (Partial Map)
+		//if received Pong, Do Enchere and send End (Partial Map)
 		if(!finished) {
 			MessageTemplate pongTemplate = MessageTemplate.and(
 					MessageTemplate.MatchProtocol("PONG"),
@@ -140,6 +148,9 @@ public class FSMCheck extends Behaviour {
 					Message message = (Message) pongReceived.getContentObject();
 					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
 					sgReceived = message.getMap();
+
+					//Enchere
+					enchere(message);
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
@@ -187,7 +198,64 @@ public class FSMCheck extends Behaviour {
 		return exitValue ;
 	}
 
-	public boolean waitCheck(){
+	private void enchere(Message message){
+		int hisMode = message.getMode();
+		Couple<String,Integer> hisGoal = message.getGoal();
+		String hisNextNode = message.getNextNode();
+		String hisPos = message.getPosition();
+
+		String myPos = myAbstractAgent.getCurrentPosition();
+		Couple<String,Integer> myGoal = message.getGoal();
+		String myNextNode = myAdventurer.getNextNode();
+
+		if(message != null && hisNextNode != null && hisPos != null && hisGoal != null && myGoal != null && myPos != null && myNextNode != null) {
+			// Hierarchy of modes : W > L > E > S
+
+			//Check current goals and positions
+			if (hisGoal.getLeft().equals(myGoal.getLeft())                                //IF we have the same goal
+			|| (myPos.equals(hisNextNode) && myAdventurer.getNextNode().equals(hisPos))   //OR we are blocking each other
+			&& (hisMode > myMode                                                	//AND IF his mode is more important my mine
+			|| (hisMode == myMode && hisGoal.getRight() <= myGoal.getRight()))){	//OR we have the same role but his path is shorter
+				myGoal = null;    //THEN I give up my goal
+				myAdventurer.setGoal(null);
+
+				//AND I need to find a new goal in life (I'm only able to change my own goals)
+				List<Couple<String,Integer>> myPriorities = myAdventurer.getPriorities();
+				if(myPriorities!=null){
+					for(Couple<String,Integer> newGoal: myPriorities){
+						myAdventurer.setGoal(newGoal);
+						myNextNode = myAdventurer.getNextNode();
+						boolean block = myNextNode != null && myPos.equals(hisNextNode) && myNextNode.equals(hisPos);
+
+						if(newGoal.getLeft().equals(hisGoal.getLeft()) || block) {        		//IF we have the same goal OR we block
+							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight()){	//BUT if we have the same mode and my route is faster
+								myGoal = newGoal;	//THEN I beat him and get the goal
+								myAdventurer.setGoal(myGoal);
+								break;
+							}
+							else { //Or else we pass to the next goal
+								myGoal = null;
+								myAdventurer.setGoal(null);
+							}
+						}
+						else { //IF we don't have the same goal and we don't block
+							if(myNextNode==null){
+								myGoal = null;
+								myAdventurer.setGoal(null);
+							}
+							else{
+								myGoal = newGoal;    //THEN I get the goal
+								myAdventurer.setGoal(myGoal);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean waitCheck(){
 		//doWait(1);
 		cptCheck++;
 		if(cptCheck >= WAITCHECK){
@@ -197,7 +265,7 @@ public class FSMCheck extends Behaviour {
 		else return true;
 	}
 
-	public boolean waitMap(){
+	private boolean waitMap(){
 		myAgent.doWait(1);
 		cptWaitMap++;
 		if(cptWaitMap >= WAITMAP){

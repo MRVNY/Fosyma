@@ -1,8 +1,8 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
@@ -23,19 +23,14 @@ public class Adventurer extends AbstractDedaleAgent {
 	private MapRepresentation myMap;
 	
 	private String corresponder;
-	private List<String> listName;
 
-	private int diamondCollected;
-	private int diamondFound;
-	private int goldCollected;
-	private int goldFound;
-	
-	private List<Couple<String,Integer>> goals = new ArrayList<>();
+	private List<Couple<String,Integer>> priorities = new ArrayList<>();
+	private Couple<String,Integer> goal = null;
 
-	//enum for mode
-	public static final int EXPLORE = 0;
-	public static final int LOCATE = 1;
-	public static final int SEARCH = 2;
+	//enum for mode (by priorities)
+	public static final int EXPLORE = 1;
+	public static final int LOCATE = 2;
+	public static final int SEARCH = 0;
 	private int mode;
 	private Observation role = Observation.ANY_TREASURE;
 
@@ -159,29 +154,6 @@ public class Adventurer extends AbstractDedaleAgent {
 		this.corresponder = corresponder;
 	}
 
-//	public float[] updateRatio(int diamond, int gold){
-//		diamondCollected += diamond;
-//		goldCollected += gold;
-//
-//		float nbG = 0;
-//
-//		List<Couple<String,List<Couple<Observation,Integer>>>> lobs=this.observe();
-//		List<Couple<Observation,Integer>> lObservations = lobs.get(0).getRight();
-//		for (Couple<Observation, Integer> o : lObservations) {
-//			switch (o.getLeft()) {
-//				case DIAMOND:
-//					nbD += o.getRight();
-//				case GOLD:
-//					nbG += o.getRight();
-//					break;
-//				default:
-//					break;
-//			}
-//		}
-//		float ratioLocal = nbD/nbG;
-//		return new float[]{0,0};
-//	}
-
 	public int getMode() {
 		return mode;
 	}
@@ -198,15 +170,49 @@ public class Adventurer extends AbstractDedaleAgent {
 		this.role = role;
 	}
 
-	public List<Couple<String,Integer>> getGoals(){
-		return goals;
+	public List<Couple<String,Integer>> getPriorities(){
+		updatePriorities();
+		return priorities;
 	}
 
-	public void setGoals(List<Couple<String,Integer>> goals){
-		this.goals = goals;
+	public String getNextNode(){
+		String nextNode = null;
+		String myPos = getCurrentPosition();
+
+		if(goal != null && goal.getLeft() != null && myPos != null) {
+			try {
+				nextNode = this.myMap.getShortestPathToGoal(myPos, goal.getLeft());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return nextNode;
 	}
 
-	public void popGoals(){
-		this.goals.remove(0);
+    public void updatePriorities(){
+        try {
+            if (this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
+                priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
+            }
+            else if (mode==Adventurer.LOCATE){
+                priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+	public void resetGoal() {
+		updatePriorities();
+		if(priorities!=null && !priorities.isEmpty()) goal = priorities.get(0);
+	}
+
+	public Couple<String, Integer> getGoal() {
+		return goal;
+	}
+
+	public void setGoal(Couple<String, Integer> goal) {
+		this.goal = goal;
 	}
 }
