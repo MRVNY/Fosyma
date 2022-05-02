@@ -1,209 +1,257 @@
 DGS004
 null 0 0
-an M1  label:M1
-an M2	label:M2
-an M3	label:M3
-an M4	label:M4
-an M8	label:M8
-an M6	label:M6
-an M7	label:M7
-an M9	label:M9
-an M10	label:M10
-an M11	label:M11
-an M12	label:M12
-an M13	label:M13
-an M14	label:M14
-an M15	label:M15
-an M16	label:M16
-an M18	label:M18
-an M19	label:M19
-an M20	label:M20
-an M21	label:M21
-an M22	label:M22
-an M23	label:M23
-an M24	label:M24
-an M25	label:M25
-an M26	label:M26
-an M28	label:M28
-an M29	label:M29
-an M30	label:M30
-an M31	label:M31
-an M34	label:M34
-an M35	label:M35
-an M39	label:M39
-an M40	label:M40
-ae M8-M7 M7  M8	
-ae M3-M2 M2  M3	
-ae M4-M3 M3  M4	
-ae M6-M9 M9  M6	
-ae M7-M6 M6  M7	
-ae M2-M1 M1  M2	
-ae M9-M1 M1  M9	
-ae M6-M2 M2  M6	
-ae M7-M3 M3  M7	
-ae M8-M4 M4  M8	
-ae M10-M14 M14  M10	
-ae M11-M15 M15  M11	
-ae M12-M16 M16  M12	
-ae M15-M14 M14  M15	
-ae M16-M15 M15  M16	
-ae M18-M16 M16  M18	
-ae M12-M13 M13  M12	
-ae M11-M12 M12  M11	
-ae M10-M11 M11  M10	
-ae M1-M10 M10  M1	
-ae M2-M11 M11  M2	
-ae M3-M12 M12  M3	
-ae M4-M13 M13  M4	
-ae M13-M18 M18  M13	
-ae M30-M9 M9  M30	
-ae M29-M30 M30  M29	
-ae M28-M29 M29  M28	
-ae M31-M28 M28  M31	
-ae M30-M31 M31  M30	
-ae M34-M9 M9  M34	
-ae M23-M39 M39  M23	
-ae M21-M23 M23  M21	
-ae M8-M21 M21  M8	
-ae M20-M8 M8  M20	
-ae M19-M20 M20  M19	
-ae M4-M19 M19  M4	
-ae M22-M20 M20  M22	
-ae M24-M22 M22  M24	
-ae M25-M24 M24  M25	
-ae M26-M25 M25  M26	
-ae M22-M26 M26  M22	
-ae M23-M24 M24  M23	
-ae M22-M21 M21  M22	
-ae M35-M18 M18  M35	
-ae M28-M39 M28  M39	
-ae M40-M39 M39  M40	
-an 0	label:0
-an 2	label:2
-an 3	label:3
-an 4	label:4
-an 5	label:5
-an 6	label:6
-an 7	label:7
-an 8	label:8
-an 9	label:9
-an 10	label:10
-an 11	label:11
-an 12	label:12
-an 13	label:13
-an 14	label:14
-an 15	label:15
-an 16	label:16
-an 17	label:17
-an 18	label:18
-an 19	label:19
-an 20	label:20
-an 21	label:21
-an 22	label:22
-an 23	label:23
-an 24	label:24
-an 25	label:25
-an 26	label:26
-an 27	label:27
-an 28	label:28
-an 29	label:29
-an 30	label:30
-an 31	label:31
-an 32	label:32
-an 33	label:33
-an 34	label:34
-an 35	label:35
-an 36	label:36
-an 37	label:37
-an 38	label:38
-an 39	label:39
-an 40	label:40
-an 41	label:41
-an 42	label:42
-an 43	label:43
-an 44	label:44
-an 45	label:45
-an 46	label:46
-an 47	label:47
-an 48	label:48
-an 49	label:49
-an 50	label:50
-an 51	label:51
-an 52	label:52
-an 53	label:53
-an 54	label:54
-an 55	label:55
-an 56	label:56
-an 57	label:57
-an 58	label:58
-an 59	label:59
-an 60	label:60
-an 61	label:61
-an 62	label:62
-an 63	label:63
-an 65	label:65
-an 66	label:66
-an 67	label:67
-an 68	label:68
-an 69	label:69
-an 70	label:70
-an 71	label:71
-an 72	label:72
-an 73	label:73
-an 74	label:74
-an 75	label:75
-an 76	label:76
-an 77	label:77
-an 78	label:78
-an 79	label:79
-an 80	label:80
-an 81	label:81
-an 82	label:82
-an 83	label:83
-an 84	label:84
-an 85	label:85
-an 86	label:86
-an 87	label:87
-an 88	label:88
-an 89	label:89
-an 90	label:90
-an 91	label:91
-an 92	label:92
-an 93	label:93
-an 94	label:94
-an 95	label:95
-an 96	label:96
-an 97	label:97
-an 98	label:98
-an 99	label:99
-an 101	label:101
-an 102	label:102
-an 103	label:103
-an 104	label:104
-an 105	label:105
-an 106	label:106
-an 107	label:107
-an 108	label:108
-an 109	label:109
-an 110	label:110
-an 111	label:111
-an 112	label:112
-an 113	label:113
-an 114	label:114
-an 115	label:115
-an 116	label:116
-an 117	label:117
-an 118	label:118
-an 119	label:119
-an 120	label:120
-an 121	label:121
-an 122	label:122
-an 124	label:124
-an 125	label:125
-an 126	label:126
-an 127	label:127
-an 128	label:128
-ae e2	0 6
+
+an 1
+cn 1	label:1
+an 2
+cn 2	label:2
+an 3
+cn 3	label:3
+an 4
+cn 4	label:4
+an 5
+cn 5	label:5
+an 6
+cn 6	label:6
+an 7
+cn 7	label:7
+an 8
+cn 8	label:8
+an 9
+cn 9	label:9
+an 10	
+cn 10	label:10
+an 11	
+cn 11	label:11
+an 12	
+cn 12	label:12
+an 13	
+cn 13	label:13
+an 14	
+cn 14	label:14
+an 15	
+cn 15	label:15
+an 16	
+cn 16	label:16
+an 17	
+cn 17	label:17
+an 18	
+cn 18	label:18
+an 19	
+cn 19	label:19
+an 20	
+cn 20	label:20
+an 21	
+cn 21	label:21
+an 22	
+cn 22	label:22
+an 23	
+cn 23	label:23
+an 24	
+cn 24	label:24
+an 25	
+cn 25	label:25
+an 26	
+cn 26	label:26
+an 27	
+cn 27	label:27
+an 28	
+cn 28	label:28
+an 29	
+cn 29	label:29
+an 30	
+cn 30	label:30
+an 31	
+cn 31	label:31
+an 32	
+cn 32	label:32
+an 33	
+cn 33	label:33
+an 34	
+cn 34	label:34
+an 35	
+cn 35	label:35
+an 36	
+cn 36	label:36
+an 37	
+cn 37	label:37
+an 38	
+cn 38	label:38
+an 39	
+cn 39	label:39
+an 40	
+cn 40	label:40
+an 41	
+cn 41	label:41
+an 42	
+cn 42	label:42
+an 43	
+cn 43	label:43
+an 44	
+cn 44	label:44
+an 45	
+cn 45	label:45
+an 46	
+cn 46	label:46
+an 47	
+cn 47	label:47
+an 48	
+cn 48	label:48
+an 49	
+cn 49	label:49
+an 50	
+cn 50	label:50
+an 51	
+cn 51	label:51
+an 52	
+cn 52	label:52
+an 53	
+cn 53	label:53
+an 54	
+cn 54	label:54
+an 55	
+cn 55	label:55
+an 56	
+cn 56	label:56
+an 57	
+cn 57	label:57
+an 58	
+cn 58	label:58
+an 59	
+cn 59	label:59
+an 60	
+cn 60	label:60
+an 61	
+cn 61	label:61
+an 62	
+cn 62	label:62
+an 63	
+cn 63	label:63
+an 65	
+cn 65	label:65
+an 66	
+cn 66	label:66
+an 67	
+cn 67	label:67
+an 68	
+cn 68	label:68
+an 69	
+cn 69	label:69
+an 70	
+cn 70	label:70
+an 71	
+cn 71	label:71
+an 72	
+cn 72	label:72
+an 73	
+cn 73	label:73
+an 74	
+cn 74	label:74
+an 75	
+cn 75	label:75
+an 76	
+cn 76	label:76
+an 77	
+cn 77	label:77
+an 78	
+cn 78	label:78
+an 79	
+cn 79	label:79
+an 80	
+cn 80	label:80
+an 81	
+cn 81	label:81
+an 82	
+cn 82	label:82
+an 83	
+cn 83	label:83
+an 84	
+cn 84	label:84
+an 85	
+cn 85	label:85
+an 86	
+cn 86	label:86
+an 87	
+cn 87	label:87
+an 88	
+cn 88	label:88
+an 89	
+cn 89	label:89
+an 90	
+cn 90	label:90
+an 91	
+cn 91	label:91
+an 92	
+cn 92	label:92
+an 93	
+cn 93	label:93
+an 94	
+cn 94	label:94
+an 95	
+cn 95	label:95
+an 96	
+cn 96	label:96
+an 97	
+cn 97	label:97
+an 98	
+cn 98	label:98
+an 99	
+cn 99	label:99
+an 101	l
+cn 101	label:101
+an 102	l
+cn 102	label:102
+an 103	l
+cn 103	label:103
+an 104	l
+cn 104	label:104
+an 105	l
+cn 105	label:105
+an 106	l
+cn 106	label:106
+an 107	l
+cn 107	label:107
+an 108	l
+cn 108	label:108
+an 109	l
+cn 109	label:109
+an 110	l
+cn 110	label:110
+an 111	l
+cn 111	label:111
+an 112	l
+cn 112	label:112
+an 113	l
+cn 113	label:113
+an 114	l
+cn 114	label:114
+an 115	l
+cn 115	label:115
+an 116	l
+cn 116	label:116
+an 117	l
+cn 117	label:117
+an 118	l
+cn 118	label:118
+an 119	l
+cn 119	label:119
+an 120	l
+cn 120	label:120
+an 121	l
+cn 121	label:121
+an 122	l
+cn 122	label:122
+an 124	l
+cn 124	label:124
+an 125	l
+cn 125	label:125
+an 126	l
+cn 126	label:126
+an 127	l
+cn 127	label:127
+an 128	l
+cn 128	label:128
+ae e2	1 6
 ae e4	2 3
 ae e5	2 7
 ae e6	3 4
@@ -297,7 +345,7 @@ ae e99	71 76
 ae e100	72 73
 ae e101	73 74
 ae e102	74 75
-ae e103	0 122
+ae e103	1 122
 ae e104	76 77
 ae e105	77 78
 ae e106	78 79
@@ -366,9 +414,9 @@ ae e173	126 127
 ae e174	127 128
 ae e175	128 117
 ae e176 128 41
-ae e177	M35 32
-ae e178 M34 79 
-ae e179 M14 42
+ae e177	35 32
+ae e178 34 79
+ae e179 14 42
 ae e180 96 11
-ae 181 86 75
-ae 182 48 M26
+ae e181 86 75
+ae e182 48 26

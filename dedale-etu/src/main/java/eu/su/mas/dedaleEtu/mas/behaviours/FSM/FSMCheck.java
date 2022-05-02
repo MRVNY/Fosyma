@@ -48,6 +48,9 @@ public class FSMCheck extends Behaviour {
 
 	@Override
 	public void action() {
+		if(this.myAdventurer.debug())
+			System.out.println("CHECKING" + Integer.toString(cptCheck) + " - " + myAbstractAgent.getLocalName());
+
 		finished = false;
 		exitValue = DEFAULT;
 
@@ -69,6 +72,7 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK END//////////
 		//Wait for END(Partial Map)
 		if(!finished && !waitMapDone){
+			if(this.myAdventurer.debug()) System.out.println("CHECK END" + " - " + myAbstractAgent.getLocalName());
 			boolean get = false;
 
 			MessageTemplate msgTemplate = MessageTemplate.and(
@@ -93,16 +97,18 @@ public class FSMCheck extends Behaviour {
 				finished = true;
 			}
 			if (!get) {
-				//System.out.println("Didn't get partial map :(");
+				if(this.myAdventurer.debug())
+					System.out.println("Didn't get partial map :(" + " - " + myAbstractAgent.getLocalName());
 			} else {
-				//System.out.println("Got partial map :)");
+				if(this.myAdventurer.debug())
+					System.out.println("Got partial map :)" + " - " + myAbstractAgent.getLocalName());
 			}
 		}
-
 
 		//////////CHECK MODE & ROLE//////////
 		//If in LOCATE mode and has no role, pass to decide to get a role
 		if(!finished) {
+			if(this.myAdventurer.debug()) System.out.println("CHECK MODE ROLE" + " - " + myAbstractAgent.getLocalName());
 			//Observation myRole = myAbstractAgent.getMyTreasureType();
 			if (myMode == Adventurer.LOCATE && myRole == Observation.ANY_TREASURE) {
 				exitValue = DECIDE;
@@ -114,6 +120,7 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK PING//////////
 		//if received Ping, send Pong (Entire Map)
 		if(!finished) {
+			if(this.myAdventurer.debug()) System.out.println("CHECK PING" + " - " + myAbstractAgent.getLocalName());
 			MessageTemplate pingTemplate = MessageTemplate.and(
 					MessageTemplate.MatchProtocol("PING"),
 					MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
@@ -124,6 +131,8 @@ public class FSMCheck extends Behaviour {
 				//System.out.println(this.getAgent().getLocalName() + " <--PING-- " + pingReceived.getSender().getLocalName());
 				myAdventurer.setCorresponder(pingReceived.getSender().getLocalName());
 				cptWaitMap = 0; //Extend waiting time for End
+				if(this.myAdventurer.debug())
+					System.out.println("RESET WAITMAP" + " - " + myAbstractAgent.getLocalName());
 				exitValue = SEND_PONG;
 				finished = true;
 			}
@@ -133,6 +142,7 @@ public class FSMCheck extends Behaviour {
 		//////////CHECK PONG//////////
 		//if received Pong, Do Enchere and send End (Partial Map)
 		if(!finished) {
+			if(this.myAdventurer.debug()) System.out.println("CHECK PONG" + " - " + myAbstractAgent.getLocalName());
 			MessageTemplate pongTemplate = MessageTemplate.and(
 					MessageTemplate.MatchProtocol("PONG"),
 					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL));
@@ -141,6 +151,7 @@ public class FSMCheck extends Behaviour {
 			if (pongReceived != null) {
 				//System.out.println(this.getAgent().getLocalName() + " <--PONG-- " + pongReceived.getSender().getLocalName());
 				myAdventurer.setCorresponder(pongReceived.getSender().getLocalName());
+				if(this.myAdventurer.debug()) System.out.println("GOT PONG" + " - " + myAbstractAgent.getLocalName());
 
 				//Merge map
 				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgReceived=null;
@@ -161,10 +172,10 @@ public class FSMCheck extends Behaviour {
 			}
 		}
 
-
 		//////////CHECK MAP//////////
 		//If found treasure, pass to DECIDE
 		if(!finished) {
+			if(this.myAdventurer.debug()) System.out.println("CHECK MAP" + " - " + myAbstractAgent.getLocalName());
 			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = myAbstractAgent.observe();//myPosition
 			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
 			//get value of the Treasure
@@ -187,6 +198,9 @@ public class FSMCheck extends Behaviour {
 		//////////NOTHING//////////
 		//If nothing, repeat CHECK
 		finished = true;
+
+		if(this.myAdventurer.debug())
+			System.out.println("CHECKED" + Integer.toString(cptCheck) + " - " + myAbstractAgent.getLocalName());
 	}
 
 	@Override
@@ -199,6 +213,7 @@ public class FSMCheck extends Behaviour {
 	}
 
 	private void enchere(Message message){
+		if(this.myAdventurer.debug()) System.out.println("ENCHERE" + " - " + myAbstractAgent.getLocalName());
 		int hisMode = message.getMode();
 		Couple<String,Integer> hisGoal = message.getGoal();
 		String hisNextNode = message.getNextNode();
@@ -253,9 +268,12 @@ public class FSMCheck extends Behaviour {
 				}
 			}
 		}
+		if(this.myAdventurer.debug()) System.out.println("ENCHERE DONE" + " - " + myAbstractAgent.getLocalName());
 	}
 
 	private boolean waitCheck(){
+		if(this.myAdventurer.debug()) System.out.println("WAIT CHECK" + " - " + myAbstractAgent.getLocalName());
+
 		//doWait(1);
 		cptCheck++;
 		if(cptCheck >= WAITCHECK){
@@ -266,6 +284,8 @@ public class FSMCheck extends Behaviour {
 	}
 
 	private boolean waitMap(){
+		if(this.myAdventurer.debug()) System.out.println("WAIT MAP" + " - " + myAbstractAgent.getLocalName());
+
 		myAgent.doWait(1);
 		cptWaitMap++;
 		if(cptWaitMap >= WAITMAP){

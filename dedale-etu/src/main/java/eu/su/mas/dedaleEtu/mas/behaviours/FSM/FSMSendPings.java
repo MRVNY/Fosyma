@@ -29,6 +29,7 @@ public class FSMSendPings extends Behaviour {
 
 	@Override
 	public void action() {
+		if(((Adventurer)this.myAgent).debug()) System.out.println("NEXT NODE DONE" + ((AbstractDedaleAgent)this.myAgent).getLocalName());
 		finished = false;
 		
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");

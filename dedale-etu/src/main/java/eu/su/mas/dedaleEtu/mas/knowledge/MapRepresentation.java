@@ -149,6 +149,8 @@ public class MapRepresentation implements Serializable {
 	 * @return the list of nodes to follow, null if the targeted node is not currently reachable
 	 */
 	public synchronized List<String> getShortestPath(String idFrom,String idTo){
+		//System.out.println("getShortestPath");
+
 		List<String> shortestPath=new ArrayList<String>();
 
 		Dijkstra dijkstra = new Dijkstra();//number of edge
@@ -450,7 +452,7 @@ public class MapRepresentation implements Serializable {
 			throw new Exception("The goal isn't defined.");
 		}
 		List<String> paths = this.getShortestPath(myPosition, goal);
-		if (!paths.isEmpty()) return paths.get(0);
+		if (paths != null && !paths.isEmpty()) return paths.get(0);
 		else return null;
 	}
 	

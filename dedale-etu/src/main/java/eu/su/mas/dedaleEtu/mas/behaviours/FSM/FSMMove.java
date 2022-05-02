@@ -70,6 +70,8 @@ public class FSMMove extends SimpleBehaviour {
 
 	@Override
 	public void action() {
+		if(this.myAdventurer.debug()) System.out.println("START MAP" + " - " + myAbstractAgent.getLocalName());
+
 		finished = false;
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" State");
 
@@ -91,7 +93,7 @@ public class FSMMove extends SimpleBehaviour {
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
 			 */
 			try {
-				this.myAgent.doWait(1000);
+				this.myAgent.doWait(100);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -165,6 +167,9 @@ public class FSMMove extends SimpleBehaviour {
 
 			myAdventurer.setMyMap(myMap);
 
+			if(this.myAdventurer.debug())
+				System.out.println("MAP DONE" + " - " + myAbstractAgent.getLocalName());
+
 			String nextNode = myAdventurer.getNextNode();
 
 			if(nextNode==null){
@@ -183,9 +188,12 @@ public class FSMMove extends SimpleBehaviour {
 
 			lastPos = myPosition;
 
+			if(this.myAdventurer.debug()) System.out.println("NEXT NODE DONE" + " - " + myAbstractAgent.getLocalName());
+
 			if(nextNode!=null) myAbstractAgent.moveTo(nextNode);
 
 			finished=true;
+            if(this.myAdventurer.debug()) System.out.println("MOVED" + " - " + myAbstractAgent.getLocalName());
 
 		}
 	}

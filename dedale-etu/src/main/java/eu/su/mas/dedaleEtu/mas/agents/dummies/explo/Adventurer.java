@@ -176,6 +176,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
 	public String getNextNode(){
+        if(debug()) System.out.println("NEXT NODE" + " - " + getLocalName());
 		String nextNode = null;
 		String myPos = getCurrentPosition();
 
@@ -190,6 +191,7 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
     public void updatePriorities(){
+        if(debug()) System.out.println("PRIORITIES" + " - " + getLocalName());
         try {
             if (this.myMap != null && this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
                 priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
@@ -214,5 +216,9 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setGoal(Couple<String, Integer> goal) {
 		this.goal = goal;
+	}
+
+	public boolean debug(){
+		return false;
 	}
 }
