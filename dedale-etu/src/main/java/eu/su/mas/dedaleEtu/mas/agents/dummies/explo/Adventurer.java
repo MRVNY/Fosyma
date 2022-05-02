@@ -191,10 +191,10 @@ public class Adventurer extends AbstractDedaleAgent {
 
     public void updatePriorities(){
         try {
-            if (this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
+            if (this.myMap != null && this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
                 priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
             }
-            else if (mode==Adventurer.LOCATE){
+            else if (this.myMap != null && mode==Adventurer.LOCATE){
                 priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
             }
         } catch (Exception e) {

@@ -45,6 +45,9 @@ public class FSMMove extends SimpleBehaviour {
 	private MapRepresentation myMap;
 	private Adventurer myAdventurer;
 	private AbstractDedaleAgent myAbstractAgent;
+	private String lastPos = "";
+	private int cptBlock = 0;
+	private final int BLOCKMAX = 10;
 
 
 /**
@@ -80,6 +83,7 @@ public class FSMMove extends SimpleBehaviour {
 		String myPosition=myAbstractAgent.getCurrentPosition();
 
 		if (myPosition!=null){
+
 			//List of observable from the agent's current position
 			List<Couple<String,List<Couple<Observation,Integer>>>> lobs=myAbstractAgent.observe();//myPosition
 
@@ -87,10 +91,11 @@ public class FSMMove extends SimpleBehaviour {
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
 			 */
 			try {
-				this.myAgent.doWait(100);
+				this.myAgent.doWait(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
@@ -165,13 +170,18 @@ public class FSMMove extends SimpleBehaviour {
 			if(nextNode==null){
 				myAdventurer.resetGoal();
 				nextNode = myAdventurer.getNextNode();
-
-				if(nextNode==null) {
-					Random r = new Random();
-					int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
-					nextNode = lobs.get(moveId).getLeft();
-				}
 			}
+
+			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
+
+			if(nextNode==null || cptBlock >= BLOCKMAX) {
+				Random r = new Random();
+				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
+				nextNode = lobs.get(moveId).getLeft();
+				cptBlock = 0;
+			}
+
+			lastPos = myPosition;
 
 			if(nextNode!=null) myAbstractAgent.moveTo(nextNode);
 

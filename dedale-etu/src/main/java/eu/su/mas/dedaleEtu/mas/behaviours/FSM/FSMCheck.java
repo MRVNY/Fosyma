@@ -229,7 +229,7 @@ public class FSMCheck extends Behaviour {
 
 						if(newGoal.getLeft().equals(hisGoal.getLeft()) || block) {        		//IF we have the same goal OR we block
 							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight()){	//BUT if we have the same mode and my route is faster
-								myGoal = newGoal;	//THEN I beat him and get the goal
+								myGoal = newGoal;	//THEN I still beat him and get the goal
 								myAdventurer.setGoal(myGoal);
 								break;
 							}
