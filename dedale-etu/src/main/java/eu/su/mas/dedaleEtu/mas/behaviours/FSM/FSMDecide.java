@@ -38,6 +38,11 @@ public class FSMDecide extends Behaviour {
 
 	@Override
 	public void action() {
+		try {
+			this.myAgent.doWait(100);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		finished = false;
 		exitValue = DEFAULT;
 		//System.out.println(this.myAgent.getLocalName() + " in " + this.getBehaviourName() + " Stade");

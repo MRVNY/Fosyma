@@ -34,6 +34,11 @@ public class FSMCollect extends Behaviour {
 
 	@Override
 	public void action() {
+		try {
+			this.myAgent.doWait(100);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		finished = false;
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
 
@@ -60,9 +65,10 @@ public class FSMCollect extends Behaviour {
 							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + myAbstractAgent.openLock(o.getLeft()));
 							int before = o.getRight();
 							int pickUp = myAbstractAgent.pick();
+							myAdventurer.setTreasureAmount(myAdventurer.getTreasureAmount() + pickUp);
 							myAdventurer.getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
 							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
-							myAdventurer.setRole(o.getLeft());
+//							myAdventurer.setRole(o.getLeft());
 							//System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
 						}
 						break;

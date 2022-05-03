@@ -77,7 +77,7 @@ public class FSMMove extends SimpleBehaviour {
 
 		if(this.myMap==null) {
 			this.myMap= new MapRepresentation();
-			this.myMap.addCapacity(myAdventurer.getLocalName(), myAdventurer.getBackPackFreeSpace());
+			this.myMap.addCapacity(myAdventurer.getLocalName(), myAdventurer.getBackPackFreeSpace());	
 		}
 		
 

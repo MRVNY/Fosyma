@@ -52,6 +52,12 @@ public class EquityModule implements Serializable{
 	
 	
 	public int getSeekingValue() {
+		if(this.type.equals(Observation.GOLD)) {
+			this.seekingValue = map.getTreasureCollection().allGold / this.rankGold.size();
+		}
+		else {
+			this.seekingValue = map.getTreasureCollection().allDiamond / this.rankDiam.size();
+		}
 		return this.seekingValue.intValue();
 	}
 	

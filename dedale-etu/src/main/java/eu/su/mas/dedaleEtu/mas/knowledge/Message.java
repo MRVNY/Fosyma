@@ -10,7 +10,11 @@ import java.util.Random;
 
 public class Message implements Serializable {
 
-    private SerializableComplexeGraph<String, MapRepresentation.MapAttribute> map;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6747727532564253694L;
+	private SerializableComplexeGraph<String, MapRepresentation.MapAttribute> map;
     private int mode;
     private Observation role;
     private Couple<String,Integer> goal;

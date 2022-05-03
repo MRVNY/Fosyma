@@ -44,6 +44,12 @@ public class Adventurer extends AbstractDedaleAgent {
 	private static final String Decide = "Decide";
     private static final String Collect = "Collect";
     
+    public int goldCap;
+    public int diamCap;
+    
+    private int TreasureAmount;
+    
+    
     public EquityModule equity;
 
 	protected void setup(){
@@ -113,6 +119,17 @@ public class Adventurer extends AbstractDedaleAgent {
 		DataStore dataFSM = new DataStore();
 		dataFSM.put("agents",list_agentNames);
 		fsm.setDataStore(dataFSM);
+		
+		for(Couple<Observation,Integer> o:this.getBackPackFreeSpace()){
+			switch (o.getLeft()) {
+			case DIAMOND:
+				this.diamCap = o.getRight();
+				break;
+			case GOLD:
+				this.goldCap = o.getRight();
+				break;
+			}
+		}
 		
 
 		List<Behaviour> lb=new ArrayList<Behaviour>();
@@ -197,7 +214,9 @@ public class Adventurer extends AbstractDedaleAgent {
                 priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
             }
             else if (this.myMap != null && mode==Adventurer.LOCATE){
-                priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
+            	int value =  this.equity.getSeekingValue() - this.getTreasureAmount();
+                System.out.println("Treasure amount:"+this.getTreasureAmount()+"; value:"+value);
+            	priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,4 +240,13 @@ public class Adventurer extends AbstractDedaleAgent {
 	public boolean debug(){
 		return false;
 	}
+
+	public int getTreasureAmount() {
+		return TreasureAmount;
+	}
+
+	public void setTreasureAmount(int treasureAmount) {
+		TreasureAmount = treasureAmount;
+	}
+	
 }
