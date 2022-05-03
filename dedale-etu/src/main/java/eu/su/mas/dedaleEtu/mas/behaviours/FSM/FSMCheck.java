@@ -229,6 +229,7 @@ public class FSMCheck extends Behaviour {
 			//Check current goals and positions
 			if (hisGoal.getLeft().equals(myGoal.getLeft())                                //IF we have the same goal
 			|| (myPos.equals(hisNextNode) && myAdventurer.getNextNode().equals(hisPos))   //OR we are blocking each other
+			|| myAdventurer.getNextNode().equals(hisNextNode)
 			&& (hisMode > myMode                                                	//AND IF his mode is more important my mine
 			|| (hisMode == myMode && hisGoal.getRight() <= myGoal.getRight()))){	//OR we have the same role but his path is shorter
 				myGoal = null;    //THEN I give up my goal
@@ -240,9 +241,9 @@ public class FSMCheck extends Behaviour {
 					for(Couple<String,Integer> newGoal: myPriorities){
 						myAdventurer.setGoal(newGoal);
 						myNextNode = myAdventurer.getNextNode();
-						boolean block = myNextNode != null && myPos.equals(hisNextNode) && myNextNode.equals(hisPos);
+						boolean block = myNextNode != null && (myPos.equals(hisNextNode) && myNextNode.equals(hisPos) || myAdventurer.getNextNode().equals(hisNextNode));
 
-						if(newGoal.getLeft().equals(hisGoal.getLeft()) || block) {        		//IF we have the same goal OR we block
+						if(newGoal.getLeft().equals(hisGoal.getLeft()) || block) {        //IF we have the same goal OR we block
 							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight()){	//BUT if we have the same mode and my route is faster
 								myGoal = newGoal;	//THEN I still beat him and get the goal
 								myAdventurer.setGoal(myGoal);

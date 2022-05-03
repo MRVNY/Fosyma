@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 
 public class TreasureCollection implements Serializable{
@@ -217,6 +218,17 @@ public class TreasureCollection implements Serializable{
 		for(Treasure t: listTreasure) {
 			if(t.getType().equals(type)) {
 				res.add(t.getTreasureAmount());
+			}
+		}
+		return res;
+	}
+
+    public List<Couple<String,Integer>> getAllValueDif(Observation type, int value){
+		List<Couple<String,Integer>> res = new ArrayList<>();
+		for(Treasure t: listTreasure) {
+			if(t.getType().equals(type)) {
+                Couple<String,Integer> cp = new Couple<String,Integer>(t.getLocation(),Math.abs(value - t.getTreasureAmount()));
+				res.add(cp);
 			}
 		}
 		return res;

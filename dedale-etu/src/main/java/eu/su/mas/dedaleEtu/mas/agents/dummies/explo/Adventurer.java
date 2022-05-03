@@ -49,7 +49,6 @@ public class Adventurer extends AbstractDedaleAgent {
     
     private int TreasureAmount;
     
-    
     public EquityModule equity;
 
 	protected void setup(){
@@ -211,12 +210,15 @@ public class Adventurer extends AbstractDedaleAgent {
         if(debug()) System.out.println("PRIORITIES" + " - " + getLocalName());
         try {
             if (this.myMap != null && this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
-                priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
+                //For optimisation, we only update priorities if the list is empty or the map has changed
+                if(priorities==null || priorities.isEmpty() || !this.myMap.sameMap()){
+                    priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
+                }
             }
             else if (this.myMap != null && mode==Adventurer.LOCATE){
             	int value =  this.equity.getSeekingValue() - this.getTreasureAmount();
-                System.out.println("Treasure amount:"+this.getTreasureAmount()+"; value:"+value);
-            	priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
+                //System.out.println("Treasure amount:"+this.getTreasureAmount()+"; value:"+value);
+            	priorities = this.myMap.getClosestTreasuresOfClosestValue(getCurrentPosition(),role,value);
             }
         } catch (Exception e) {
             e.printStackTrace();

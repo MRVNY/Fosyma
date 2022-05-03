@@ -79,6 +79,8 @@ public class FSMMove extends SimpleBehaviour {
 			this.myMap= new MapRepresentation();
 			this.myMap.addCapacity(myAdventurer.getLocalName(), myAdventurer.getBackPackFreeSpace());	
 		}
+
+		this.myMap.countSameMap();
 		
 
 		//0) Retrieve the current position
@@ -132,14 +134,10 @@ public class FSMMove extends SimpleBehaviour {
 
 			int mode = myAdventurer.getMode();
 
-			if (!this.myMap.hasOpenNode() && mode == Adventurer.EXPLORE){
+			if ((!this.myMap.hasOpenNode() || this.myMap.sameMapTIMEOUT()) && mode == Adventurer.EXPLORE){
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				myAdventurer.setMode(Adventurer.LOCATE);
-				//affichage des trésors trouvés
-				//System.out.println(this.myMap.getTreasureCollection());
-				//Ressources trouvés 
-				//System.out.println("Total Gold seen: "+this.myMap.getTreasureCollection().allGold);
-				//System.out.println("Total Diamond seen: "+this.myMap.getTreasureCollection().allDiamond);
+
 				
 				myAdventurer.equity = new EquityModule(myAdventurer.getMyMap(),this.getAgent().getLocalName());
 				myAdventurer.setRole(myAdventurer.equity.getType());
@@ -172,18 +170,30 @@ public class FSMMove extends SimpleBehaviour {
 
 			String nextNode = myAdventurer.getNextNode();
 
-			if(nextNode==null){
+			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().equals(myPosition)){
 				myAdventurer.resetGoal();
 				nextNode = myAdventurer.getNextNode();
 			}
 
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
-			if(nextNode==null || cptBlock >= BLOCKMAX) {
+            if(cptBlock >= BLOCKMAX){
+				System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
+                List<Couple<String,Integer>> priorities = myAdventurer.getPriorities();
+
+                if(priorities!=null && priorities.size()>1){
+                    Random rand = new Random();
+                    myAdventurer.setGoal(priorities.get(rand.nextInt(priorities.size())));
+                    nextNode = myAdventurer.getNextNode();
+                }
+                else nextNode = null;
+				cptBlock = 0;
+			}
+
+			if(nextNode==null) {
 				Random r = new Random();
 				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
 				nextNode = lobs.get(moveId).getLeft();
-				cptBlock = 0;
 			}
 
 			lastPos = myPosition;

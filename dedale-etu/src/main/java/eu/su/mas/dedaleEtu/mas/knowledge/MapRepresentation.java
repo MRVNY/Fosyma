@@ -2,6 +2,7 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.math3.geometry.partitioning.BSPTreeVisitor.Order;
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
@@ -18,6 +20,7 @@ import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.fx_viewer.FxViewer;
+import org.graphstream.ui.javafx.util.AttributeUtils.Tuple;
 import org.graphstream.ui.view.Viewer;
 import dataStructures.serializableGraph.*;
 import dataStructures.tuple.Couple;
@@ -45,6 +48,10 @@ public class MapRepresentation implements Serializable {
 	}
 
 	private static final long serialVersionUID = -1333959882640838272L;
+    private int lastMap = 0;
+    private int cptMapChange = 0;
+    private int cptSameMap = 0;
+    private final int SAME_MAX = 10;
 
 	/*********************************
 	 * Parameters for graph rendering
@@ -88,6 +95,8 @@ public class MapRepresentation implements Serializable {
 	 * @param mapAttribute
 	 */
 	public synchronized void addNode(String id,MapAttribute mapAttribute){
+        cptMapChange++;
+
 		Node n;
 		if (this.g.getNode(id)==null){
 			n=this.g.addNode(id);
@@ -130,6 +139,7 @@ public class MapRepresentation implements Serializable {
 		this.nbEdges++;
 		try {
 			this.g.addEdge(this.nbEdges.toString(), idNode1, idNode2);
+            cptMapChange++;
 		}catch (IdAlreadyInUseException e1) {
 			System.err.println("ID existing");
 			System.exit(1);
@@ -139,6 +149,23 @@ public class MapRepresentation implements Serializable {
 
 		}
 	}
+
+    public boolean sameMap() {
+        return lastMap == cptMapChange;
+    }
+
+    public void countSameMap(){
+        if(lastMap == cptMapChange) cptSameMap++;
+    }
+
+    public boolean sameMapTIMEOUT(){
+        boolean out = cptSameMap > SAME_MAX;
+        if(out){
+            cptSameMap = 0;
+            lastMap = cptMapChange;
+        }
+        return out;
+    }
 
 	/**
 	 * Compute the shortest Path from idFrom to IdTo. The computation is currently not very efficient
@@ -475,10 +502,12 @@ public class MapRepresentation implements Serializable {
         //1) Get all openNodes
         List<String> opennodes=getOpenNodes();
 
-        //2) Sort nodes
+		if (opennodes.size() > 10) opennodes = opennodes.subList(0, 9);
+
+		//2) Sort nodes
         List<Couple<String,Integer>> lc =
                 opennodes.stream()
-                        .map(on -> (getShortestPath(myPosition,on)!=null)? new Couple<String, Integer>(on,getShortestPath(myPosition,on).size()): new Couple<String, Integer>(on,Integer.MAX_VALUE))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));
@@ -500,12 +529,74 @@ public class MapRepresentation implements Serializable {
         //2) Sort nodes
         List<Couple<String,Integer>> lc =
                 treasurenodes.stream()
-                        .map(on -> (getShortestPath(myPosition,on)!=null)? new Couple<String, Integer>(on,getShortestPath(myPosition,on).size()): new Couple<String, Integer>(on,Integer.MAX_VALUE))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));
 
         return lc;
+    }
+
+    public List<Couple<String,Integer>> getClosestTreasuresOfClosestValue(String myPosition, Observation type, int value) throws Exception {
+        if (this.treasure.isEmpty()) {
+            throw new Exception("La liste de trésors est vide pour le moment");
+        }
+
+        //Get difference to the value for all treasures
+        List<Couple<String,Integer>> treasureValueDif = this.treasure.getAllValueDif(type,value);
+
+		if(treasureValueDif!=null) {
+			//Sort and trim the list (optional)
+			treasureValueDif.sort(Comparator.comparingInt(Couple::getRight));
+			if (treasureValueDif.size() > 10) treasureValueDif = treasureValueDif.subList(0, 9);
+
+			//Get shortest path to each treasure
+			List<Couple<Couple<String, Integer>, Integer>> lc = //<<pos,dist>,dif>
+					treasureValueDif.stream()
+							.map(on -> new Couple<Couple<String, Integer>, Integer>(new Couple<String, Integer>(on.getLeft(), getShortestLength(myPosition, on.getLeft())), on.getRight()))
+							.collect(Collectors.toList());
+
+
+			//Sort by 2 criterias (dif and dist)
+			Collections.sort(lc, new DifAndDistComparator());
+
+
+			List<Couple<String, Integer>> out =
+					lc.stream()
+							.map(on -> on.getLeft())
+							.collect(Collectors.toList());
+
+//			System.out.println(value);
+//			System.out.println(lc);
+
+			return out;
+		}
+		else return null;
+    }
+
+    public int getShortestLength(String from,String to){
+        List<String> path = getShortestPath(from,to);
+        if(path==null) return Integer.MAX_VALUE;
+        return path.size();
+    }
+
+    class DifAndDistComparator implements Comparator<Couple<Couple<String,Integer>,Integer>> {
+
+        @Override
+        public int compare(Couple<Couple<String, Integer>, Integer> o1, Couple<Couple<String, Integer>, Integer> o2) {
+            int firstDif = o1.getRight();
+            int secondDif = o2.getRight();
+            int firstDist = o1.getLeft().getRight();
+            int secondDist = o2.getLeft().getRight();
+
+            if(firstDif == secondDif) {
+                return firstDist - secondDist;
+            }
+            else {
+                return firstDif - secondDif;
+            }
+        }
+
     }
 
 
