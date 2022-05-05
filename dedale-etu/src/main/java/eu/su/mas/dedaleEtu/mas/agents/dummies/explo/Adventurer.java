@@ -47,8 +47,8 @@ public class Adventurer extends AbstractDedaleAgent {
     public int goldCap;
     public int diamCap;
     
-    private int collectedAmount;
-    private int amountToCollect;
+    private int collectedAmount = 0;
+    private int amountToCollect = 0;
     
     public EquityModule equity;
 

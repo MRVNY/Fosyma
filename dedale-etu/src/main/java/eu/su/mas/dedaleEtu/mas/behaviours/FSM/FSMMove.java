@@ -107,6 +107,7 @@ public class FSMMove extends SimpleBehaviour {
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.DIAMOND));
 					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
 					break;
+
 				case GOLD: 
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
@@ -119,7 +120,9 @@ public class FSMMove extends SimpleBehaviour {
 						//System.out.println(this.myMap.getTreasureCollection());
 					}
 					break;
-				}
+
+                }
+
 			}
 			
 			
