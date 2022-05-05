@@ -181,15 +181,11 @@ public class FSMCheck extends Behaviour {
 			//get value of the Treasure
 			int value = 0;
 			for (Couple<Observation, Integer> o : lObservations) {
-				if (o.getRight() != null && o.getRight() > 0) {
-					value = o.getRight();
+				switch (o.getLeft()) {
+					case DIAMOND:case GOLD:
+						exitValue = DECIDE;
+						finished = true;
 				}
-			}
-
-			//If there's at least one type of non-empty treasure
-			if (value > 0) {
-				exitValue = DECIDE;
-				finished = true;
 			}
 		}
 
@@ -246,16 +242,13 @@ public class FSMCheck extends Behaviour {
                         block = myNextNode != null && (myPos.equals(hisNextNode) && myNextNode.equals(hisPos) || myAdventurer.getNextNode().equals(hisNextNode));
                         sameGoal = hisGoal.getLeft().equals(newGoal.getLeft());
 
-						if(sameGoal || block) {   												//IF same goal OR block
-							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight())	//BUT IF we have the same mode and my route is faster
-								break; 															//THEN I still beat him and get the goal
-							else myAdventurer.setGoal(null);									//OR ELSE we pass to the next goal
-						}
+						//IF same goal OR block BUT we have the same mode and my route is faster
+						if(sameGoal || block && hisMode == myMode && hisGoal.getRight() >= newGoal.getRight())
+							break; 				//THEN I still beat him and get the goal
 
-						else { 																	//IF not same goal and don't block
-							if(myNextNode==null) myAdventurer.setGoal(null);
-							else break;															//THEN I get the goal
-						}
+						else if(myNextNode!=null) break;					//IF not same goal and don't block THEN I get the goal
+
+						if(myNextNode==null) myAdventurer.setGoal(null);	//ELSE I pass to the next goal
 					}
 				}
 			}

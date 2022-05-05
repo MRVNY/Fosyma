@@ -3,6 +3,7 @@ package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
@@ -276,5 +277,9 @@ public class Adventurer extends AbstractDedaleAgent {
     public int getAmountToCollect() {
         return amountToCollect;
     }
+
+	public List<String> possibleNexts(){
+		return observe().stream().map((ob -> ob.getLeft())).collect(Collectors.toList());
+	}
 	
 }

@@ -71,9 +71,11 @@ public class FSMDecide extends Behaviour {
 			int value = 0;
 			Observation type = Observation.ANY_TREASURE;
 			for(Couple<Observation,Integer> o:lObservations) {
-				if (o.getRight()!=null && o.getRight() > 0){
-					value = o.getRight();
-					type = o.getLeft();
+				switch (o.getLeft()) {
+					case DIAMOND:case GOLD:
+						value = o.getRight();
+						type = o.getLeft();
+						break;
 				}
 			}
 
@@ -109,17 +111,18 @@ public class FSMDecide extends Behaviour {
 			//If I'm at by goal / the amount is perfect -> Collect
             int amountToCollect = myAdventurer.getAmountToCollect();
 			Couple<String,Integer> goal = myAdventurer.getGoal();
+			int canCollect = Math.min(bagSpace,value);
 
-			if (!finished && goal!=null && role == type && (value==amountToCollect || goal.getLeft().equals(myPosition))) {
+			if (!finished && goal!=null && role == type && (canCollect==amountToCollect || goal.getLeft().equals(myPosition))) {
 				exitValue = COLLECT;
 				finished = true;
 			}
 			else{
-				System.out.println(myAdventurer.getLocalName());
-				System.out.println(myPosition);
-				System.out.println(goal);
-				System.out.println(value);
-				System.out.println(amountToCollect);
+					System.out.println(myAdventurer.getLocalName());
+					System.out.println(myPosition + goal);
+					System.out.println(myAdventurer.getPriorities());
+					System.out.println(myAdventurer.getMyMap().getTreasureCollection().getTreasures());
+					System.out.println(canCollect + "-" + amountToCollect);
 			}
 
 			finished = true;

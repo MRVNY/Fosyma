@@ -1,5 +1,6 @@
 package eu.su.mas.dedaleEtu.mas.behaviours.FSM;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +49,7 @@ public class FSMMove extends SimpleBehaviour {
 	private String lastPos = "";
 	private int cptBlock = 0;
 	private final int BLOCKMAX = 10;
+	private int cptDeBlock = 0;
 
 
 /**
@@ -101,32 +103,32 @@ public class FSMMove extends SimpleBehaviour {
 			}
 
 			List<Couple<Observation,Integer>> lObservations= lobs.get(0).getRight();
+			boolean hasTreasure = false;
 			for(Couple<Observation,Integer> o:lObservations){
 				switch (o.getLeft()) {
 				case DIAMOND:
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.DIAMOND));
+					hasTreasure = true;
 					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
 					break;
 
 				case GOLD: 
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
+					hasTreasure = true;
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
-				default:
-//					if(myAdventurer.getGoal()!= null && myAdventurer.getGoal().getLeft().equals(myPosition) && myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
-//						//System.out.println(this.myMap.getTreasureCollection());
-//						//System.out.println(myPosition);
-//						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-//						//System.out.println(this.myMap.getTreasureCollection());
-//					}
-					this.myMap.getTreasureCollection().removeTreasure(myPosition);
-					break;
-
                 }
-
 			}
-			
-			
+
+			if(!hasTreasure){
+				if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
+					this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+				}
+				else this.myMap.getTreasureCollection().removeTreasure(myPosition);
+				myAdventurer.resetGoal();
+			}
+
+
 			//1) remove the current node from openlist and add it to closedNodes.
 			this.myMap.addNode(myPosition, MapAttribute.closed);
 
@@ -138,7 +140,6 @@ public class FSMMove extends SimpleBehaviour {
 				//the node may exist, but not necessarily the edge
 				if (myPosition!=nodeId) {
 					this.myMap.addEdge(myPosition, nodeId);
-					//
 				}
 			}
 
@@ -150,24 +151,8 @@ public class FSMMove extends SimpleBehaviour {
 				System.out.println(this.myAgent.getLocalName()+" passes to LOCATE");
 				myAdventurer.setMode(Adventurer.LOCATE);
 
-				
 				myAdventurer.equity = new EquityModule(myAdventurer.getMyMap(),this.getAgent().getLocalName());
 				myAdventurer.setRole(myAdventurer.equity.getType());
-				//System.out.println(myAdventurer.equity.getType());
-				
-				//System.out.println(this.myMap.getCapacity());
-				
-				//this crap is only here for testing purpose, don't mind it.
-				
-//				this.myMap.getTreasureCollection().removeTreasure("25");
-//				this.myMap.getTreasureCollection().removeTreasure("7");
-//				
-//				this.myMap.getTreasureCollection().updateTreasure("25",0);
-//				this.myMap.getTreasureCollection().updateTreasure("7",0);
-				
-				//Ressources sur la cartes actuellement
-//				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
-//				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
 			}
 
 			//4) select next move.
@@ -183,7 +168,7 @@ public class FSMMove extends SimpleBehaviour {
 
 			String nextNode = myAdventurer.getNextNode();
 
-			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().equals(myPosition)){
+			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().getLeft().equals(myPosition)){
 				myAdventurer.resetGoal();
 				nextNode = myAdventurer.getNextNode();
 			}
@@ -191,16 +176,17 @@ public class FSMMove extends SimpleBehaviour {
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
             if(cptBlock >= BLOCKMAX){
-				//System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
-                List<Couple<String,Integer>> priorities = myAdventurer.getPriorities();
+				if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
+				List<String> otherNodes = myAdventurer.possibleNexts();
+				otherNodes.remove(nextNode);
+				Collections.shuffle(otherNodes);
+				if(!otherNodes.isEmpty())nextNode = otherNodes.get(0);
+				cptDeBlock++;
 
-                if(priorities!=null && priorities.size()>1){
-                    Random rand = new Random();
-                    myAdventurer.setGoal(priorities.get(rand.nextInt(priorities.size())));
-                    nextNode = myAdventurer.getNextNode();
-                }
-                else nextNode = null;
-				cptBlock = 0;
+				if(cptDeBlock >= BLOCKMAX) {
+					cptDeBlock = 0;
+					cptBlock = 0;
+				}
 			}
 
 			if(nextNode==null) {
