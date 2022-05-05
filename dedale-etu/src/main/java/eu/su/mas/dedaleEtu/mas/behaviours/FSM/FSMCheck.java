@@ -226,43 +226,35 @@ public class FSMCheck extends Behaviour {
 			// Hierarchy of modes : W > L > E > S
 
 			//Check current goals and positions
-			if (hisGoal.getLeft().equals(myGoal.getLeft())                                //IF we have the same goal
-			|| (myPos.equals(hisNextNode) && myAdventurer.getNextNode().equals(hisPos))   //OR we are blocking each other
-			|| myAdventurer.getNextNode().equals(hisNextNode)
+            boolean sameGoal = hisGoal.getLeft().equals(myGoal.getLeft());
+            boolean block = myPos.equals(hisNextNode) && myNextNode.equals(hisPos)|| myAdventurer.getNextNode().equals(hisNextNode);
+
+			if (sameGoal || block    												//IF we have the same goal OR we are blocking each other
 			&& (hisMode > myMode                                                	//AND IF his mode is more important my mine
 			|| (hisMode == myMode && hisGoal.getRight() <= myGoal.getRight()))){	//OR we have the same role but his path is shorter
-				myGoal = null;    //THEN I give up my goal
-				myAdventurer.setGoal(null);
+				
+				myAdventurer.setGoal(null); 										//THEN I give up my goal
 
 				//AND I need to find a new goal in life (I'm only able to change my own goals)
 				List<Couple<String,Integer>> myPriorities = myAdventurer.getPriorities();
+
 				if(myPriorities!=null){
 					for(Couple<String,Integer> newGoal: myPriorities){
 						myAdventurer.setGoal(newGoal);
 						myNextNode = myAdventurer.getNextNode();
-						boolean block = myNextNode != null && (myPos.equals(hisNextNode) && myNextNode.equals(hisPos) || myAdventurer.getNextNode().equals(hisNextNode));
+						
+                        block = myNextNode != null && (myPos.equals(hisNextNode) && myNextNode.equals(hisPos) || myAdventurer.getNextNode().equals(hisNextNode));
+                        sameGoal = hisGoal.getLeft().equals(newGoal.getLeft());
 
-						if(newGoal.getLeft().equals(hisGoal.getLeft()) || block) {        //IF we have the same goal OR we block
-							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight()){	//BUT if we have the same mode and my route is faster
-								myGoal = newGoal;	//THEN I still beat him and get the goal
-								myAdventurer.setGoal(myGoal);
-								break;
-							}
-							else { //Or else we pass to the next goal
-								myGoal = null;
-								myAdventurer.setGoal(null);
-							}
+						if(sameGoal || block) {   												//IF same goal OR block
+							if(hisMode == myMode && hisGoal.getRight() >= newGoal.getRight())	//BUT IF we have the same mode and my route is faster
+								break; 															//THEN I still beat him and get the goal
+							else myAdventurer.setGoal(null);									//OR ELSE we pass to the next goal
 						}
-						else { //IF we don't have the same goal and we don't block
-							if(myNextNode==null){
-								myGoal = null;
-								myAdventurer.setGoal(null);
-							}
-							else{
-								myGoal = newGoal;    //THEN I get the goal
-								myAdventurer.setGoal(myGoal);
-								break;
-							}
+
+						else { 																	//IF not same goal and don't block
+							if(myNextNode==null) myAdventurer.setGoal(null);
+							else break;															//THEN I get the goal
 						}
 					}
 				}
