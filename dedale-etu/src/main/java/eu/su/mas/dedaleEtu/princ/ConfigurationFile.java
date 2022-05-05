@@ -147,6 +147,7 @@ public final class ConfigurationFile {
 	 * 3) Agents characteristics
 	 * 
 	 ************************************/
+	public static int NB_AGENT = 6;
 
 	/**
 	 * Must'nt be null as it describes the native agents' capabilities 
