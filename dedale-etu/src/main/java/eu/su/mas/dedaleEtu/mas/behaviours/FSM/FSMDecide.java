@@ -117,13 +117,6 @@ public class FSMDecide extends Behaviour {
 				exitValue = COLLECT;
 				finished = true;
 			}
-			else{
-					System.out.println(myAdventurer.getLocalName());
-					System.out.println(myPosition + goal);
-					System.out.println(myAdventurer.getPriorities());
-					System.out.println(myAdventurer.getMyMap().getTreasureCollection().getTreasures());
-					System.out.println(canCollect + "-" + amountToCollect);
-			}
 
 			finished = true;
 		}
