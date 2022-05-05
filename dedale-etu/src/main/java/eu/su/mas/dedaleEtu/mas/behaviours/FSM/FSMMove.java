@@ -111,6 +111,14 @@ public class FSMMove extends SimpleBehaviour {
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
+				default:
+					if(myAdventurer.getGoal()!= null && myAdventurer.getGoal().getLeft().equals(myPosition) && myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
+						//System.out.println(this.myMap.getTreasureCollection());
+						//System.out.println(myPosition);
+						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+						//System.out.println(this.myMap.getTreasureCollection());
+					}
+					break;
 				}
 			}
 			
@@ -141,6 +149,7 @@ public class FSMMove extends SimpleBehaviour {
 				
 				myAdventurer.equity = new EquityModule(myAdventurer.getMyMap(),this.getAgent().getLocalName());
 				myAdventurer.setRole(myAdventurer.equity.getType());
+				//System.out.println(myAdventurer.equity.getType());
 				
 				//System.out.println(this.myMap.getCapacity());
 				

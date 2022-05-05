@@ -118,9 +118,9 @@ public class TreasureCollection implements Serializable{
 		if(res == null) {
 			return;
 		}
-		if(value == 0) {
-			this.removeTreasure(res);
-		}
+//		if(value == 0) {
+//			this.removeTreasure(res);
+//		}
 		else {
 			res.setTreasureAmount(value);
 		}

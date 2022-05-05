@@ -62,12 +62,13 @@ public class FSMCollect extends Behaviour {
 							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + myAdventurer.getRole());
 							//System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + myAbstractAgent.getBackPackFreeSpace());
 							//System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
-							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + myAbstractAgent.openLock(o.getLeft()));
+							//System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + myAbstractAgent.openLock(o.getLeft()));
+							myAbstractAgent.openLock(o.getLeft());
 							int before = o.getRight();
 							int pickUp = myAbstractAgent.pick();
 							myAdventurer.setCollectedAmount(myAdventurer.getCollectedAmount() + pickUp);
 							myAdventurer.getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
-							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
+							//System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
 //							myAdventurer.setRole(o.getLeft());
 							//System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
 						}
