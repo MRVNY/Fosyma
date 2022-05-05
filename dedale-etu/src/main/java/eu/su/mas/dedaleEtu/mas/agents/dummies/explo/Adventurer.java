@@ -216,9 +216,19 @@ public class Adventurer extends AbstractDedaleAgent {
                 }
             }
             else if (this.myMap != null && mode==Adventurer.LOCATE){
+            	// we calculate the value which the agent need to seek at the moment
             	int value =  this.equity.getSeekingValue() - this.getTreasureAmount();
-                //System.out.println("Treasure amount:"+this.getTreasureAmount()+"; value:"+value);
-            	priorities = this.myMap.getClosestTreasuresOfClosestValue(getCurrentPosition(),role,value);
+            	//System.out.println(this.getMyMap().getTreasureCollection().allDiamond);
+                System.out.println("Treasure amount:"+this.getTreasureAmount()+"; seeking:"+this.equity.getSeekingValue()+"; value:"+value);
+                // if the value is 0 or negative, the agent should now help the other to obtaint their value 
+                // so we switch to Search mode
+                if(value <= 0) {
+                	mode=Adventurer.SEARCH;
+                }
+                // Otherwise, we start seeking the treasure with the closest value that we seek
+                else {
+                	priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

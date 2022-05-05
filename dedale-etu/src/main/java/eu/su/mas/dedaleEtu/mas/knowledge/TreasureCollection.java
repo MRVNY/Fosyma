@@ -18,6 +18,8 @@ public class TreasureCollection implements Serializable{
 	public int allGold = 0;
 	public int allDiamond = 0;
 	
+	private ArrayList<String> seenNodes = new  ArrayList<>();
+	
 	
 	
 	
@@ -34,11 +36,12 @@ public class TreasureCollection implements Serializable{
 		//no value existing yet
 		if(this.isEmpty()) {
 			this.listTreasure.add(t);
-			this.addAllValueTreasure(t);
+//			this.addAllValueTreasure(t);
 			return;
 		}
 		//updating the value
 		if(this.getAllLocation(t.getType()).contains(t.getLocation())) {
+//			System.out.println(this.getAllLocation(t.getType()) + "treasure"+ t);
 			Treasure tr = this.getTreasure(t.getLocation());
 			if(tr.getLocation() == t.getLocation()) {
 				if(tr.getTreasureAmount() < t.getTreasureAmount()) {
@@ -48,7 +51,13 @@ public class TreasureCollection implements Serializable{
 		}
 		//regular addition
 		else {
+//			System.out.println(this.getAllLocation(t.getType()) + "treasure"+ t);
 			this.listTreasure.add(t);
+//			this.addAllValueTreasure(t);
+		}
+		
+		if(!this.seenNodes.contains(t.getLocation())) {
+			this.seenNodes.add(t.getLocation());
 			this.addAllValueTreasure(t);
 		}
 	}
@@ -208,11 +217,19 @@ public class TreasureCollection implements Serializable{
 	public boolean isIn(Treasure t) {
 		return this.listTreasure.contains(t);
 	}
-	
+	/***
+	 * 
+	 * @return true if the treasure collection is empty, false otherwise
+	 */
 	public boolean isEmpty() {
 		return this.listTreasure.isEmpty();
 	}
 	
+	/***
+	 * Look over the treasure collection to get the total value of a certain type of treasure
+	 * @param type : the type of treasure that we want to see
+	 * @return
+	 */
 	public List<Integer> getAllValue(Observation type){
 		List<Integer> res = new ArrayList<>();
 		for(Treasure t: listTreasure) {
@@ -253,7 +270,7 @@ public class TreasureCollection implements Serializable{
 	}
 	
 	public void mergeTreasure(TreasureCollection tc) {
-		this.addTreasures(tc.listTreasure);
+		this.addTreasures(tc.getTreasures());
 	}
 	
 	public TreasureCollection getMissingPart(TreasureCollection tc) {

@@ -178,7 +178,7 @@ public class FSMMove extends SimpleBehaviour {
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
             if(cptBlock >= BLOCKMAX){
-				System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
+				//System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
                 List<Couple<String,Integer>> priorities = myAdventurer.getPriorities();
 
                 if(priorities!=null && priorities.size()>1){
