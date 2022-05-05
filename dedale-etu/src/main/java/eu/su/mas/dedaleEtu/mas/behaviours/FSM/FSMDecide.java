@@ -77,18 +77,17 @@ public class FSMDecide extends Behaviour {
 				}
 			}
 
-//			//get mode
-			int mode = myAdventurer.getMode();
-
 			//get ratio
 			float TRatio = 1/2;
 			float ARatio = 1/2;
 
 
 			//////////////Decision////////////////////
+            //We're sure the mode is already LOCATE
 
+            // If the agent doesn't have a role well give him one (Deprecated by EquityModule)
 			if(!finished) {
-				if (mode == Adventurer.LOCATE && role == Observation.ANY_TREASURE) {
+				if (role == Observation.ANY_TREASURE) {
 					myAdventurer.setRole(type); //Temporary buy fix
 					finished = true;
 				}
@@ -96,7 +95,7 @@ public class FSMDecide extends Behaviour {
 
 			//BagFull -> SearchMode -> Check
 			if (!finished && bagSpace==0){
-				if(role != Observation.ANY_TREASURE && mode!=Adventurer.SEARCH) {
+				if(role != Observation.ANY_TREASURE) {
 					System.out.println(this.myAgent.getLocalName() + " passes to SEARCH");
 					myAdventurer.setMode(Adventurer.SEARCH);
 				}
@@ -105,15 +104,14 @@ public class FSMDecide extends Behaviour {
 
 			//Can't verify role cuz bug not fixed by prof
 			//No role & TRatio_OK -> Collect
-			if (!finished && value>0 && role == Observation.ANY_TREASURE && TRatio >= 1/3){
-				//System.out.println(this.myAgent.getLocalName() + " decides to collect and got a role");
-				exitValue = COLLECT;
-				finished = true;
-			}
+			// if (!finished && value>0 && role == Observation.ANY_TREASURE && TRatio >= 1/3){
+			// 	//System.out.println(this.myAgent.getLocalName() + " decides to collect and got a role");
+			// 	exitValue = COLLECT;
+			// 	finished = true;
+			// }
 
 			//Role_OK & ARatio_OK -> Collect
-			if ( !finished && value>0 && role == type && ARatio >= 1/3){
-				//System.out.println(this.myAgent.getLocalName() + " decides to collect");
+			if (!finished && value>0 && role == type && ARatio >= 1/3){
 				exitValue = COLLECT;
 				finished = true;
 			}

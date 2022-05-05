@@ -173,8 +173,8 @@ public class FSMCheck extends Behaviour {
 		}
 
 		//////////CHECK MAP//////////
-		//If found treasure, pass to DECIDE
-		if(!finished) {
+		//If found treasure, pass to DECIDE (Only collect when locate)
+		if(!finished && myMode == Adventurer.LOCATE) {
 			if(this.myAdventurer.debug()) System.out.println("CHECK MAP" + " - " + myAbstractAgent.getLocalName());
 			List<Couple<String, List<Couple<Observation, Integer>>>> lobs = myAbstractAgent.observe();//myPosition
 			List<Couple<Observation, Integer>> lObservations = lobs.get(0).getRight();
@@ -188,7 +188,6 @@ public class FSMCheck extends Behaviour {
 
 			//If there's at least one type of non-empty treasure
 			if (value > 0) {
-				//System.out.println(this.myAgent.getLocalName() + " found treasure");
 				exitValue = DECIDE;
 				finished = true;
 			}
