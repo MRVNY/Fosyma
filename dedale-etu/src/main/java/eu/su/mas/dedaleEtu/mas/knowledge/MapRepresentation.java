@@ -598,6 +598,4 @@ public class MapRepresentation implements Serializable {
         }
 
     }
-
-
 }
