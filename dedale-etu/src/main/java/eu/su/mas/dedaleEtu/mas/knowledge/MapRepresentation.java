@@ -507,7 +507,7 @@ public class MapRepresentation implements Serializable {
 		//2) Sort nodes
         List<Couple<String,Integer>> lc =
                 opennodes.stream()
-                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));
@@ -529,7 +529,7 @@ public class MapRepresentation implements Serializable {
         //2) Sort nodes
         List<Couple<String,Integer>> lc =
                 treasureNodes.stream()
-                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));

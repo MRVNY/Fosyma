@@ -1,6 +1,7 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -27,6 +28,8 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	private List<Couple<String,Integer>> priorities = new ArrayList<>();
 	private Couple<String,Integer> goal = null;
+	//private List<Couple<String,Integer>> path = null;
+	private List<String> path = null;
 
 	//enum for mode (by priorities)
 	public static final int EXPLORE = 1;
@@ -194,16 +197,15 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
 	public String getNextNode(){
-        if(debug()) System.out.println("NEXT NODE" + " - " + getLocalName());
 		String nextNode = null;
 		String myPos = getCurrentPosition();
 
-		if(goal != null && goal.getLeft() != null && myPos != null) {
-			try {
-				nextNode = this.myMap.getShortestPathToGoal(myPos, goal.getLeft());
-			} catch (Exception e) {
-				e.printStackTrace();
+		if(path!=null && !path.isEmpty() && myPos != null) {
+			if(path.contains(myPos)){
+				int index = path.indexOf(myPos);
+				nextNode = path.get(Math.min(index+1, path.size()-1));
 			}
+			else if(possibleNexts().contains(path.get(0))) nextNode = path.get(0);
 		}
 		return nextNode;
 	}
@@ -251,7 +253,18 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void resetGoal() {
 		updatePriorities();
-		if(priorities!=null && !priorities.isEmpty()) goal = priorities.get(0);
+		if(priorities!=null && !priorities.isEmpty()) {
+			goal = priorities.get(0);
+			path = myMap.getShortestPath(getCurrentPosition(), goal.getLeft());
+
+//			List<String> tmp = myMap.getShortestPath(getCurrentPosition(), goal.getLeft());
+//			Collections.reverse(tmp);
+//			path = tmp.stream()
+//					.map(o -> new Couple<String, Integer>(o, tmp.size() - tmp.indexOf(((Object) o))))
+//					.collect(Collectors.toList());
+//			System.out.println(path + "\n" + goal);
+		}
+		else goal = null;
 	}
 
 	public Couple<String, Integer> getGoal() {
@@ -260,6 +273,7 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setGoal(Couple<String, Integer> goal) {
 		this.goal = goal;
+		if(goal!=null) path = myMap.getShortestPath(getCurrentPosition(), goal.getLeft());
 	}
 
 	public boolean debug(){

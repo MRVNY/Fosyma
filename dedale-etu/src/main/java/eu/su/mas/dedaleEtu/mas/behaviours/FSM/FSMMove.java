@@ -168,7 +168,7 @@ public class FSMMove extends SimpleBehaviour {
 
 			String nextNode = myAdventurer.getNextNode();
 
-			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().getLeft().equals(myPosition)){
+			if(nextNode==null || (nextNode!=null && myAdventurer.getGoal()!=null && (nextNode.equals(myPosition) || myAdventurer.getGoal().getLeft().equals(myPosition)))){
 				myAdventurer.resetGoal();
 				nextNode = myAdventurer.getNextNode();
 			}
@@ -176,11 +176,11 @@ public class FSMMove extends SimpleBehaviour {
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
             if(cptBlock >= BLOCKMAX){
-				//if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
+				if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
 				List<String> otherNodes = myAdventurer.possibleNexts();
 				otherNodes.remove(nextNode);
 				Collections.shuffle(otherNodes);
-				if(!otherNodes.isEmpty())nextNode = otherNodes.get(0);
+				if(!otherNodes.isEmpty()) nextNode = otherNodes.get(0);
 				cptDeBlock++;
 
 				if(cptDeBlock >= BLOCKMAX) {
