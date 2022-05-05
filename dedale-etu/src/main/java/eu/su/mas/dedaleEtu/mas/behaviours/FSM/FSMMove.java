@@ -113,12 +113,13 @@ public class FSMMove extends SimpleBehaviour {
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
 				default:
-					if(myAdventurer.getGoal()!= null && myAdventurer.getGoal().getLeft().equals(myPosition) && myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
-						//System.out.println(this.myMap.getTreasureCollection());
-						//System.out.println(myPosition);
-						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-						//System.out.println(this.myMap.getTreasureCollection());
-					}
+//					if(myAdventurer.getGoal()!= null && myAdventurer.getGoal().getLeft().equals(myPosition) && myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
+//						//System.out.println(this.myMap.getTreasureCollection());
+//						//System.out.println(myPosition);
+//						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+//						//System.out.println(this.myMap.getTreasureCollection());
+//					}
+					this.myMap.getTreasureCollection().removeTreasure(myPosition);
 					break;
 
                 }

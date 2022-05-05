@@ -60,8 +60,8 @@ public class FSMCollect extends Behaviour {
 						if ((o.getLeft() == role || role == Observation.ANY_TREASURE) && o.getRight()>0) {
 							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + myAbstractAgent.getMyTreasureType());
 							//System.out.println(this.myAgent.getLocalName() + " - My treasure type is : " + myAdventurer.getRole());
-							//System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + myAbstractAgent.getBackPackFreeSpace());
-							//System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
+							System.out.println(this.myAgent.getLocalName() + " - My current backpack capacity is:" + myAbstractAgent.getBackPackFreeSpace());
+							System.out.println(this.myAgent.getLocalName() + " - Value of the treasure on the current position: " + o.getLeft() + ": " + o.getRight());
 							//System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + myAbstractAgent.openLock(o.getLeft()));
 							myAbstractAgent.openLock(o.getLeft());
 							int before = o.getRight();
@@ -70,7 +70,7 @@ public class FSMCollect extends Behaviour {
 							myAdventurer.getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
 							//System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
 //							myAdventurer.setRole(o.getLeft());
-							//System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
+							System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
 						}
 						break;
 					default:

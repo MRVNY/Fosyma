@@ -229,8 +229,6 @@ public class Adventurer extends AbstractDedaleAgent {
                 }
                 // Otherwise, we start seeking the treasure with the closest value that we seek
                 else {
-
-                	
                 	try {
                 	priorities = this.myMap.getClosestTreasuresOfClosestValue(getCurrentPosition(),role,amountToCollect);
                 	}

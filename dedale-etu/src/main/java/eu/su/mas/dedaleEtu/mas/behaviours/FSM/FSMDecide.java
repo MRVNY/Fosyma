@@ -109,9 +109,17 @@ public class FSMDecide extends Behaviour {
 			//If I'm at by goal / the amount is perfect -> Collect
             int amountToCollect = myAdventurer.getAmountToCollect();
 			Couple<String,Integer> goal = myAdventurer.getGoal();
-			if (!finished && goal!=null && role == type && (value==amountToCollect || goal.getLeft()==myPosition)) {
+
+			if (!finished && goal!=null && role == type && (value==amountToCollect || goal.getLeft().equals(myPosition))) {
 				exitValue = COLLECT;
 				finished = true;
+			}
+			else{
+				System.out.println(myAdventurer.getLocalName());
+				System.out.println(myPosition);
+				System.out.println(goal);
+				System.out.println(value);
+				System.out.println(amountToCollect);
 			}
 
 			finished = true;
