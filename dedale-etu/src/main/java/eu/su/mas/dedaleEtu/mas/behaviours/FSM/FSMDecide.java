@@ -77,10 +77,6 @@ public class FSMDecide extends Behaviour {
 				}
 			}
 
-			//get ratio
-			float TRatio = 1/2;
-			float ARatio = 1/2;
-
 
 			//////////////Decision////////////////////
             //We're sure the mode is already LOCATE
@@ -110,8 +106,9 @@ public class FSMDecide extends Behaviour {
 			// 	finished = true;
 			// }
 
-			//Role_OK & ARatio_OK -> Collect
-			if (!finished && value>0 && role == type && ARatio >= 1/3){
+			//If I'm at by goal / the amount is perfect -> Collect
+            int amountToCollect = myAdventurer.getAmountToCollect();
+			if (!finished && role == type && (value==amountToCollect || myAdventurer.getGoal().getLeft()==myPosition)) {
 				exitValue = COLLECT;
 				finished = true;
 			}

@@ -521,14 +521,14 @@ public class MapRepresentation implements Serializable {
         }
 
         //1) Get all location of Treasures
-        List<String> treasurenodes = this.treasure.getAllLocation(type);
-        if (treasurenodes.isEmpty()) {
+        List<String> treasureNodes = this.treasure.getAllLocation(type);
+        if (treasureNodes.isEmpty()) {
             throw new Exception("La liste de trésors ne semble pas contenir de " + type);
         }
 
         //2) Sort nodes
         List<Couple<String,Integer>> lc =
-                treasurenodes.stream()
+                treasureNodes.stream()
                         .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
                         .collect(Collectors.toList());
 
@@ -566,9 +566,6 @@ public class MapRepresentation implements Serializable {
 							.map(on -> on.getLeft())
 							.collect(Collectors.toList());
 
-//			System.out.println(value);
-//			System.out.println(lc);
-
 			return out;
 		}
 		else return null;
@@ -596,6 +593,6 @@ public class MapRepresentation implements Serializable {
                 return firstDif - secondDif;
             }
         }
-
     }
+
 }

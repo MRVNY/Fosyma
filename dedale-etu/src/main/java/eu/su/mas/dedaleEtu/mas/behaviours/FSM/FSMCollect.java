@@ -65,7 +65,7 @@ public class FSMCollect extends Behaviour {
 							System.out.println(this.myAgent.getLocalName() + " - I try to open the safe: " + myAbstractAgent.openLock(o.getLeft()));
 							int before = o.getRight();
 							int pickUp = myAbstractAgent.pick();
-							myAdventurer.setTreasureAmount(myAdventurer.getTreasureAmount() + pickUp);
+							myAdventurer.setCollectedAmount(myAdventurer.getCollectedAmount() + pickUp);
 							myAdventurer.getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
 							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
 //							myAdventurer.setRole(o.getLeft());

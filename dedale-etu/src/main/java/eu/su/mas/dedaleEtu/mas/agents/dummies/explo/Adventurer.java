@@ -47,7 +47,8 @@ public class Adventurer extends AbstractDedaleAgent {
     public int goldCap;
     public int diamCap;
     
-    private int TreasureAmount;
+    private int collectedAmount;
+    private int amountToCollect;
     
     public EquityModule equity;
 
@@ -217,18 +218,21 @@ public class Adventurer extends AbstractDedaleAgent {
             }
             else if (this.myMap != null && mode==Adventurer.LOCATE){
             	// we calculate the value which the agent need to seek at the moment
-            	int value =  this.equity.getSeekingValue() - this.getTreasureAmount();
+            	amountToCollect =  this.equity.getSeekingValue() - collectedAmount;
             	//System.out.println(this.getMyMap().getTreasureCollection().allDiamond);
-                System.out.println("Treasure amount:"+this.getTreasureAmount()+"; seeking:"+this.equity.getSeekingValue()+"; value:"+value);
-                // if the value is 0 or negative, the agent should now help the other to obtaint their value 
+                System.out.println("Treasure amount:"+ collectedAmount+"; seeking:"+this.equity.getSeekingValue()+"; value:"+ amountToCollect);
+                // if the value is 0 or negative, the agent should now help the other to obtain their value 
                 // so we switch to Search mode
-                if(value <= 0) {
+                if(amountToCollect <= 0) {
                 	mode=Adventurer.SEARCH;
                 }
                 // Otherwise, we start seeking the treasure with the closest value that we seek
                 else {
-                	priorities = this.myMap.getClosestTreasures(getCurrentPosition(),role);
+                	priorities = this.myMap.getClosestTreasuresOfClosestValue(getCurrentPosition(),role,amountToCollect);
                 }
+            }
+            else if(mode==Adventurer.SEARCH){ //Go to random treasure
+            	priorities = this.myMap.getTreasureCollection().getAllTreasure();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -253,12 +257,16 @@ public class Adventurer extends AbstractDedaleAgent {
 		return false;
 	}
 
-	public int getTreasureAmount() {
-		return TreasureAmount;
+	public int getCollectedAmount() {
+		return collectedAmount;
 	}
 
-	public void setTreasureAmount(int treasureAmount) {
-		TreasureAmount = treasureAmount;
+	public void setCollectedAmount(int collectedAmount) {
+		this.collectedAmount = collectedAmount;
 	}
+
+    public int getAmountToCollect() {
+        return amountToCollect;
+    }
 	
 }

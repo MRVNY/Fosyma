@@ -2,10 +2,12 @@ package eu.su.mas.dedaleEtu.mas.knowledge;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
+import jade.util.leap.Collection;
 
 public class TreasureCollection implements Serializable{
 	
@@ -239,6 +241,15 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
+
+    public List<Couple<String, Integer>> getAllTreasure() {
+        List<Couple<String, Integer>> res = new ArrayList<>();
+        for (Treasure t : listTreasure) {
+            res.add(new Couple<String,Integer>(t.getLocation(), 0));
+        }
+        Collections.shuffle(res);
+        return res;
+    }
 
     public List<Couple<String,Integer>> getAllValueDif(Observation type, int value){
 		List<Couple<String,Integer>> res = new ArrayList<>();
