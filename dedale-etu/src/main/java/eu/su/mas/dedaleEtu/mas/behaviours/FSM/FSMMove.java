@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.xml.bind.annotation.XmlElement.DEFAULT;
+
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedale.mas.AbstractDedaleAgent;
@@ -107,11 +109,13 @@ public class FSMMove extends SimpleBehaviour {
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.DIAMOND));
 					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
 					break;
+
 				case GOLD: 
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
-				}
+                }
+
 			}
 			
 			
