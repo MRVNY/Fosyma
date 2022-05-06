@@ -17,9 +17,10 @@ public class Message implements Serializable {
 	private SerializableComplexeGraph<String, MapRepresentation.MapAttribute> map;
     private int mode;
     private Observation role;
-    private Couple<String,Integer> goal;
+    private String goal;
     private String nextNode;
     private String position;
+    private String name;
 
     public Message(Adventurer agent){
         map = agent.getMyMap().getSerializableGraph();
@@ -28,6 +29,7 @@ public class Message implements Serializable {
         goal = agent.getGoal();
         nextNode = agent.getNextNode();
         position = agent.getCurrentPosition();
+        name = agent.getLocalName();
     }
 
     public void setMap(SerializableComplexeGraph<String, MapRepresentation.MapAttribute> map) {
@@ -46,7 +48,7 @@ public class Message implements Serializable {
         return mode;
     }
 
-    public Couple<String,Integer> getGoal(){
+    public String getGoal(){
         return goal;
     }
 
@@ -56,5 +58,9 @@ public class Message implements Serializable {
 
     public String getPosition() {
         return position;
+    }
+
+    public String getName() {
+        return name;
     }
 }

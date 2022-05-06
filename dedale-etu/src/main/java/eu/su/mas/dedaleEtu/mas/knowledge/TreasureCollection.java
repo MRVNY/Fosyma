@@ -4,27 +4,28 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dataStructures.tuple.Couple;
 import eu.su.mas.dedale.env.Observation;
 import jade.util.leap.Collection;
 
 public class TreasureCollection implements Serializable{
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7383476290092058458L;
 	private ArrayList<Treasure> listTreasure = new ArrayList<>();
-	
+
 	public int allGold = 0;
 	public int allDiamond = 0;
-	
+
 	private ArrayList<String> seenNodes = new  ArrayList<>();
-	
-	
-	
-	
+
+
+
+
 	/***
 	 * Add a treasure to the knowledge or update the value to the lowest possible between the two possibility ( we assume that a lower value is the Wumpus fault )
 	 * @param t : a Treasure
@@ -57,22 +58,22 @@ public class TreasureCollection implements Serializable{
 			this.listTreasure.add(t);
 //			this.addAllValueTreasure(t);
 		}
-		
+
 		if(!this.seenNodes.contains(t.getLocation())) {
 			this.seenNodes.add(t.getLocation());
 			this.addAllValueTreasure(t);
 		}
 	}
-	
+
 	/***
 	 * Adding multiple treasure at once
-	 * @param l: a collection of treasure 
+	 * @param l: a collection of treasure
 	 */
 	public void addTreasures(ArrayList<Treasure> l) {
 		for(Treasure t: l) {
 			addTreasure(t);
 		}
-		
+
 	}
 
 	/***
@@ -86,7 +87,7 @@ public class TreasureCollection implements Serializable{
 		}
 		return null;
 	}
-	
+
 	/***
 	 * remove a treasure of the knowledge if present
 	 * @param location: the location of the treasure
@@ -101,7 +102,7 @@ public class TreasureCollection implements Serializable{
 		}
 		return null;
 	}
-	
+
 	/***
 	 * Updating the value of a specific treasure
 	 * @param location: location of the treasure
@@ -125,7 +126,7 @@ public class TreasureCollection implements Serializable{
 			res.setTreasureAmount(value);
 		}
 	}
-	
+
 	/***
 	 * Count the global value of the Gold currently in the knowledge
 	 * @return global value of the Gold currently in the knowledge
@@ -139,7 +140,7 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
-	
+
 	/***
 	 * Count the global value of the Diamond currently in the knowledge
 	 * @return global value of the Diamond currently in the knowledge
@@ -153,7 +154,7 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder res = new StringBuilder();
@@ -166,10 +167,10 @@ public class TreasureCollection implements Serializable{
 		res.append("]");
 		return res.toString();
 	}
-	
+
 	/***
 	 * Give access to all the location of the knowledge for a given type
-	 * @param type: Gold or Diamond 
+	 * @param type: Gold or Diamond
 	 * @return all the location of the knowledge for the type
 	 */
 	public List<String> getAllLocation(Observation type){
@@ -181,7 +182,7 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
-	
+
 	/***
 	 * Give access to all the location of the knowledge
 	 * @return all the location of the knowledge
@@ -193,10 +194,10 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
-	
+
 	/***
 	 * Give the treasure with the most value among a certain type
-	 * @param type:  Gold or Diamond 
+	 * @param type:  Gold or Diamond
 	 * @return the treasure with the most value
 	 */
 	public Treasure getMostValueable(Observation type) {
@@ -210,23 +211,23 @@ public class TreasureCollection implements Serializable{
 		}
 		return res;
 	}
-	
+
 	/***
-	 * 
-	 * @param t: 
+	 *
+	 * @param t:
 	 * @return True if the treasure is already knew, false if not
 	 */
 	public boolean isIn(Treasure t) {
 		return this.listTreasure.contains(t);
 	}
 	/***
-	 * 
+	 *
 	 * @return true if the treasure collection is empty, false otherwise
 	 */
 	public boolean isEmpty() {
 		return this.listTreasure.isEmpty();
 	}
-	
+
 	/***
 	 * Look over the treasure collection to get the total value of a certain type of treasure
 	 * @param type : the type of treasure that we want to see
@@ -242,13 +243,8 @@ public class TreasureCollection implements Serializable{
 		return res;
 	}
 
-    public List<Couple<String, Integer>> getAllTreasure() {
-        List<Couple<String, Integer>> res = new ArrayList<>();
-        for (Treasure t : listTreasure) {
-            res.add(new Couple<String,Integer>(t.getLocation(), 0));
-        }
-        Collections.shuffle(res);
-        return res;
+    public List<String> getAllTreasure() {
+        return listTreasure.stream().map(o -> o.getLocation()).collect(Collectors.toList());
     }
 
     public List<Couple<String,Integer>> getAllValueDif(Observation type, int value){
