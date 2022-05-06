@@ -1,7 +1,6 @@
 package eu.su.mas.dedaleEtu.mas.agents.dummies.explo;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -199,9 +198,7 @@ public class Adventurer extends AbstractDedaleAgent {
 		String nextNode = null;
 		String myPos = getCurrentPosition();
 
-		if(goal != null && myPos != null) {
-			try {
-				nextNode = this.myMap.getShortestPathToGoal(myPos, goal);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
