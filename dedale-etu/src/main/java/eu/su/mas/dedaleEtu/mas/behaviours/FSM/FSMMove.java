@@ -97,7 +97,7 @@ public class FSMMove extends SimpleBehaviour {
 			 * Just added here to let you see what the agent is doing, otherwise he will be too quick
 			 */
 			try {
-				this.myAgent.doWait(100);
+				this.myAgent.doWait(1000);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -112,7 +112,7 @@ public class FSMMove extends SimpleBehaviour {
 					//System.out.println(this.getAgent().getLocalName() + " just found Gold");
 					break;
 
-				case GOLD: 
+				case GOLD:
 					this.myMap.addNewTreasure(new Treasure(o.getRight(), myPosition, Observation.GOLD));
 					hasTreasure = true;
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
@@ -168,7 +168,7 @@ public class FSMMove extends SimpleBehaviour {
 
 			String nextNode = myAdventurer.getNextNode();
 
-			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().getLeft().equals(myPosition)){
+			if(nextNode==null || nextNode.equals(myPosition) || myAdventurer.getGoal().equals(myPosition)){
 				myAdventurer.resetGoal();
 				nextNode = myAdventurer.getNextNode();
 			}
@@ -176,7 +176,7 @@ public class FSMMove extends SimpleBehaviour {
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
             if(cptBlock >= BLOCKMAX){
-				//if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName()+" , "+lastPos+" , " + myPosition+" , "+nextNode);
+				if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName() +": "+ myPosition+" -> "+nextNode);
 				List<String> otherNodes = myAdventurer.possibleNexts();
 				otherNodes.remove(nextNode);
 				Collections.shuffle(otherNodes);

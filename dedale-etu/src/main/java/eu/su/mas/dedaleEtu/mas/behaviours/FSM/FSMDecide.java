@@ -110,10 +110,10 @@ public class FSMDecide extends Behaviour {
 
 			//If I'm at by goal / the amount is perfect -> Collect
             int amountToCollect = myAdventurer.getAmountToCollect();
-			Couple<String,Integer> goal = myAdventurer.getGoal();
+			String goal = myAdventurer.getGoal();
 			int canCollect = Math.min(bagSpace,value);
 
-			if (!finished && goal!=null && role == type && (canCollect==amountToCollect || goal.getLeft().equals(myPosition))) {
+			if (!finished && goal!=null && role == type && (canCollect==amountToCollect || goal.equals(myPosition))) {
 				exitValue = COLLECT;
 				finished = true;
 			}

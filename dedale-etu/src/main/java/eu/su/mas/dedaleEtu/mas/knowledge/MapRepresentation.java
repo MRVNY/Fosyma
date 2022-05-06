@@ -176,16 +176,14 @@ public class MapRepresentation implements Serializable {
 	 * @return the list of nodes to follow, null if the targeted node is not currently reachable
 	 */
 	public synchronized List<String> getShortestPath(String idFrom,String idTo){
-		//System.out.println("getShortestPath");
-
 		List<String> shortestPath=new ArrayList<String>();
 
 		Dijkstra dijkstra = new Dijkstra();//number of edge
 		dijkstra.init(g);
+		if(g.getNode(idTo)==null || g.getNode(idFrom)==null) return null;
 		dijkstra.setSource(g.getNode(idFrom));
 
 		dijkstra.compute();//compute the distance to all nodes from idFrom
-		//if(g.getNode(idTo)==null || g.getNode(idFrom)==null) return null;
 		List<Node> path=dijkstra.getPath(g.getNode(idTo)).getNodePath(); //the shortest path from idFrom to idTo
 		Iterator<Node> iter=path.iterator();
 		while (iter.hasNext()){
@@ -226,7 +224,13 @@ public class MapRepresentation implements Serializable {
 
 	public List<String> getOpenNodes(){
 		return this.g.nodes()
-				.filter(x ->x .getAttribute("ui.class")==MapAttribute.open.toString()) 
+				.filter(x ->x .getAttribute("ui.class")==MapAttribute.open.toString())
+				.map(Node::getId)
+				.collect(Collectors.toList());
+	}
+
+	public List<String> getAllNodes(){
+		return this.g.nodes()
 				.map(Node::getId)
 				.collect(Collectors.toList());
 	}
@@ -262,12 +266,12 @@ public class MapRepresentation implements Serializable {
 		}
 		// adding the treasure to the serialiazeGraph
 		sg.addTreasures(treasure);
-		
+
 		sg.addCapacity(agentCapacity);
-		
-		
-		
-		
+
+
+
+
 	}
 
 
@@ -326,10 +330,10 @@ public class MapRepresentation implements Serializable {
 
 		g.display();
 	}
-	
+
 	/**
-	 * 
-	 * @return true if there exist at least one openNode on the graph 
+	 *
+	 * @return true if there exist at least one openNode on the graph
 	 */
 	public boolean hasOpenNode() {
 		return (this.g.nodes()
@@ -378,16 +382,16 @@ public class MapRepresentation implements Serializable {
 		//System.out.println("Merge done");
 	}
 
-	
+
 	/***
-	 * We try to only collect the part of the map that we're missing 
+	 * We try to only collect the part of the map that we're missing
 	 * @param sgreceived the other map
 	 * @return the missing part
 	 */
 	public MapRepresentation getMissingPart(SerializableComplexeGraph<String, MapAttribute> sgreceived) {
 		// we want to get only the part that our map is missing in sgreceived
 		MapRepresentation partialMap = new MapRepresentation();
-		
+
 		for (SerializableNode<String, MapAttribute> n: sg.getAllNodes()) {
 			boolean notAlreadyIn =true;
 			for (SerializableNode<String, MapAttribute> m: sgreceived.getAllNodes()){
@@ -400,18 +404,18 @@ public class MapRepresentation implements Serializable {
 			}
 		}
 	}
-		
-		
+
+
 		partialMap.treasure = this.treasure.getMissingPart(sgreceived.getTreasures());
 		partialMap.agentCapacity.putAll(sgreceived.getCapacity());
 		return partialMap;
 	}
-	
+
 	public String getShortestPathToClosestTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
-		
+
 		//1) Get all location of Treasures
 		List<String> treasurenodes=this.treasure.getAllLocation(type);
 		if (treasurenodes.isEmpty()) {
@@ -435,27 +439,27 @@ public class MapRepresentation implements Serializable {
 		else return null;
 
 	}
-	
+
 	public String getShortestPathToMostValuableTreasure(String myPosition,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
-		
+
 		return this.getShortestPath(myPosition, this.treasure.getMostValueable(type).getLocation()).get(0);
 	}
-	
+
 	public String getShortestPathToSomeTreasure(String myPosition,Treasure treasure) throws Exception {
 		if(this.treasure.isIn(treasure)) {
 			return this.getShortestPath(myPosition,treasure.getLocation()).get(0);
 		}
 		throw new Exception(treasure +" n'existe pas sur la map.");
 	}
-	
+
 	public String getShortestPathToSomeValueTreasure(String myPosition, int value,Observation type) throws Exception {
 		if (this.treasure.isEmpty()) {
 			throw new Exception("La liste de trésors est vide pour le moment");
 		}
-		
+
 		List<Integer> treasureValues = this.treasure.getAllValue(type);
 		//if there is a treasure for the values that we're looking for we set it as our objectif
 		if(treasureValues.contains(value)) {
@@ -473,7 +477,7 @@ public class MapRepresentation implements Serializable {
 			return closest.getLocation();
 		}
 	}
-	
+
 	public String getShortestPathToGoal(String myPosition,String goal) throws Exception {
 		if(goal == null) {
 			throw new Exception("The goal isn't defined.");
@@ -482,37 +486,39 @@ public class MapRepresentation implements Serializable {
 		if (paths != null && !paths.isEmpty()) return paths.get(0);
 		else return null;
 	}
-	
+
 	public TreasureCollection getTreasureCollection() {
 		return this.treasure;
 	}
-	
+
 	public void addCapacity(String agentName, List<Couple<Observation,Integer>> data) {
 		if(!this.agentCapacity.containsKey(agentName)) {
 			this.agentCapacity.put(agentName,data);
 		}
-		
+
 	}
-	
+
 	public HashMap<String,List<Couple<Observation, Integer>>> getCapacity(){
 		return this.agentCapacity;
 	}
-	
-	public List<Couple<String,Integer>> getClosestOpenNodes(String myPosition) {
-        //1) Get all openNodes
-        List<String> opennodes=getOpenNodes();
 
-		if (opennodes.size() > 10) opennodes = opennodes.subList(0, 9);
+	public List<String> getClosestOpenNodes(String myPosition) {
+        //1) Get all openNodes
+        List<String> opennodes = getOpenNodes();
+
+		//if (opennodes.size() > 10) opennodes = opennodes.subList(0, 9);
 
 		//2) Sort nodes
         List<Couple<String,Integer>> lc =
                 opennodes.stream()
-                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<>(on, getShortestLength(myPosition, on)))//some nodes my be unreachable if the agents do not share at least one common node.
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));
 
-        return lc;
+		List<String> out = lc.stream().map(on -> on.getLeft()).collect(Collectors.toList());
+
+        return out;
     }
 
     public List<Couple<String,Integer>> getClosestTreasures(String myPosition,Observation type) throws Exception {
@@ -529,7 +535,7 @@ public class MapRepresentation implements Serializable {
         //2) Sort nodes
         List<Couple<String,Integer>> lc =
                 treasureNodes.stream()
-                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))//some nodes my be unreachable if the agents do not share at least one common node.
+                        .map(on -> new Couple<String, Integer>(on,getShortestLength(myPosition,on)))
                         .collect(Collectors.toList());
 
         lc.sort(Comparator.comparingInt(Couple::getRight));
@@ -537,7 +543,7 @@ public class MapRepresentation implements Serializable {
         return lc;
     }
 
-    public List<Couple<String,Integer>> getClosestTreasuresOfClosestValue(String myPosition, Observation type, int value) throws Exception {
+    public List<String> getClosestTreasuresOfClosestValue(String myPosition, Observation type, int value) throws Exception {
         if (this.treasure.isEmpty()) {
             throw new Exception("La liste de trésors est vide pour le moment");
         }
@@ -561,10 +567,12 @@ public class MapRepresentation implements Serializable {
 			Collections.sort(lc, new DifAndDistComparator());
 
 
-			List<Couple<String, Integer>> out =
+			List<Couple<String, Integer>> tmp =
 					lc.stream()
 							.map(on -> on.getLeft())
 							.collect(Collectors.toList());
+
+			List<String> out = tmp.stream().map(on -> on.getLeft()).collect(Collectors.toList());
 
 			return out;
 		}

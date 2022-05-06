@@ -82,18 +82,18 @@ public class FSMCheck extends Behaviour {
 
 			if (msgReceived != null) {
 				get = true;
-				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgReceived = null;
+				SerializableComplexeGraph<String, MapRepresentation.MapAttribute> sgReceived;
 				try {
 					Message message = (Message) msgReceived.getContentObject();
 					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
 					sgReceived = message.getMap();
+					myAdventurer.getMyMap().mergeMap(sgReceived);
 
 					//Enchere
-					enchere(message);
+					negotiate(message);
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
-				myAdventurer.getMyMap().mergeMap(sgReceived);
 				finished = true;
 			}
 			if (!get) {
@@ -159,13 +159,13 @@ public class FSMCheck extends Behaviour {
 					Message message = (Message) pongReceived.getContentObject();
 					//sgReceived = (SerializableComplexeGraph<String, MapRepresentation.MapAttribute>) msgReceived.getContentObject();
 					sgReceived = message.getMap();
+					myAdventurer.getMyMap().mergeMap(sgReceived);
 
 					//Enchere
-					enchere(message);
+					negotiate(message);
 				} catch (UnreadableException e) {
 					e.printStackTrace();
 				}
-				myAdventurer.getMyMap().mergeMap(sgReceived);
 
 				exitValue = SEND_END;
 				finished = true;
@@ -202,58 +202,70 @@ public class FSMCheck extends Behaviour {
 	public boolean done() {
 		return finished;
 	}
-	
+
 	public int onEnd() {
 		return exitValue ;
 	}
 
-	private void enchere(Message message){
-		if(this.myAdventurer.debug()) System.out.println("ENCHERE" + " - " + myAbstractAgent.getLocalName());
+	private void negotiate(Message message){
 		int hisMode = message.getMode();
-		Couple<String,Integer> hisGoal = message.getGoal();
+		String hisGoal = message.getGoal();
 		String hisNextNode = message.getNextNode();
 		String hisPos = message.getPosition();
 
 		String myPos = myAbstractAgent.getCurrentPosition();
-		Couple<String,Integer> myGoal = message.getGoal();
+		String myGoal = message.getGoal();
 		String myNextNode = myAdventurer.getNextNode();
 
-		if(message != null && hisNextNode != null && hisPos != null && hisGoal != null && myGoal != null && myPos != null && myNextNode != null) {
-			// Hierarchy of modes : W > L > E > S
 
+		if(message != null && hisNextNode != null && hisPos != null && hisGoal != null && myGoal != null && myPos != null && myNextNode != null) {
+			int hisDist = myAdventurer.getMyMap().getShortestLength(hisPos,hisGoal);
+			int myDist = myAdventurer.getMyMap().getShortestLength(myPos,myGoal);
+
+			// Hierarchy of modes : L > E > S
 			//Check current goals and positions
-            boolean sameGoal = hisGoal.getLeft().equals(myGoal.getLeft());
+            boolean sameGoal = hisGoal.equals(myGoal);
             boolean block = myPos.equals(hisNextNode) && myNextNode.equals(hisPos)|| myAdventurer.getNextNode().equals(hisNextNode);
 
 			if (sameGoal || block    												//IF we have the same goal OR we are blocking each other
 			&& (hisMode > myMode                                                	//AND IF his mode is more important my mine
-			|| (hisMode == myMode && hisGoal.getRight() <= myGoal.getRight()))){	//OR we have the same role but his path is shorter
-				
+			|| (hisMode == myMode && hisDist <= myDist))){	//OR we have the same role but his path is shorter
+
+				System.out.println(myAdventurer.getLocalName()+": "+myPos+" -> "+ myNextNode+" -> "+myGoal+": "+myAdventurer.getPriorities());
+				System.out.println(message.getName()+": "+hisPos+" -> "+hisNextNode+" -> "+hisGoal);
+
 				myAdventurer.setGoal(null); 										//THEN I give up my goal
 
 				//AND I need to find a new goal in life (I'm only able to change my own goals)
-				List<Couple<String,Integer>> myPriorities = myAdventurer.getPriorities();
+				List<String> myPriorities = myAdventurer.getPriorities();
 
 				if(myPriorities!=null){
-					for(Couple<String,Integer> newGoal: myPriorities){
-						myAdventurer.setGoal(newGoal);
-						myNextNode = myAdventurer.getNextNode();
-						
-                        block = myNextNode != null && (myPos.equals(hisNextNode) && myNextNode.equals(hisPos) || myAdventurer.getNextNode().equals(hisNextNode));
-                        sameGoal = hisGoal.getLeft().equals(newGoal.getLeft());
+					for(String newGoal: myPriorities){
+						myNextNode = myAdventurer.getNextNode(newGoal);
+                        int newDist = myAdventurer.getMyMap().getShortestLength(myPos,newGoal);
+
+                        block = myNextNode != null && ((myPos.equals(hisNextNode) && myNextNode.equals(hisPos)) || myNextNode.equals(hisNextNode));
+                        sameGoal = hisGoal.equals(newGoal);
 
 						//IF same goal OR block BUT we have the same mode and my route is faster
-						if(sameGoal || block && hisMode == myMode && hisGoal.getRight() >= newGoal.getRight())
-							break; 				//THEN I still beat him and get the goal
+						if((sameGoal || block) && hisMode == myMode && hisDist > newDist) {
+							myAdventurer.setGoal(newGoal);
+							break;                //THEN I still beat him and get the goal
+						}
 
-						else if(myNextNode!=null) break;					//IF not same goal and don't block THEN I get the goal
-
-						if(myNextNode==null) myAdventurer.setGoal(null);	//ELSE I pass to the next goal
+						else if(myNextNode!=null) {                       	//IF not same goal and don't block THEN I get the goal
+							myAdventurer.setGoal(newGoal);
+							break;
+						}
+						//ELSE I pass to the next goal
 					}
+				}
+				System.out.println("DONE" + " - " + myAbstractAgent.getLocalName() +", "+ myPos +" -> " + myAdventurer.getNextNode() +" -> "+myAdventurer.getGoal()+ '\n');
+				if(myAdventurer.getGoal()==null){
+					myAdventurer.setGoal(myAdventurer.getGoal());
 				}
 			}
 		}
-		if(this.myAdventurer.debug()) System.out.println("ENCHERE DONE" + " - " + myAbstractAgent.getLocalName());
 	}
 
 	private boolean waitCheck(){
