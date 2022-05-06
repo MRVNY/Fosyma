@@ -231,6 +231,11 @@ public class Adventurer extends AbstractDedaleAgent {
                 // Otherwise, we start seeking the treasure with the closest value that we seek
                 else {
                 	try {
+                	//In order to diversify the collect and the treasure which the agent will seek
+//                	if(Math.random()>=0.5) {
+//                		System.out.println("The value has change");
+//                		amountToCollect = (int) (Math.random() * (amountToCollect - 1 + 1) + 1);  
+//                	}
                 	priorities = this.myMap.getClosestTreasuresOfClosestValue(getCurrentPosition(),role,amountToCollect);
                 	}
                 	catch(Exception e){
