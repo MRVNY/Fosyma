@@ -35,6 +35,8 @@ public class EquityModule implements Serializable{
 	
 	private Observation type;
 	private Integer seekingValue;
+	
+	private final boolean  ABSOLUTE_EQUTY = true;
 
 	private String name;
 	
@@ -57,6 +59,9 @@ public class EquityModule implements Serializable{
 		}
 		else {
 			this.seekingValue = map.getTreasureCollection().allDiamond / this.rankDiam.size();
+		}
+		if(this.ABSOLUTE_EQUTY) {
+			this.seekingValue = this.equityAllCost(this.seekingValue);
 		}
 		return this.seekingValue.intValue();
 	}
@@ -125,10 +130,16 @@ public class EquityModule implements Serializable{
 		if(this.rankGold.contains(this.name)) {
 			this.type = Observation.GOLD;
 			this.seekingValue = map.getTreasureCollection().allGold / this.rankGold.size();
+			if(this.ABSOLUTE_EQUTY) {
+				this.seekingValue = this.equityAllCost(this.seekingValue);
+			}
 		}
 		else {
 			this.type = Observation.DIAMOND;
 			this.seekingValue = map.getTreasureCollection().allDiamond / this.rankDiam.size();
+			if(this.ABSOLUTE_EQUTY) {
+				this.seekingValue = this.equityAllCost(this.seekingValue);
+			}
 		}
 	}
 	
@@ -195,6 +206,38 @@ public class EquityModule implements Serializable{
 			copy.put(agentName, cap.get(agentName));
 		}
 		return copy;
+	}
+	
+	private int worstCap(HashMap<String,Integer> cap) {
+		int min = (int) Double.POSITIVE_INFINITY;
+		for(String agentName:cap.keySet()) {
+			if(cap.get(agentName).intValue()<min) {
+				min = cap.get(agentName).intValue();
+			}
+		}
+		return min;
+	}
+	
+	private int equityAllCost(int seekingValue) {
+		HashMap<String,Integer> rankType = new HashMap<>();
+		for(String agentName:agentCapacity.keySet()) {
+			if(rankGold.contains(agentName)) {
+				for(Couple<Observation,Integer> o:agentCapacity.get(agentName)){
+					if(o.getLeft().equals(Observation.GOLD)) {
+						rankType.put(agentName, o.getRight());
+					}	
+				}
+			}
+			if(rankDiam.contains(agentName)) {
+				for(Couple<Observation,Integer> o:agentCapacity.get(agentName)){
+					if(o.getLeft().equals(Observation.DIAMOND)) {
+						rankType.put(agentName, o.getRight());
+					}	
+				}
+			}
+		}
+		int min =this.worstCap(rankType);
+		return (seekingValue > min )? min : seekingValue;
 	}
 	
 	
