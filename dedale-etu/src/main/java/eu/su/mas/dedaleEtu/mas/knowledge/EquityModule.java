@@ -36,7 +36,7 @@ public class EquityModule implements Serializable{
 	private Observation type;
 	private Integer seekingValue;
 	
-	private final boolean  ABSOLUTE_EQUTY = false;
+	private final boolean  ABSOLUTE_EQUTY = true;
 
 	private String name;
 	
