@@ -264,7 +264,7 @@ public class Adventurer extends AbstractDedaleAgent {
                 }
             }
             else if(mode==Adventurer.SEARCH){ //Go to random treasure
-            	priorities = this.myMap.getOpenNodes();
+            	priorities = this.myMap.getAllNodes();
             }
         } catch (Exception e) {
             e.printStackTrace();

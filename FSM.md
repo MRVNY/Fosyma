@@ -51,7 +51,7 @@ Send_Ping ---> Check
 
 Check --Ping--> Send_Pong
 Check --Pong--> Send_End
-Check --Treasure/First_Time_Locate--> Decide
+Check --Treasure & LOCATE--> Decide
 Check --Nothing/End--> Check
 Check --Timeout--> Move
 
