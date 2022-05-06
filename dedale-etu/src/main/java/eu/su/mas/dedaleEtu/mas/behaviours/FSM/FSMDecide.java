@@ -84,12 +84,12 @@ public class FSMDecide extends Behaviour {
             //We're sure the mode is already LOCATE
 
             // If the agent doesn't have a role well give him one (Deprecated by EquityModule)
-			if(!finished) {
-				if (role == Observation.ANY_TREASURE) {
-					myAdventurer.setRole(type); //Temporary buy fix
-					finished = true;
-				}
-			}
+//			if(!finished) {
+//				if (role == Observation.ANY_TREASURE) {
+//					myAdventurer.setRole(type); //Temporary buy fix
+//					finished = true;
+//				}
+//			}
 
 			//BagFull -> SearchMode -> Check
 			if (!finished && bagSpace==0){
@@ -108,7 +108,7 @@ public class FSMDecide extends Behaviour {
 			// 	finished = true;
 			// }
 
-			//If I'm at by goal / the amount is perfect -> Collect
+			//If I'm at my goal / the amount is perfect -> Collect
             int amountToCollect = myAdventurer.getAmountToCollect();
 			String goal = myAdventurer.getGoal();
 			int canCollect = Math.min(bagSpace,value);
