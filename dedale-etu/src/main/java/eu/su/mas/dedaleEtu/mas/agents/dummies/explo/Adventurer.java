@@ -237,8 +237,12 @@ public class Adventurer extends AbstractDedaleAgent {
         
                 // if the value is 0 or negative, the agent should now help the other to obtain their value
                 // so we switch to Search mode
-            	System.out.println(this.getLocalName()+" -> seekingValue: " + this.equity.getSeekingValue() + "; amoutToCollect: " + amountToCollect + " type: " + this.getRole());
-                if(amountToCollect <= 0) {
+            	//System.out.println(this.getLocalName()+" -> seekingValue: " + this.equity.getSeekingValue() + "; amoutToCollect: " + amountToCollect + " type: " + this.getRole());
+//                if(this.goal!= null) {
+//                	System.out.println(this.goal);
+//                }
+            	
+            	if(amountToCollect <= 0) {
                 	System.out.println(this.getLocalName()+" à finis de récolter pour le moment.");
                 	mode=Adventurer.SEARCH;
                 }

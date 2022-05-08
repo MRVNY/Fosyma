@@ -215,7 +215,7 @@ public class EquityModule implements Serializable{
 		for(String agentName:cap.keySet()) {
 			if(cap.get(agentName).intValue()<min) {
 				min = cap.get(agentName).intValue();
-			}
+			}  
 		}
 		return min;
 	}

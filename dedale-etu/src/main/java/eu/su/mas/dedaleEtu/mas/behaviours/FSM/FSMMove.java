@@ -116,25 +116,29 @@ public class FSMMove extends SimpleBehaviour {
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
 
-				default:
-					if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
-						//System.out.println(this.myMap.getTreasureCollection());
-						//System.out.println(myPosition);
-						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-						//System.out.println(this.myMap.getTreasureCollection());
-					}
-					break;
-
+//				default:
+//					if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
+//						System.out.println(this.myMap.getTreasureCollection());
+//						System.out.println(myPosition);
+//						System.out.println("updating the value" + o.getLeft());
+//						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+//					}
+//					break;
+//
 
                 }
 			}
 
-			if(!hasTreasure){
-				if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
-					this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-				}
-				else this.myMap.getTreasureCollection().removeTreasure(myPosition);
-				myAdventurer.resetGoal();
+//			if(!hasTreasure){
+//				if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
+//					this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+//				}
+//				else this.myMap.getTreasureCollection().removeTreasure(myPosition);
+//				myAdventurer.resetGoal();
+//			}
+			if(!hasTreasure && myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
+			this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+			myAdventurer.resetGoal();
 			}
 
 
@@ -215,5 +219,6 @@ public class FSMMove extends SimpleBehaviour {
 	}
 	
 	public int onEnd() {return ExitValue ;}
+	
 
 }
