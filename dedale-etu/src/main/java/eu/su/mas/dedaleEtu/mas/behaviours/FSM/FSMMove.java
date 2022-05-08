@@ -116,14 +116,14 @@ public class FSMMove extends SimpleBehaviour {
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
 
-//				default:
-//					if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
-//						//System.out.println(this.myMap.getTreasureCollection());
-//						//System.out.println(myPosition);
-//						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-//						//System.out.println(this.myMap.getTreasureCollection());
-//					}
-//					break;
+				default:
+					if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
+						//System.out.println(this.myMap.getTreasureCollection());
+						//System.out.println(myPosition);
+						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
+						//System.out.println(this.myMap.getTreasureCollection());
+					}
+					break;
 
 
                 }
@@ -182,7 +182,7 @@ public class FSMMove extends SimpleBehaviour {
 			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
 
             if(cptBlock >= BLOCKMAX){
-				if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName() +": "+ myPosition+" -> "+nextNode);
+				//if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName() +": "+ myPosition+" -> "+nextNode);
 				List<String> otherNodes = myAdventurer.possibleNexts();
 				otherNodes.remove(nextNode);
 				Collections.shuffle(otherNodes);

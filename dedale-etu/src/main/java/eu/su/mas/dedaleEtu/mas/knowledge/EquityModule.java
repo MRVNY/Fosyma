@@ -63,6 +63,8 @@ public class EquityModule implements Serializable{
 		if(this.ABSOLUTE_EQUTY) {
 			this.seekingValue = this.equityAllCost(this.seekingValue);
 		}
+		//System.out.println(this.equityAllCost(this.seekingValue));
+		this.equityAllCost(this.seekingValue);
 		return this.seekingValue.intValue();
 	}
 	
@@ -114,17 +116,17 @@ public class EquityModule implements Serializable{
 		while(!copyG.isEmpty()) {
 			if(bi) {
 				bi = false;
-				String best = this.bestAgentFor(copyG);
-				copyG.remove(best);
-				copyD.remove(best);
-				this.rankGold.add(best);
-			}
-			else {
-				bi = true;
 				String best = this.bestAgentFor(copyD);
 				copyG.remove(best);
 				copyD.remove(best);
 				this.rankDiam.add(best);
+			}
+			else {
+				bi = true;
+				String best = this.bestAgentFor(copyG);
+				copyG.remove(best);
+				copyD.remove(best);
+				this.rankGold.add(best);
 			}
 		}
 		if(this.rankGold.contains(this.name)) {
@@ -221,14 +223,14 @@ public class EquityModule implements Serializable{
 	private int equityAllCost(int seekingValue) {
 		HashMap<String,Integer> rankType = new HashMap<>();
 		for(String agentName:agentCapacity.keySet()) {
-			if(rankGold.contains(agentName)) {
+			if(rankGold.contains(agentName) && this.type.equals(Observation.GOLD)) {
 				for(Couple<Observation,Integer> o:agentCapacity.get(agentName)){
 					if(o.getLeft().equals(Observation.GOLD)) {
 						rankType.put(agentName, o.getRight());
 					}	
 				}
 			}
-			if(rankDiam.contains(agentName)) {
+			if(rankDiam.contains(agentName) && this.type.equals(Observation.DIAMOND)) {
 				for(Couple<Observation,Integer> o:agentCapacity.get(agentName)){
 					if(o.getLeft().equals(Observation.DIAMOND)) {
 						rankType.put(agentName, o.getRight());
@@ -237,6 +239,7 @@ public class EquityModule implements Serializable{
 			}
 		}
 		int min =this.worstCap(rankType);
+//		System.out.println(rankType);
 		return (seekingValue > min )? min : seekingValue;
 	}
 	

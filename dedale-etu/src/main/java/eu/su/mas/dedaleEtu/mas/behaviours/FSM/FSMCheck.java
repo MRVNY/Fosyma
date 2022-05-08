@@ -209,8 +209,8 @@ public class FSMCheck extends Behaviour {
 			&& (hisMode > myMode                                                	//AND IF his mode is more important my mine
 			|| (hisMode == myMode && hisDist <= myDist))){	//OR we have the same role but his path is shorter
 
-				System.out.println(myAdventurer.getLocalName()+": "+myPos+" -> "+ myNextNode+" -> "+myGoal+": "+myAdventurer.getPriorities());
-				System.out.println(message.getName()+": "+hisPos+" -> "+hisNextNode+" -> "+hisGoal);
+				//System.out.println(myAdventurer.getLocalName()+": "+myPos+" -> "+ myNextNode+" -> "+myGoal+": "+myAdventurer.getPriorities());
+				//System.out.println(message.getName()+": "+hisPos+" -> "+hisNextNode+" -> "+hisGoal);
 
 				myAdventurer.setGoal(null); 										//THEN I give up my goal
 
@@ -238,7 +238,7 @@ public class FSMCheck extends Behaviour {
 						//ELSE I pass to the next goal
 					}
 				}
-				System.out.println("DONE" + " - " + myAbstractAgent.getLocalName() +", "+ myPos +" -> " + myAdventurer.getNextNode() +" -> "+myAdventurer.getGoal()+ '\n');
+				//System.out.println("DONE" + " - " + myAbstractAgent.getLocalName() +", "+ myPos +" -> " + myAdventurer.getNextNode() +" -> "+myAdventurer.getGoal()+ '\n');
 				if(myAdventurer.getGoal()==null){
 					myAdventurer.setGoal(myAdventurer.getGoal());
 				}
