@@ -195,7 +195,6 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
 	public String getNextNode(){
-        if(debug()) System.out.println("NEXT NODE" + " - " + getLocalName());
 		String nextNode = null;
 		String myPos = getCurrentPosition();
 
@@ -210,8 +209,6 @@ public class Adventurer extends AbstractDedaleAgent {
 	}
 
     public String getNextNode(String myGoal) {
-        if (debug())
-            System.out.println("NEXT NODE" + " - " + getLocalName());
         String nextNode = null;
         String myPos = getCurrentPosition();
 
@@ -226,7 +223,6 @@ public class Adventurer extends AbstractDedaleAgent {
     }
 
     public void updatePriorities(){
-        if(debug()) System.out.println("PRIORITIES" + " - " + getLocalName());
         try {
             if (this.myMap != null && this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
                 //For optimisation, we only update priorities if the list is empty or the map has changed
@@ -238,8 +234,7 @@ public class Adventurer extends AbstractDedaleAgent {
             else if (this.myMap != null && mode==Adventurer.LOCATE){
             	// we calculate the value which the agent need to seek at the moment
             	amountToCollect =  this.equity.getSeekingValue() - collectedAmount;
-            	//System.out.println(this.getMyMap().getTreasureCollection().allDiamond);
-                //System.out.println("Treasure amount:"+ collectedAmount+"; seeking:"+this.equity.getSeekingValue()+"; value:"+ amountToCollect);
+        
                 // if the value is 0 or negative, the agent should now help the other to obtain their value
                 // so we switch to Search mode
                 if(amountToCollect <= 0) {
@@ -283,10 +278,6 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setGoal(String goal) {
 		this.goal = goal;
-	}
-
-	public boolean debug(){
-		return false;
 	}
 
 	public int getCollectedAmount() {

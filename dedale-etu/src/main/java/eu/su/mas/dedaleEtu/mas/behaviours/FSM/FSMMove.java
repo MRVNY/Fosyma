@@ -72,8 +72,6 @@ public class FSMMove extends SimpleBehaviour {
 
 	@Override
 	public void action() {
-		if(this.myAdventurer.debug()) System.out.println("START MAP" + " - " + myAbstractAgent.getLocalName());
-
 		finished = false;
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" State");
 
@@ -147,7 +145,7 @@ public class FSMMove extends SimpleBehaviour {
 			Iterator<Couple<String, List<Couple<Observation, Integer>>>> iter=lobs.iterator();
 			while(iter.hasNext()){
 				String nodeId=iter.next().getLeft();
-				boolean isNewNode=this.myMap.addNewNode(nodeId);
+				boolean isNewNode = this.myMap.addNewNode(nodeId);
 				//the node may exist, but not necessarily the edge
 				if (myPosition!=nodeId) {
 					this.myMap.addEdge(myPosition, nodeId);
@@ -164,23 +162,6 @@ public class FSMMove extends SimpleBehaviour {
 
 				myAdventurer.equity = new EquityModule(myAdventurer.getMyMap(),this.getAgent().getLocalName());
 				myAdventurer.setRole(myAdventurer.equity.getType());
-
-				//System.out.println(myAdventurer.equity.getType());
-				
-				//System.out.println(this.myMap.getCapacity());
-				
-				//this crap is only here for testing purpose, don't mind it.
-				
-//				this.myMap.getTreasureCollection().removeTreasure("25");
-//				this.myMap.getTreasureCollection().removeTreasure("7");
-//				
-//				this.myMap.getTreasureCollection().updateTreasure("25",0);
-//				this.myMap.getTreasureCollection().updateTreasure("7",0);
-				
-				//Ressources sur la cartes actuellement
-//				System.out.println("Gold: "+this.myMap.getTreasureCollection().countGold());
-//				System.out.println("Diamond: "+this.myMap.getTreasureCollection().countDiamond());
-
 			}
 
 			//4) select next move.
@@ -190,9 +171,6 @@ public class FSMMove extends SimpleBehaviour {
 			//We now update goals in FSMCheck since we need to do enchere
 
 			myAdventurer.setMyMap(myMap);
-
-			if(this.myAdventurer.debug())
-				System.out.println("MAP DONE" + " - " + myAbstractAgent.getLocalName());
 
 			String nextNode = myAdventurer.getNextNode();
 
@@ -225,13 +203,9 @@ public class FSMMove extends SimpleBehaviour {
 
 			lastPos = myPosition;
 
-			if(this.myAdventurer.debug()) System.out.println("NEXT NODE DONE" + " - " + myAbstractAgent.getLocalName());
-
 			if(nextNode!=null) myAbstractAgent.moveTo(nextNode);
 
 			finished=true;
-            if(this.myAdventurer.debug()) System.out.println("MOVED" + " - " + myAbstractAgent.getLocalName());
-
 		}
 	}
 

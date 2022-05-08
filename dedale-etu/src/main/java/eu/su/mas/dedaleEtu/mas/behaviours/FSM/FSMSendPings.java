@@ -11,11 +11,6 @@ import jade.lang.acl.ACLMessage;
 
 public class FSMSendPings extends Behaviour {
 
-	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2964208976149209685L;
 
 	private boolean finished = false;
@@ -29,7 +24,6 @@ public class FSMSendPings extends Behaviour {
 
 	@Override
 	public void action() {
-		if(((Adventurer)this.myAgent).debug()) System.out.println("NEXT NODE DONE" + ((AbstractDedaleAgent)this.myAgent).getLocalName());
 		finished = false;
 		
 		//System.out.println(this.myAgent.getLocalName()+" in "+this.getBehaviourName()+" Stade");
@@ -62,7 +56,6 @@ public class FSMSendPings extends Behaviour {
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
 		return finished;
 	}
 	

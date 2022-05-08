@@ -1,22 +1,13 @@
 package eu.su.mas.dedaleEtu.mas.knowledge;
 
-import dataStructures.tuple.Couple;
-import eu.su.mas.dedale.env.Observation;
 import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
-
 import java.io.Serializable;
-import java.util.List;
-import java.util.Random;
 
 public class Message implements Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 6747727532564253694L;
 	private SerializableComplexeGraph<String, MapRepresentation.MapAttribute> map;
     private int mode;
-    private Observation role;
     private String goal;
     private String nextNode;
     private String position;
@@ -25,7 +16,6 @@ public class Message implements Serializable {
     public Message(Adventurer agent){
         map = agent.getMyMap().getSerializableGraph();
         mode = agent.getMode();
-        role = agent.getRole();
         goal = agent.getGoal();
         nextNode = agent.getNextNode();
         position = agent.getCurrentPosition();
@@ -38,10 +28,6 @@ public class Message implements Serializable {
 
     public SerializableComplexeGraph<String, MapRepresentation.MapAttribute> getMap(){
         return this.map;
-    }
-
-    public Observation getRole(){
-        return role;
     }
 
     public int getMode(){
