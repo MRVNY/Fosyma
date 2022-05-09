@@ -160,8 +160,10 @@ public class FSMCheck extends Behaviour {
 			for (Couple<Observation, Integer> o : lObservations) {
 				switch (o.getLeft()) {
 					case DIAMOND:case GOLD:
-						exitValue = DECIDE;
-						finished = true;
+						if(o.getRight()>0){
+							exitValue = DECIDE;
+							finished = true;
+						}
                         break;
                     default:
                         break;

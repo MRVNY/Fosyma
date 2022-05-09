@@ -243,7 +243,7 @@ public class Adventurer extends AbstractDedaleAgent {
 //                }
             	
             	if(amountToCollect <= 0) {
-                	System.out.println(this.getLocalName()+" à finis de récolter pour le moment.");
+                	System.out.println(this.getLocalName()+" passes to SEARCH.");
                 	mode=Adventurer.SEARCH;
                 }
                 // Otherwise, we start seeking the treasure with the closest value that we seek
@@ -258,7 +258,7 @@ public class Adventurer extends AbstractDedaleAgent {
                 	}
                 	catch(Exception e){
                 		mode = Adventurer.SEARCH;
-                		System.out.println(this.getLocalName()+" à finis de récolter pour le moment.");
+                		System.out.println(this.getLocalName()+" passes to SEARCH.");
                 	}
 
                 }
@@ -300,5 +300,9 @@ public class Adventurer extends AbstractDedaleAgent {
 	public List<String> possibleNexts(){
 		return observe().stream().map((ob -> ob.getLeft())).collect(Collectors.toList());
 	}
-	
+
+	public boolean optimised(){
+		return true;
+	}
+
 }

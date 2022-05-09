@@ -113,8 +113,8 @@ public class FSMDecide extends Behaviour {
 			String goal = myAdventurer.getGoal();
 			int canCollect = Math.min(bagSpace,value);
 
-			//if (!finished && goal!=null && role == type && (canCollect==amountToCollect || goal.equals(myPosition))) {
-			if (!finished && goal!=null  &&  goal.equals(myPosition)) {
+			if (!finished && goal!=null && role == type && (canCollect<=amountToCollect || goal.equals(myPosition))) {
+			//if (!finished && goal!=null  &&  goal.equals(myPosition)) {
 				exitValue = COLLECT;
 				finished = true;
 			}
@@ -125,7 +125,7 @@ public class FSMDecide extends Behaviour {
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
+		myAdventurer.resetGoal();
 		return finished;
 	}
 	

@@ -253,7 +253,7 @@ public class TreasureCollection implements Serializable{
 			if(t.getTreasureAmount() == 0) {
 				continue;
 			}
-			if(t.getType().equals(type)) {
+			else if(t.getType().equals(type)) {
                 Couple<String,Integer> cp = new Couple<String,Integer>(t.getLocation(),Math.abs(value - t.getTreasureAmount()));
 				res.add(cp);
 			}

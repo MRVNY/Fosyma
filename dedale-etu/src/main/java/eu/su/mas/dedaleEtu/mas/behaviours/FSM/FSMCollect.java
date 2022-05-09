@@ -70,7 +70,7 @@ public class FSMCollect extends Behaviour {
 							myAdventurer.getMyMap().getTreasureCollection().updateTreasure(myPosition, before - pickUp);
 //							System.out.println(this.myAgent.getLocalName() + " - The agent grabbed : " + pickUp);
 //							myAdventurer.setRole(o.getLeft());
-//							System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
+							//System.out.println(this.myAgent.getLocalName() + " - the remaining backpack capacity is: " + myAbstractAgent.getBackPackFreeSpace());
 						}
 						break;
 					default:

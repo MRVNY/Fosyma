@@ -49,6 +49,7 @@ public class FSMMove extends SimpleBehaviour {
 	private String lastPos = "";
 	private int cptBlock = 0;
 	private final int BLOCKMAX = 10;
+	private final int DEBLOCKMAX = 120;
 	private int cptDeBlock = 0;
 
 
@@ -193,7 +194,7 @@ public class FSMMove extends SimpleBehaviour {
 				if(!otherNodes.isEmpty())nextNode = otherNodes.get(0);
 				cptDeBlock++;
 
-				if(cptDeBlock >= BLOCKMAX) {
+				if(cptDeBlock >= DEBLOCKMAX) {
 					cptDeBlock = 0;
 					cptBlock = 0;
 				}
