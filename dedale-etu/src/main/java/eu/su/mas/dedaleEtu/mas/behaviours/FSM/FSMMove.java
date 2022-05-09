@@ -46,7 +46,6 @@ public class FSMMove extends SimpleBehaviour {
 	private MapRepresentation myMap;
 	private Adventurer myAdventurer;
 	private AbstractDedaleAgent myAbstractAgent;
-	private String lastPos = "";
 	private int cptBlock = 0;
 	private final int BLOCKMAX = 10;
 	private final int DEBLOCKMAX = 120;
@@ -116,27 +115,9 @@ public class FSMMove extends SimpleBehaviour {
 					hasTreasure = true;
 					//System.out.println(this.getAgent().getLocalName() + " just found Diamond");
 					break;
-
-//				default:
-//					if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)) {
-//						System.out.println(this.myMap.getTreasureCollection());
-//						System.out.println(myPosition);
-//						System.out.println("updating the value" + o.getLeft());
-//						this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-//					}
-//					break;
-//
-
                 }
 			}
 
-//			if(!hasTreasure){
-//				if(myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
-//					this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
-//				}
-//				else this.myMap.getTreasureCollection().removeTreasure(myPosition);
-//				myAdventurer.resetGoal();
-//			}
 			if(!hasTreasure && myMap.getTreasureCollection().getAllLocation().contains(myPosition)){
 			this.myMap.getTreasureCollection().updateTreasure(myPosition, 0);
 			myAdventurer.resetGoal();
@@ -184,9 +165,7 @@ public class FSMMove extends SimpleBehaviour {
 				nextNode = myAdventurer.getNextNode();
 			}
 
-			if(myPosition.equals(lastPos)) cptBlock++; //Unblock mechanism
-
-            if(cptBlock >= BLOCKMAX){
+            if(cptBlock >= BLOCKMAX || cptDeBlock > 0){
 				//if(cptDeBlock==0) System.out.println("DEBLOCK "+myAdventurer.getLocalName() +": "+ myPosition+" -> "+nextNode);
 				List<String> otherNodes = myAdventurer.possibleNexts();
 				otherNodes.remove(nextNode);
@@ -195,6 +174,7 @@ public class FSMMove extends SimpleBehaviour {
 				cptDeBlock++;
 
 				if(cptDeBlock >= DEBLOCKMAX) {
+					myAdventurer.resetGoal();
 					cptDeBlock = 0;
 					cptBlock = 0;
 				}
@@ -202,13 +182,20 @@ public class FSMMove extends SimpleBehaviour {
 
 			if(nextNode==null) {
 				Random r = new Random();
-				int moveId = 1 + r.nextInt(lobs.size() - 1);//removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
+				int moveId = 1 + r.nextInt(lobs.size() - 1); //removing the current position from the list of target, not necessary as to stay is an action but allow quicker random move
 				nextNode = lobs.get(moveId).getLeft();
 			}
 
-			lastPos = myPosition;
+//			if(myPosition.equals("58")){
+//				System.out.println(lobs);
+//				System.out.println(myAdventurer.getLocalName() + " : " + nextNode + " -> " + myAdventurer.getGoal());
+//				System.out.println(myAdventurer.getPriorities());
+//			}
 
-			if(nextNode!=null) myAbstractAgent.moveTo(nextNode);
+			boolean moved = true;
+			if(nextNode!=null) moved = myAbstractAgent.moveTo(nextNode);
+			if(!moved) cptBlock++;
+			else cptBlock = 0;
 
 			finished=true;
 		}

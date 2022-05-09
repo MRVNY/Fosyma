@@ -37,7 +37,7 @@ public class FSMCheck extends Behaviour {
     private Adventurer myAdventurer;
 	private AbstractDedaleAgent myAbstractAgent;
 
-	int myMode = -1;
+	int myMode;
 	Observation myRole = null;
 
 	public FSMCheck(final Adventurer myagent) {
@@ -230,10 +230,10 @@ public class FSMCheck extends Behaviour {
 						//IF same goal OR block BUT we have the same mode and my route is faster
 						if((sameGoal || block) && hisMode == myMode && hisDist > newDist) {
 							myAdventurer.setGoal(newGoal);
-							break;                //THEN I still beat him and get the goal
+							break;               		//THEN I still beat him and get the goal
 						}
 
-						else if(myNextNode!=null) {                       	//IF not same goal and don't block THEN I get the goal
+						else if(myNextNode!=null) {		//IF not same goal and don't block THEN I get the goal
 							myAdventurer.setGoal(newGoal);
 							break;
 						}

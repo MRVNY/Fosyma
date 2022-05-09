@@ -28,6 +28,8 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	private List<String> priorities = new ArrayList<>();
 	private String goal = null;
+	private List<String> path;
+	public static final boolean OPT = false;
 
 	//enum for mode (by priorities)
 	public static final int EXPLORE = 1;
@@ -200,7 +202,8 @@ public class Adventurer extends AbstractDedaleAgent {
 
 		if(goal != null && myPos != null) {
 			try {
-				nextNode = this.myMap.getShortestPathToGoal(myPos, goal);
+				if(OPT && path!=null && path.contains(myPos)) nextNode = path.get(Math.min(path.indexOf(myPos),path.size()-1));
+				else nextNode = this.myMap.getShortestPathToGoal(myPos, goal);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -226,10 +229,8 @@ public class Adventurer extends AbstractDedaleAgent {
         try {
             if (this.myMap != null && this.myMap.hasOpenNode() && mode==Adventurer.EXPLORE || mode==Adventurer.SEARCH){
                 //For optimisation, we only update priorities if the list is empty or the map has changed
-                //if(priorities==null || priorities.isEmpty() || !myMap.sameMap()){
-                    priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
-					if(new Random().nextFloat() < 1/2) Collections.shuffle(priorities);
-                //}
+				priorities = this.myMap.getClosestOpenNodes(getCurrentPosition());
+				if(Math.random()>=0.5) Collections.shuffle(priorities);
             }
             else if (this.myMap != null && mode==Adventurer.LOCATE){
             	// we calculate the value which the agent need to seek at the moment
@@ -274,7 +275,10 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void resetGoal() {
 		updatePriorities();
-		if(priorities!=null && !priorities.isEmpty()) goal = priorities.get(0);
+		if(priorities!=null && !priorities.isEmpty()){
+			goal = priorities.get(0);
+			if(OPT) path = myMap.getShortestPath(getCurrentPosition(),goal);
+		}
 	}
 
 	public String getGoal() {
@@ -283,6 +287,7 @@ public class Adventurer extends AbstractDedaleAgent {
 
 	public void setGoal(String goal) {
 		this.goal = goal;
+		if(OPT) path = myMap.getShortestPath(getCurrentPosition(),goal);
 	}
 
 	public int getCollectedAmount() {
@@ -300,9 +305,4 @@ public class Adventurer extends AbstractDedaleAgent {
 	public List<String> possibleNexts(){
 		return observe().stream().map((ob -> ob.getLeft())).collect(Collectors.toList());
 	}
-
-	public boolean optimised(){
-		return true;
-	}
-
 }

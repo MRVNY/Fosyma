@@ -250,10 +250,7 @@ public class TreasureCollection implements Serializable{
     public List<Couple<String,Integer>> getAllValueDif(Observation type, int value){
 		List<Couple<String,Integer>> res = new ArrayList<>();
 		for(Treasure t: listTreasure) {
-			if(t.getTreasureAmount() == 0) {
-				continue;
-			}
-			else if(t.getType().equals(type)) {
+			if(t.getType().equals(type) && t.getTreasureAmount() != 0) {
                 Couple<String,Integer> cp = new Couple<String,Integer>(t.getLocation(),Math.abs(value - t.getTreasureAmount()));
 				res.add(cp);
 			}

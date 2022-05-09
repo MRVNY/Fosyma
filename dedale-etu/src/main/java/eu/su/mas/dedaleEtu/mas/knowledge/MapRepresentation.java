@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import eu.su.mas.dedaleEtu.mas.agents.dummies.explo.Adventurer;
 import org.apache.commons.math3.geometry.partitioning.BSPTreeVisitor.Order;
 import org.graphstream.algorithm.Dijkstra;
 import org.graphstream.graph.Edge;
@@ -506,7 +507,8 @@ public class MapRepresentation implements Serializable {
         //1) Get all openNodes
         List<String> opennodes = getOpenNodes();
 
-		//if (opennodes.size() > 10) opennodes = opennodes.subList(0, 9);
+		if ((Adventurer.OPT && opennodes.size() > 10))
+			opennodes = opennodes.subList(0, 9);
 
 		//2) Sort nodes
         List<Couple<String,Integer>> lc =
@@ -554,7 +556,8 @@ public class MapRepresentation implements Serializable {
 		if(treasureValueDif!=null) {
 			//Sort and trim the list (optional)
 			treasureValueDif.sort(Comparator.comparingInt(Couple::getRight));
-			if (treasureValueDif.size() > 10) treasureValueDif = treasureValueDif.subList(0, 9);
+			if ((Adventurer.OPT && treasureValueDif.size() > 10))
+				treasureValueDif = treasureValueDif.subList(0, 9);
 
 			//Get shortest path to each treasure
 			List<Couple<Couple<String, Integer>, Integer>> lc = //<<pos,dist>,dif>
