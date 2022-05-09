@@ -51,7 +51,7 @@ public class FSMCheck extends Behaviour {
 		finished = false;
 		exitValue = DEFAULT;
 
-		if(cptCheck==0) myAdventurer.updatePriorities(); //Update the goals so we don't stay on goals from last pos
+		//if(cptCheck==0) myAdventurer.updatePriorities(); //Update the goals so we don't stay on goals from last pos
 		myMode = myAdventurer.getMode();
 		myRole = myAdventurer.getRole();
 
