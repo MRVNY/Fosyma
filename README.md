@@ -16,3 +16,9 @@ while facing, or not, other teams.
 This game is initally inspired by the famous "Hunt the Wumpus"  of [Gregory Yob](https://en.wikipedia.org/wiki/Gregory_Yob).
 
 For more details, see Dedale's website : https://dedale.gitlab.io/
+
+**result for our version:** 
+
+
+https://user-images.githubusercontent.com/74248238/178283634-9c5d6f8c-dd4f-46b6-9cf9-ee92395d598b.mp4
+
